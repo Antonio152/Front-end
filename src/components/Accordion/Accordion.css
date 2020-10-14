@@ -1,0 +1,118 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto:500,600&display=swap");
+
+/* Disable button border */
+button:focus{
+    border:none;
+    outline:none;
+}
+
+/* Style the accordion section */
+.accordion__section {
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Style the buttons that are used to open and close the accordion panel */
+.accordion {
+    border: none;
+    outline: none;
+    background-color: #051E34;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    height: 60px;
+    padding: 16px 0px 16px 32px;
+    height: 64px;
+    align-items: left;
+    transition: background-color 0.6s ease;
+    /* Disable text selection highlighting  */
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none;
+}
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+.accordion:hover, .accordion.activated{
+    background-color: #11293F;
+    border: none;
+    outline: none;
+}
+
+/* Style the accordion content title */
+.accordion__title {
+    color: white;
+    font-size: 14px;
+    text-align: left;
+    margin-left: 38px;
+    position: absolute;
+}
+
+/* Style the text behind the title */
+.accordion__subtitle{
+    color: #768597;
+    font-size: 14px;
+    position: absolute;
+    margin-top: 16px;
+    margin-left: 38px;
+    text-align: left;
+    position: absolute;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    width:140px; 
+}
+
+.accordion__subtitle__hidden{
+    display: none;
+}
+
+/* Style the accordion chevron icon */
+.accordion__icon {
+    margin-left: auto;
+    position: absolute;
+    vertical-align: middle;
+    right: 18px;
+    transform: translateY(-50%);
+    top: 50%;
+    transition: transform 0.6s ease;
+}
+
+/* Style the accordion principal icon */
+.icon__button {
+    right: auto;
+    left: 32px;
+}
+
+/* Style to rotate icon when state is active */
+.rotate {
+    transform: rotate(90deg);
+}
+
+/* Style the accordion content panel. Note: hidden by default */
+.accordion__content {
+    background-color:#11293F;
+    overflow: hidden;
+    transition: max-height 0.6s ease;
+    list-style: none;
+    border-bottom: 1px solid #2A4865;
+}
+
+.accordion__content.active {
+    border-bottom: 1px solid #2A4865;
+}
+
+/* Style the accordion content text */
+.accordion__text {
+    font-family: "Roboto", sans-serif;
+    color:#B8BFC6;
+    font-weight: 400;
+    font-size: 14px;
+    padding-top: 0;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #2A4865;
+}
