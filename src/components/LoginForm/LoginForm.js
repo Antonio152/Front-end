@@ -61,11 +61,17 @@ export class LoginForm extends Component {
             console.log(result)
             // If user is logged
             if (result && result.success) {
+                var apellidos = `${result.apellidoPaterno} ${result.apellidoMaterno ? result.apellidoMaterno : ''}`;
                 UserStore.loading = false;
                 UserStore.isLoggedIn = true;
                 UserStore.username = result.username;
-                UserStore.name = result.fullname;
+                UserStore.name = result.nombre;
+                UserStore.lastName = apellidos;
                 UserStore.role = result.role;
+                UserStore.photo = result.foto;
+                result.modulos.map((module, modIndex) => {
+                  UserStore.modules.push(module)
+                });
             }
             else if (result && result.success === false) {
                 this.resetForm();

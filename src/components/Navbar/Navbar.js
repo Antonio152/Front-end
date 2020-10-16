@@ -13,6 +13,7 @@ import Accordion from '../Accordion/Accordion'
 import userImg from './img/profesor.png'
 
 
+
 function useOutsideClick(ref, callback, when) {
 
     const savedCallback = useRef(callback);
@@ -37,7 +38,6 @@ function useOutsideClick(ref, callback, when) {
 
 // Navbar and sidebar fuction
 function Navbar(props) {
-    
     // Appear and disappear sidebar and menu behavior
     const [sidebar, setSidebar] = useState(false)
     const [menuBars, setMenuBars] = useState(false)
@@ -115,8 +115,9 @@ function Navbar(props) {
                         })}
                     </ul>
                     <div className="profile-info-section">
-                        <div className="profile-img">
-                            <img className="userLogo" src={userImg}></img>
+                        <div className="profile-img" id="profile_img">
+                            <img className="userLogo" src={`data:image/jpg;base64,${props.profile_photo}`}></img>
+                            {/* <Example data={photo} /> */}
                         </div>
                         <div className="profile-desc">
                             <div className="profile-role">
@@ -124,6 +125,9 @@ function Navbar(props) {
                             </div>
                             <div className="profile-name">
                                 {props.profile_name}
+                            </div>
+                            <div className="profile-name">
+                                {props.profile_lastName}
                             </div>
                         </div>
                     </div>

@@ -7,8 +7,10 @@ export class UserStore {
             isLoggedIn: false,
             username: '',
             name: '',
+            lastName: '',
             role: '',
-            modules: []
+            photo: '',
+            modules: [{ type: String }]
         })
     }
 }

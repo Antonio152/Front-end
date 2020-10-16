@@ -60,11 +60,17 @@ class App extends Component {
       
       // If it's logged in
       if (result && result.success) {
+        var apellidos = `${result.apellidoPaterno} ${result.apellidoMaterno ? result.apellidoMaterno : ''}`;
         UserStore.loading = false;
         UserStore.isLoggedIn = true;
         UserStore.username = result.username;
-        UserStore.name = result.fullname;
+        UserStore.name = result.nombre;
+        UserStore.lastName = apellidos;
         UserStore.role = result.role;
+        UserStore.photo = result.foto;
+        result.modulos.map((module, modIndex) => {
+          UserStore.modules.push(module)
+        });
       }
       else {
         UserStore.loading = false;
@@ -90,7 +96,12 @@ class App extends Component {
       if(UserStore.isLoggedIn){
         return (
           <Router>
-            <Navbar profile_name={UserStore.name} profile_role={UserStore.role}/>
+            <Navbar 
+              profile_name={UserStore.name} 
+              profile_photo={UserStore.photo} 
+              profile_lastName = {UserStore.lastName}
+              profile_role={UserStore.role}
+            />
             <SubmitButton
                 styles={'right-icon top'}
                 icon={<BiIcons.BiLogOut className="logout-icon"/>}
