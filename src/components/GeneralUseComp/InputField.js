@@ -10,7 +10,9 @@ export class InputField extends Component {
                     type={ this.props.type }
                     placeholder={ this.props.placeholder }
                     value= {this.props.value}
+                    name={this.props.name}
                     onChange={ (e) => this.props.onChange(e.target.value) }
+                    // onChange={ this.props.onChange }
                 ></input>
             </div>
         )

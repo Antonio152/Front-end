@@ -16,6 +16,16 @@
     background-color: #618aaf; 
 }
 
+.disabled {
+    background-color: rgb(105, 105, 105);
+    cursor: auto;
+}
+
+.disabled:hover {
+    background-color: rgb(146, 146, 146);
+    
+}
+
 .fullWidth{
     width:100%;
 }
@@ -74,4 +84,59 @@
     font-size: 24px;
     margin-right: 24px;
     margin-top: auto;
+}
+
+.no_padding {
+    padding: 0;
+}
+.no_margin {
+    margin: 0;
+}
+
+.width-auto{
+    width: auto;
+}
+
+.consulta{
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.btn-blanco {
+    background-color: white;
+    text-align: left;
+    line-height: 20px;
+    color: #555555;
+}
+
+.btn-blanco:hover, .btn-blanco:focus {
+    background-color: rgb(235, 235, 235);
+}
+
+.margin-top0{
+    margin-top: 0;
+}
+
+.size18{
+    padding-top: 5px;
+    font-size: 18px;
+}
+
+.btn-blanco.padding-top7 {
+    padding-top: 7px;
+}
+
+.input-size {    
+    padding-left: 10px;
+    height: 30px;
+}
+
+.input-size-select {
+    padding-left: 10px;
+    padding-top: 10px;
+    height: 50px;
+}
+
+.padding-10 {
+    padding: 10px;
 }

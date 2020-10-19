@@ -5,11 +5,15 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import * as BiIcons from 'react-icons/bi';
 
+// Componentes
 import UserStore from './components/Stores/UserStore';
 import LoginForm from './components/LoginForm/LoginForm'
 import SubmitButton from './components/GeneralUseComp/SubmitButton'
-
 import Navbar from './components/Navbar/Navbar'
+
+// Módulos
+import ConsultaUsuarios from './components/ConsultarUsuarios/ConsultaUsuarios'
+import ConsultaAlumnos from './components/ConsultarAlumnos/ConsultaAlumnos'
 
 class App extends Component {
 
@@ -68,7 +72,7 @@ class App extends Component {
         UserStore.lastName = apellidos;
         UserStore.role = result.role;
         UserStore.photo = result.foto;
-        result.modulos.map((module, modIndex) => {
+        result.modulos.forEach(module => {
           UserStore.modules.push(module)
         });
       }
@@ -109,9 +113,12 @@ class App extends Component {
                 disabled = {false}
                 onclick = {() => this.doLogout()}
             />
-            <Switch>
-              <Route path='/' />
-            </Switch>
+            <div className="contenido">
+              <Switch>
+                <Route path='/usuarios/consulta' component= {ConsultaUsuarios} />
+                <Route path='/alumnos/consulta' component= {ConsultaAlumnos} />
+              </Switch>
+            </div>
           </Router>
         );
       }

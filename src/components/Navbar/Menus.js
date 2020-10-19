@@ -18,7 +18,7 @@ export const Menus = [
             {
                 name: 'Consultar usuarios',
                 cName: 'inside-text',
-                path: '/',
+                path: '/usuarios/consulta',
             },
             {
                 name: 'Modificar usuarios',
@@ -46,7 +46,7 @@ export const Menus = [
             {
                 name: 'Consultar alumnos',
                 cName: 'inside-text',
-                path: '/',
+                path: '/alumnos/consulta',
             },
             {
                 name: 'Modificar alumnos',

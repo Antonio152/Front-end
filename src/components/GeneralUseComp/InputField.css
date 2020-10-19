@@ -14,3 +14,15 @@
     border-bottom: 1px solid #419DC5;
     transition: 30ms;
 }
+
+.mg_top{
+    margin-top: 10px;
+}
+
+.option {
+    height: 20px;
+}
+
+.inputField{
+    width: 100%;
+}

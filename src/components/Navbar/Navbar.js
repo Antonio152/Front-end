@@ -10,9 +10,6 @@ import { IconContext } from 'react-icons'
 
 import Accordion from '../Accordion/Accordion'
 
-import userImg from './img/profesor.png'
-
-
 
 function useOutsideClick(ref, callback, when) {
 
@@ -33,7 +30,7 @@ function useOutsideClick(ref, callback, when) {
             document.addEventListener("click",handler)
             return () => document.removeEventListener("click", handler)
         }
-    }, [when]);
+    });
 }
 
 // Navbar and sidebar fuction
@@ -53,7 +50,7 @@ function Navbar(props) {
     // Travels inside the menus as submenus an concatenate them into a string
     const subMenuToString = (array) => {
         var nameSubMenus = '';
-        array.map((subMenu, smIndex) => { nameSubMenus += `${subMenu.name}, ` })
+        array.forEach(subMenu => { nameSubMenus += `${subMenu.name}, ` })
         return nameSubMenus;
     }
 
@@ -116,7 +113,7 @@ function Navbar(props) {
                     </ul>
                     <div className="profile-info-section">
                         <div className="profile-img" id="profile_img">
-                            <img className="userLogo" src={`data:image/jpg;base64,${props.profile_photo}`}></img>
+                            <img className="userLogo" alt="" src={`data:image/jpg;base64,${props.profile_photo}`}></img>
                             {/* <Example data={photo} /> */}
                         </div>
                         <div className="profile-desc">

@@ -69,7 +69,7 @@ export class LoginForm extends Component {
                 UserStore.lastName = apellidos;
                 UserStore.role = result.role;
                 UserStore.photo = result.foto;
-                result.modulos.map((module, modIndex) => {
+                result.modulos.forEach(module => {
                   UserStore.modules.push(module)
                 });
             }

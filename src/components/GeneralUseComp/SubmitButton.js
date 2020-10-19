@@ -6,7 +6,7 @@ export class SubmitButton extends Component {
         return (
             <div className="submitButton">
                 <button
-                    className={`btn ${this.props.styles}`}
+                    className={`btn ${this.props.styles} ${this.props.disabled ? 'disabled' : ''}`}
                     disabled={this.props.disabled}
                     onClick={ () => this.props.onclick() }
                 >

@@ -1,0 +1,225 @@
+.modulo{
+    width: fit-content;
+    max-width: 1500px;
+}
+
+.contenedor {
+    display: flex;
+    /* position: absolute; */
+    background-color: black;
+    height: auto;
+    /* max-height: 530px; */
+    /* width: 100%; */
+    /* max-width: 420px; */
+    /* padding: 50px; */
+    flex-direction: row;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    padding-right: 15px;
+    padding-left: 15px;
+    box-sizing: border-box;
+    min-width: 355px;
+    /* top: 50%; */
+    /* left: 50%; */
+    border: 2px solid #f0f0f0;
+}
+
+.mh_img {
+    max-height: 256px;
+}
+
+.blanco {
+    background-color: white;
+    color: #555555;
+}
+
+.full_width {
+    width: 100%;
+}
+
+/* La cantidad de espacios del ancho de pantalla es de 10 */
+.ancho_auto{
+    width: auto;
+}
+.ancho1{
+    width: 10%;
+}
+.ancho2{
+    width: 20%;
+}
+.ancho3{
+    width: 30%;
+}
+.ancho4{
+    width: 40%;
+}
+.ancho5{
+    width: 50%;
+}
+
+.datos_usuario{
+    width: 50%;
+    min-width: 700px;
+}
+
+.img_contenedor_principal{
+    width: 246px;
+}
+
+.contenido{
+    padding: 20px;
+    width: 100%;
+}
+
+.fila {
+    display: flex;
+    flex-direction: row;
+}
+
+.justificado {justify-content: space-between;}
+
+.relleno{ flex: 1 1 auto; }
+
+.tabla{
+    border-collapse: collapse;
+    margin-top: 15px;
+    overflow: visible;
+}
+
+.tabla th, .tabla td {
+    padding: 5px;
+    border: 1px solid #ddd;
+}
+
+.tabla th {
+    background-color: #456F97;
+    font-weight: 400;
+    color: white;
+    cursor: auto;
+    width: 200px;
+}
+
+.tabla .rol {
+    width: 120px;
+}
+.tabla .matricula {
+    min-width: 200px;
+}
+
+.tabla .activo {
+    width: 50px;
+}
+
+.tabla tr:nth-child(even){ background-color: #f2f2f2; }
+.tabla tr:hover {
+    background-color: #ddd;
+    cursor: pointer;
+}
+
+.modulos{
+    width: fit-content;
+    overflow: visible;
+}
+
+.adjustable_td{
+    width: 50%;
+}
+
+.texto {
+    margin-top: 15px;
+}
+
+.texto_mediano {
+    font-size: 30px;
+}
+
+.no_margen {
+    margin:0;
+    padding:0;
+}
+
+.cont_foto{
+    height: auto;
+    width: 100px;
+    vertical-align: middle;
+}
+
+.foto_usuario {
+    width: 100px;
+    border-radius: 50px;
+    border: 3px solid #cecece;
+}
+
+.columns{
+    display: flex;
+    flex-direction: column;
+    /* width: 100%; */
+}
+
+.justificado-vert{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-content: space-between;
+}
+
+.azul { color: #456F97; }
+
+.direccion {
+    height: 32px;
+    width: 100%;
+    overflow: visible;
+    padding-left: 15px;
+    text-indent: -15px;
+}
+
+.botones {
+    padding-top: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    /* display: flex;
+    justify-content: space-between; */
+    width: 108px;
+}
+
+.etiqueta {
+    margin-top: 10px;
+    margin-bottom: 3px;
+    color: #b4b4b4;
+    font-size: 14px;
+    letter-spacing: 2px;
+    font-weight: 400;
+}
+
+.no-seleccionado{
+    font-size: 32px;
+    margin-left: 20px;
+    margin-top: 50px
+}
+
+.centrado {
+    padding-top: 35px;
+    width: 100%;
+    text-align: center;
+}
+
+.right {
+    float: right;
+}
+
+.max-1357px{
+    max-width: 1357px;
+}
+
+@media only screen and (max-width: 1370px){
+    .img_contenedor_principal{
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 737px){
+    .resize-columna{
+        flex-direction: column;
+    }
+}
