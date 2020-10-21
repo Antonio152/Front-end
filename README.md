@@ -13,6 +13,8 @@ npm run start
 ...
 ```
 
+De esta forma, se instalarán todas las dependencias y se iniciará el script de arranque.
+
 Todo archivo de JavaScript, CSS, etc. perteneciente al proyecto de react, se encuentra en el directorio *src*. Cada componente se encuentra en la carpeta *Components* y el cuerpo de la aplicación se encuentra en el archivo *App.js*
 
 ## Contribución
