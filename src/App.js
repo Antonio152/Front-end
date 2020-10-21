@@ -3,7 +3,7 @@
 import React, {Component} from 'react';
 import { observer } from 'mobx-react'
 import './App.css';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import * as BiIcons from 'react-icons/bi';
 
@@ -19,6 +19,8 @@ import ConsultaAlumnos from './components/ConsultarAlumnos/ConsultaAlumnos'
 import ConsultaCredencial from './components/ConsultaCredencial/ConsultaCredencial'
 import MainComponent from './components/Main/MainComponent';
 
+
+import {Redirect} from 'react-router-dom'
 
 
 class App extends Component {
@@ -42,11 +44,11 @@ class App extends Component {
 
       let result = await res.json();
 
-      console.log(result);
 
       if (result && result.success) {
         UserStore.isLoggedIn = false;
         UserStore.username = '';
+        UserStore.id = '';
       }
     } catch (error) {
       console.log(error);
@@ -73,15 +75,13 @@ class App extends Component {
 
       let result = await res.json();
 
-      console.log(result);
-      
-      
       // If it's logged in
       if (result && result.success) {
         var apellidos = `${result.apellidoPaterno} ${result.apellidoMaterno ? result.apellidoMaterno : ''}`;
         UserStore.loading = false;
         UserStore.isLoggedIn = true;
         UserStore.username = result.username;
+        UserStore.id = result._id;
         UserStore.name = result.nombre;
         UserStore.lastName = apellidos;
         UserStore.role = result.role;
@@ -112,7 +112,7 @@ class App extends Component {
       );
     }
     else {
-      if(UserStore.isLoggedIn){
+      if(UserStore.isLoggedIn && UserStore.id){
         if (UserStore.role !== 'Alumno')
           return (
             <Router>
@@ -123,24 +123,25 @@ class App extends Component {
                 profile_role={UserStore.role}
                 activateNavbar = {() => this.changeNavbar()}
               />
+              <Link to='/'>
               <SubmitButton
                   styles={'right-icon top'}
                   icon={<BiIcons.BiLogOut className="logout-icon"/>}
                   text = {'Logout'}
                   disabled = {false}
-                  onclick = {() => this.doLogout()}
-              />
+                  onclick = {() => {this.doLogout()}}/>
+              </Link>
               <div className={this.state.navActivado ? 'contenido nav-activado' : 'contenido'}>
-                <MainComponent
-                  profile_name={UserStore.name} 
-                  profile_lastName = {UserStore.lastName}
-                  profile_photo={UserStore.photo} 
-                  profile_role={UserStore.role}
-                  profile_email={UserStore.email}
-                  />
                 <Switch>
+                    <Route exact path="/auth">
+                      <Redirect to={`/${UserStore.id}`} />
+                    </Route>
+                    <Route exact path="/">
+                      <Redirect to={`/${UserStore.id}`} />
+                    </Route>
                     <Route path='/usuarios/consulta' component= {ConsultaUsuarios} />
                     <Route path='/alumnos/consulta' component= {ConsultaAlumnos} />
+                    <Route path='/:userId' component= {MainComponent} />
                 </Switch>
               </div>
             </Router>
@@ -155,15 +156,22 @@ class App extends Component {
                 profile_role={UserStore.role}
                 activateNavbar = {() => this.changeNavbar()}
               />
+              <Link to='/'>
               <SubmitButton
                   styles={'right-icon top'}
                   icon={<BiIcons.BiLogOut className="logout-icon"/>}
                   text = {'Logout'}
                   disabled = {false}
-                  onclick = {() => this.doLogout()}
-              />
+                  onclick = {() => this.doLogout()}/>
+              </Link>
               <div className={this.state.navActivado ? 'contenido nav-activado' : 'contenido'}>
                 <Switch>
+                    <Route exact path="/auth">
+                        <Redirect to={`${UserStore.id}`} />
+                    </Route>
+                    <Route exact path="/">
+                      <Redirect to={`/${UserStore.id}`} />
+                    </Route>
                     <Route path='/:userId' component= {ConsultaCredencial} />
                 </Switch>
               </div>
@@ -173,7 +181,19 @@ class App extends Component {
       return(
         <div className="app">
           <div className="container">
-            <LoginForm/>
+            <Router>
+              <Switch>
+                <Route exact path={`/${UserStore.id}`}>
+                    <Redirect to="/auth" />
+                </Route>
+                <Route exact path="/">
+                    <Redirect to="/auth" />
+                </Route>
+                <Route path='/auth' component= {LoginForm} />
+              </Switch>
+                
+            </Router>
+            
           </div>
         </div>
       );
