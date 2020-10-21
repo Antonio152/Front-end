@@ -1,6 +1,9 @@
 import React, { useState, useRef } from "react";
 import Chevron from "./Chevron";
 
+import * as FaIcons from 'react-icons/fa'; // This way you import all Font Awesome Icons
+import * as IoIcons from 'react-icons/io';
+
 import "./Accordion.css";
 
 // Function that defines the accordion button
@@ -30,12 +33,21 @@ function Accordion(props) {
         );
     }
 
+    const decideIcon = () => {
+        if (props.title === 'Usuarios')
+            return(<FaIcons.FaUsersCog size={24}/>);
+        if (props.title === 'Alumnos')
+            return(<IoIcons.IoMdSchool size={24}/>);
+        if (props.title === 'Credenciales')
+            return(<FaIcons.FaRegCreditCard size={24}/>);
+    }
+
     return (
         <div className="accordion__section">
         {/* Accordion's principal button */}
             <button className={`accordion ${setActive}`} onClick={toggleAccordion}>
             {/* Title of the accordion */}
-                <div className="accordion__icon icon__button">{ props.icon }</div>
+                <div className="accordion__icon icon__button">{decideIcon()}</div>
                 <div>
                     <p className="accordion__title">{props.title}</p>
                     <p className={`${setSubtitle}`}>{ props.subMenus }</p>

@@ -1,0 +1,92 @@
+/* div de contenedor */
+.contenedor-main{
+    padding-right: 20px;
+}
+
+.main{
+    max-width: 1000px;
+}
+
+/* caja blanca */
+.caja-main{
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    background-color: white;
+    border-bottom: 2px solid #f0f0f0;
+    width: calc(100% - 30px);
+}
+/* caja de fondo  */
+.caja-header{
+    position: relative;
+    color: white;
+    min-height: 224px;
+    border-bottom: 1px solid #dfdfdf;
+}
+/* Muestra el contenido en columnas */
+.columns{
+    display: flex;
+    flex-direction: column;
+    /* width: 100%; */
+}
+/* Fondo del header de la caja */
+.fondo-cont-main{
+    position: absolute;
+    width: 100%;
+    -webkit-border-top-left-radius: 5px;
+    -webkit-border-top-right-radius: 5px;
+    -moz-border-radius-topleft: 5px;
+    -moz-border-radius-topright: 5px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+/* Título de la caja */
+.title-main{
+    position: relative;
+    line-height: 220px;
+}
+/* Centra el tecto */
+.texto-centrado{
+    width: 100%;
+    text-align: center;
+    height: 100%;
+}
+/* Los botones inferiores */
+.btn-accesos{
+    font-size: 16px;
+    width: 100%;
+    padding: 10px 15px;
+    color: #555555;
+
+}
+/* Personalización del link */
+.link-acceso{
+    text-decoration: none;
+    width: 100%;
+}
+
+.link-acceso:visited, .link-acceso:link{
+    color: #555555;
+}
+
+.btn-accesos:hover{
+    background-color: rgb(235, 235, 235);
+}
+
+.link-desc{
+    color: #6b6b6b;
+    font-size: 14px;
+}
+/* Ícono del link */
+.link-icono{
+    color: #6b6b6b;
+    font-size: 24px;
+    padding: 5px;
+    padding-right: 10px;
+}
+
+.nombre-link{
+    color: #456F97;
+}

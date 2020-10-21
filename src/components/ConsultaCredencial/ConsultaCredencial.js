@@ -32,7 +32,7 @@ export class ConsultaCredencial extends Component {
             <div className="column">
                 <div className="fila">
                     <div className="columns justificado_vert">
-                        <div className="cont_foto">
+                        <div className="cont_foto_cons">
                             <img className="foto-alumno" alt="" src={`data:image/jpg;base64,${this.state.usuario.foto ? this.state.usuario.foto : ''}`}/>
                         </div>
                     </div>

@@ -15,6 +15,8 @@ import Navbar from './components/Navbar/Navbar'
 import ConsultaUsuarios from './components/ConsultarUsuarios/ConsultaUsuarios'
 import ConsultaAlumnos from './components/ConsultarAlumnos/ConsultaAlumnos'
 import ConsultaCredencial from './components/ConsultaCredencial/ConsultaCredencial'
+import MainComponent from './components/Main/MainComponent';
+
 
 
 class App extends Component {
@@ -82,6 +84,7 @@ class App extends Component {
         UserStore.lastName = apellidos;
         UserStore.role = result.role;
         UserStore.photo = result.foto;
+        UserStore.email = result.contacto[0].email;
         result.modulos.forEach(module => {
           UserStore.modules.push(module)
         });
@@ -126,6 +129,13 @@ class App extends Component {
                   onclick = {() => this.doLogout()}
               />
               <div className={this.state.navActivado ? 'contenido nav-activado' : 'contenido'}>
+                <MainComponent
+                  profile_name={UserStore.name} 
+                  profile_lastName = {UserStore.lastName}
+                  profile_photo={UserStore.photo} 
+                  profile_role={UserStore.role}
+                  profile_email={UserStore.email}
+                  />
                 <Switch>
                     <Route path='/usuarios/consulta' component= {ConsultaUsuarios} />
                     <Route path='/alumnos/consulta' component= {ConsultaAlumnos} />
