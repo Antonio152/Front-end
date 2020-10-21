@@ -1,3 +1,5 @@
+// Esto es un comentario de prueba
+
 import React, {Component} from 'react';
 import { observer } from 'mobx-react'
 import './App.css';
