@@ -1,0 +1,107 @@
+.contenedor-blanco {
+    display: flex;
+    height: auto;
+    flex-direction: row;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    padding-right: 15px;
+    padding-left: 15px;
+    box-sizing: border-box;
+    background-color: white;
+    border: 2px solid #f0f0f0;
+    width: 100%;
+}
+/* Ancho máximo del contenedor del módulo */
+.max-datos-alu{
+    width: 1004px;
+}
+
+/* Foto */
+.foto-alumno {
+    height: 172px;
+    border-radius: 50%;
+    border: 3px solid #cecece;
+}
+/* Contenedor de la foto */
+.cont_foto{
+    padding: 20px 0px;
+    width: 200px;
+}
+
+/* Datos del alumno */
+.dato-alumno{
+    padding-left: 20px;
+}
+
+/* Contenedor de tipos de credencial */
+.tipo{ 
+    width: 215px;
+    height: calc(100% - 20px);
+    margin-left: 20px;
+    margin-right: 0;
+}
+
+/* Contenedor de radio buttons */
+.radio-cont {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 20px;
+    cursor: pointer;
+    line-height: 22px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Oculta el radio original */
+.radio-cont input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* Crea un radio customizado*/
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    margin: 0;
+    background-color: #eee;
+    border-radius: 50%;
+}
+
+/* Cuando se pasa el cursor por encima */
+.radio-cont:hover input ~ .checkmark {
+    background-color: #ccc;
+}
+
+/* Cuando el radio está seleccionado */
+.radio-cont input:checked ~ .checkmark {
+    background-color: #456F97;
+}
+
+/*  Crea un punto dentro del radio cuando se selecciona */
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Muestra el punto */
+.radio-cont input:checked ~ .checkmark:after {
+    display: block;
+}
+
+/* Estilo del punto */
+.radio-cont .checkmark:after {
+    top: 9px;
+    left: 9px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: white;
+}

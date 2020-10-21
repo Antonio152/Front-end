@@ -230,7 +230,7 @@ export class ConsultaUsuarios extends Component {
                 <div className="fila justificado resize-columna">
                     <div className="contenedor blanco full_width mh_img">
                         <img src={imgBusqueda} alt="" className="img_contenedor_principal"></img>
-                        <div className="contenido">
+                        <div className="contenidoMod">
                             <h1>Buscar usuario por...</h1><br/>
                             {/* Filtro de búsqueda */}
                             <SelectField
@@ -253,7 +253,7 @@ export class ConsultaUsuarios extends Component {
                         </div>
                     </div>
                     <div className="contenedor blanco mh_img datos_usuario">
-                        <div className="contenido ">
+                        <div className="contenidoMod ">
                             {/* Renderiza los datos del usuario seleccionado */}
                             {this.renderUserSelected()}
                         </div>
@@ -262,7 +262,7 @@ export class ConsultaUsuarios extends Component {
 
                 <div className="fila">
                     <div className="contenedor blanco full_width relleno">
-                        <div className="contenido">
+                        <div className="contenidoMod">
                             <h1>Usuarios</h1>
                             <p className="texto"><BiIcons.BiHelpCircle/>  Para conocer más detalles del usuario, haga click sobre él.</p>
                             { !this.state.userQry[0] ? <span className="texto_mediano"> Usuarios no encontrados </span> : 

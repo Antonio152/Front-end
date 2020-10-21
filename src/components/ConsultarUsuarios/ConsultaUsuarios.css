@@ -6,7 +6,6 @@
 .contenedor {
     display: flex;
     /* position: absolute; */
-    background-color: black;
     height: auto;
     /* max-height: 530px; */
     /* width: 100%; */
@@ -66,7 +65,7 @@
     width: 246px;
 }
 
-.contenido{
+.contenidoMod{
     padding: 20px;
     width: 100%;
 }
@@ -212,7 +211,7 @@
     max-width: 1357px;
 }
 
-@media only screen and (max-width: 1370px){
+@media only screen and (max-width: 1538px){
     .img_contenedor_principal{
         display: none;
     }

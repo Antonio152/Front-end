@@ -14,8 +14,14 @@ import Navbar from './components/Navbar/Navbar'
 // Módulos
 import ConsultaUsuarios from './components/ConsultarUsuarios/ConsultaUsuarios'
 import ConsultaAlumnos from './components/ConsultarAlumnos/ConsultaAlumnos'
+import ConsultaCredencial from './components/ConsultaCredencial/ConsultaCredencial'
+
 
 class App extends Component {
+
+  state = {
+    navActivado: true
+  }
 
   // For logging out
   async doLogout () {
@@ -43,6 +49,10 @@ class App extends Component {
     }
   }
 
+  changeNavbar() {
+    this.setState({navActivado: !this.state.navActivado})
+    console.log(this.state.navActivado)
+  }
   
   // When component loads
   async componentDidMount () {
@@ -98,29 +108,55 @@ class App extends Component {
     }
     else {
       if(UserStore.isLoggedIn){
-        return (
-          <Router>
-            <Navbar 
-              profile_name={UserStore.name} 
-              profile_photo={UserStore.photo} 
-              profile_lastName = {UserStore.lastName}
-              profile_role={UserStore.role}
-            />
-            <SubmitButton
-                styles={'right-icon top'}
-                icon={<BiIcons.BiLogOut className="logout-icon"/>}
-                text = {'Logout'}
-                disabled = {false}
-                onclick = {() => this.doLogout()}
-            />
-            <div className="contenido">
-              <Switch>
-                <Route path='/usuarios/consulta' component= {ConsultaUsuarios} />
-                <Route path='/alumnos/consulta' component= {ConsultaAlumnos} />
-              </Switch>
-            </div>
-          </Router>
-        );
+        if (UserStore.role !== 'Alumno')
+          return (
+            <Router>
+              <Navbar 
+                profile_name={UserStore.name} 
+                profile_photo={UserStore.photo} 
+                profile_lastName = {UserStore.lastName}
+                profile_role={UserStore.role}
+                activateNavbar = {() => this.changeNavbar()}
+              />
+              <SubmitButton
+                  styles={'right-icon top'}
+                  icon={<BiIcons.BiLogOut className="logout-icon"/>}
+                  text = {'Logout'}
+                  disabled = {false}
+                  onclick = {() => this.doLogout()}
+              />
+              <div className={this.state.navActivado ? 'contenido nav-activado' : 'contenido'}>
+                <Switch>
+                    <Route path='/usuarios/consulta' component= {ConsultaUsuarios} />
+                    <Route path='/alumnos/consulta' component= {ConsultaAlumnos} />
+                </Switch>
+              </div>
+            </Router>
+          );
+        else
+          return (
+            <Router>
+              <Navbar 
+                profile_name={UserStore.name} 
+                profile_photo={UserStore.photo} 
+                profile_lastName = {UserStore.lastName}
+                profile_role={UserStore.role}
+                activateNavbar = {() => this.changeNavbar()}
+              />
+              <SubmitButton
+                  styles={'right-icon top'}
+                  icon={<BiIcons.BiLogOut className="logout-icon"/>}
+                  text = {'Logout'}
+                  disabled = {false}
+                  onclick = {() => this.doLogout()}
+              />
+              <div className={this.state.navActivado ? 'contenido nav-activado' : 'contenido'}>
+                <Switch>
+                    <Route path='/:userId' component= {ConsultaCredencial} />
+                </Switch>
+              </div>
+            </Router>
+          );
       }
       return(
         <div className="app">

@@ -10,7 +10,6 @@ import { IconContext } from 'react-icons'
 
 import Accordion from '../Accordion/Accordion'
 
-
 function useOutsideClick(ref, callback, when) {
 
     const savedCallback = useRef(callback);
@@ -36,13 +35,14 @@ function useOutsideClick(ref, callback, when) {
 // Navbar and sidebar fuction
 function Navbar(props) {
     // Appear and disappear sidebar and menu behavior
-    const [sidebar, setSidebar] = useState(false)
-    const [menuBars, setMenuBars] = useState(false)
+    const [sidebar, setSidebar] = useState(true)
+    const [menuBars, setMenuBars] = useState(true)
     const [confMenu, setConfMenu] = useState(false)
     const showSideBar = () => {
-        setSidebar(!sidebar)
-        setMenuBars(!menuBars)
-        setConfMenu(false)
+        setSidebar(!sidebar);
+        setMenuBars(!menuBars);
+        setConfMenu(false);
+        props.activateNavbar()
     }
     const showConfMenu = () => setConfMenu(!confMenu)
     const hideConfMenu = () => setConfMenu(false)

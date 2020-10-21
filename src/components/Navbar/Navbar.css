@@ -13,6 +13,7 @@
     font-size: 2rem;
     background: none;
     transition: 350ms;
+    width: 100%;
 }
 
 .menu-bars.active {
