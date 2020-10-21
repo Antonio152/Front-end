@@ -10,6 +10,7 @@ import qr from './img/QR.png'
 
 export class Cedencial extends Component {
     render() {
+        if (this.props.alumno.usuario.nombre)
         return (
             <div className="credencial">
                 <div className="fila justificado">
@@ -121,6 +122,8 @@ export class Cedencial extends Component {
                 </div>
             </div>
         )
+        else
+            return('Cargando...')
     }
 }
 

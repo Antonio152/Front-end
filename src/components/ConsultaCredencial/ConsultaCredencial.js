@@ -28,6 +28,7 @@ export class ConsultaCredencial extends Component {
     }
 
     renderUserSelected () {
+        if (this.state.usuario.nombre)
         return(
             <div className="column">
                 <div className="fila">
@@ -83,6 +84,8 @@ export class ConsultaCredencial extends Component {
                 
             </div>
         )
+        else
+            return('Cargando...')
     }
 
     render() {

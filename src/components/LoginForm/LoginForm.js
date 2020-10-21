@@ -3,6 +3,8 @@ import InputField from '../GeneralUseComp/InputField';
 import SubmitButton from '../GeneralUseComp/SubmitButton';
 import UserStore from '../Stores/UserStore';
 
+import {Redirect} from 'react-router-dom'
+
 import './LoginForm.css'
 
 export class LoginForm extends Component {
@@ -12,7 +14,8 @@ export class LoginForm extends Component {
         this.state = {
             username: '', // this two props will be for the input field data
             password: '', 
-            buttonDisabled: false // When a user clicks log in button and the API checks if user exists
+            buttonDisabled: false, // When a user clicks log in button and the API checks if user exists
+            redirect: null
         }
     }
 
@@ -58,12 +61,12 @@ export class LoginForm extends Component {
                 })
             }); 
             let result = await res.json();
-            console.log(result)
             // If user is logged
             if (result && result.success) {
                 var apellidos = `${result.apellidoPaterno} ${result.apellidoMaterno ? result.apellidoMaterno : ''}`;
                 UserStore.loading = false;
                 UserStore.isLoggedIn = true;
+                UserStore.id = result._id;
                 UserStore.username = result.username;
                 UserStore.name = result.nombre;
                 UserStore.lastName = apellidos;
