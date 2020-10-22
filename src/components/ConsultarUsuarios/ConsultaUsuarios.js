@@ -35,7 +35,7 @@ export class ConsultaUsuarios extends Component {
         if (val.length > maxLenght)  //Max lenght
             return;
         this.setState({
-            [property]: val // property = username or password
+            [property]: val // Cambia el valor del estado que se le indique
         });
     }
 
@@ -224,14 +224,13 @@ export class ConsultaUsuarios extends Component {
 
     // Renderizado del módulo
     render() {
-        var concModulos;
         return (
             <div className="modulo">
                 <div className="fila justificado resize-columna">
                     <div className="contenedor blanco full_width mh_img">
                         <img src={imgBusqueda} alt="" className="img_contenedor_principal"></img>
                         <div className="contenidoMod">
-                            <h1>Buscar usuario por...</h1><br/>
+                            <h1 className="title">Buscar usuario por...</h1><br/>
                             {/* Filtro de búsqueda */}
                             <SelectField
                                 options={{
@@ -263,29 +262,36 @@ export class ConsultaUsuarios extends Component {
                 <div className="fila">
                     <div className="contenedor blanco full_width relleno">
                         <div className="contenidoMod">
-                            <h1>Usuarios</h1>
+                            <h1 className="title">Usuarios</h1>
                             <p className="texto"><BiIcons.BiHelpCircle/>  Para conocer más detalles del usuario, haga click sobre él.</p>
                             { !this.state.userQry[0] ? <span className="texto_mediano"> Usuarios no encontrados </span> : 
                             <table className="tabla">
                                 <tbody>
                                     <tr>
-                                        <th>Nombre completo</th>
+                                        <th className="th-nombre">Nombre completo</th>
                                         <th className="rol">Rol</th>
                                         <th>Módulos con acceso</th>
                                         <th className="activo">Activo</th>
                                     </tr>
                                     {/* Carga los datos de los alumnos */}
                                     {this.state.userQry.filter(usuario => usuario.rol[0].nombre !== 'Alumno').map((usuario, usIndex) => {
-                                        concModulos='';
                                         return(
                                         <tr key = {usIndex} onClick={() => this.setState({userSelected:usuario})}>
                                             <td>{`${usuario.nombre} ${usuario.aPaterno} ${usuario.aMaterno} `}</td>
                                             <td>{usuario.rol[0].nombre}</td>
                                             <td className="modulos">
-                                                {usuario.rol[0].modulos.forEach(modulo => {
-                                                    concModulos += `${modulo} `;
+                                                {/* Imprime los datos de cada uno de los módulos que tiene acceso */}
+                                                {usuario.rol[0].modulos.map(modulo => {
+                                                    return(
+                                                        <div className="fila">
+                                                        <p><b>{modulo.nombre}</b>:  
+                                                            {modulo.permisos.map((permiso, perIndex) => {
+                                                                return(<>{`${perIndex === 0 ? ' ' : ', '} ${permiso} ${modulo.nombre.toLowerCase()  }`}</>)
+                                                            })}
+                                                        </p>
+                                                        </div>
+                                                    )
                                                 })}
-                                                {concModulos}
                                             </td> 
                                             <td>{usuario.published ? 'Sí' : 'No'}</td>
                                         </tr>

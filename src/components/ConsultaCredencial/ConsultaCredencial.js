@@ -16,6 +16,7 @@ export class ConsultaCredencial extends Component {
         direccion: {}
     }
 
+    //Obtiene el usuario el id
     async componentDidMount() {
         const res = await axios.get('http://localhost:4000/api/users/' + this.props.match.params.userId);
         this.setState({ 
@@ -26,7 +27,7 @@ export class ConsultaCredencial extends Component {
             direccion: res.data.direccion[0]
         })
     }
-
+    //Renderiza el usuario cargado con el id
     renderUserSelected () {
         if (this.state.usuario.nombre)
         return(

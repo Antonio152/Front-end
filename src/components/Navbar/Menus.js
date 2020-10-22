@@ -1,7 +1,3 @@
-import React from 'react'
-import * as FaIcons from 'react-icons/fa'; // This way you import all Font Awesome Icons
-import * as IoIcons from 'react-icons/io';
-
 // Data for the sidebar
 export const Menus = [
     {

@@ -281,7 +281,7 @@ export class ConsultaAlumnos extends Component {
                     <div className="contenedor blanco full_width mh_img">
                         <img src={imgBusqueda} alt="" className="img_contenedor_principal"></img>
                         <div className="contenidoMod">
-                            <h1>Buscar alumno por...</h1><br/>
+                            <h1 className="title">Buscar alumno por...</h1><br/>
                             {/* Filtro de búsqueda */}
                             <SelectField
                                 options={{
@@ -313,7 +313,7 @@ export class ConsultaAlumnos extends Component {
                 <div className="fila">
                     <div className="contenedor blanco full_width relleno">
                         <div className="contenidoMod">
-                            <h1>Usuarios</h1>
+                            <h1 className="title">Usuarios</h1>
                             <p className="texto"><BiIcons.BiHelpCircle/>  Para conocer más detalles del usuario, haga click sobre él.</p>
                             { !this.state.userQry[0] ? <><br/><br/><span className="texto_mediano"> Usuarios no encontrados </span></> : 
                             <table className="tabla">

@@ -178,7 +178,7 @@ p.nombre-inst{
 .periodo{
     height: 57px;
 }
-
+/* Línea vertical de la credencial */
 .linea-vertical{
     background: rgb(180, 180, 180);
     height: 100%;

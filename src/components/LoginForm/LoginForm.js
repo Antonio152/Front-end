@@ -3,8 +3,6 @@ import InputField from '../GeneralUseComp/InputField';
 import SubmitButton from '../GeneralUseComp/SubmitButton';
 import UserStore from '../Stores/UserStore';
 
-import {Redirect} from 'react-router-dom'
-
 import './LoginForm.css'
 
 export class LoginForm extends Component {
