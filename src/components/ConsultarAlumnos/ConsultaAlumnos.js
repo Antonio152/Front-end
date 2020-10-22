@@ -7,6 +7,7 @@ import SubmitButton from '../GeneralUseComp/SubmitButton'
 import InputField from '../GeneralUseComp/InputField'
 import * as BiIcons from 'react-icons/bi'
 import * as AiIcons from 'react-icons/ai'
+import UserStore from '../Stores/UserStore'
 
 export class ConsultaAlumnos extends Component {
 
@@ -21,15 +22,21 @@ export class ConsultaAlumnos extends Component {
         aMaterno: '',
         matricula: '',
         carrera: 'Ingeniería en Software',
-        estado: 'Activo'
+        estado: 'Activo',
+        permisos: []
     }
-
+    // Obtiene los usuarios del servidor
     getUsuarios = async () => {
         const res = await axios.get('http://localhost:4000/api/users');
         this.setState({
             usuarios: res.data,
             userQry: res.data
         });
+    }
+    // Obtiene los modulos del servidor
+    getModulos = async () => {
+        const res = await axios.get(`http://localhost:4000/api/users/${UserStore.id}`);
+        this.setState({permisos: res.data.rol[0].modulos[1].permisos});
     }
 
     // Estado cambia con inputs
@@ -163,7 +170,7 @@ export class ConsultaAlumnos extends Component {
         var usuarioSeleccionado =[]
         if (this.state.consulta === 'Por nombre')
                 this.state.usuarios.forEach(usuario => {
-                    if (usuario.nombre.includes(this.state.nombre) || usuario.nombre.includes(this.state.nombre) !== '')
+                    if (usuario.nombre.includes(this.state.nombre))
                         usuarioSeleccionado.push(usuario); 
                 });
         if (this.state.consulta === 'Por apellidos')
@@ -203,6 +210,7 @@ export class ConsultaAlumnos extends Component {
 
     componentDidMount() {
         this.getUsuarios();
+        this.getModulos();
     }
 
     // Renderiza los datos del usuario seleccionado
@@ -216,9 +224,20 @@ export class ConsultaAlumnos extends Component {
                                 <img className="foto_usuario" alt="" src={`data:image/jpg;base64,${this.state.userSelected.foto}`}/>
                             </div>
                             <div className="botones">
-                                <SubmitButton icon={<BiIcons.BiTrash/>} styles="fullWidth no_padding no_margin boton consulta btn-blanco" text="Eliminar"/>
-                                <SubmitButton icon={<BiIcons.BiPencil/>} styles="fullWidth no_padding no_margin boton btn-blanco" text="Editar   "/>
-                                <SubmitButton icon={<AiIcons.AiOutlineIdcard/>} styles="fullWidth no_padding no_margin boton btn-blanco padding-top7" text="Credencial"/>
+                                <SubmitButton 
+                                    icon={<BiIcons.BiTrash/>} 
+                                    styles="fullWidth no_padding no_margin boton consulta btn-blanco" 
+                                    text="Eliminar"
+                                    disabled={this.state.permisos.includes('Eliminar') ? false : true}/>
+                                <SubmitButton 
+                                    icon={<BiIcons.BiPencil/>} 
+                                    styles="fullWidth no_padding no_margin boton btn-blanco" 
+                                    text="Editar   "
+                                    disabled={this.state.permisos.includes('Modificar') ? false : true}/>
+                                <SubmitButton 
+                                    icon={<AiIcons.AiOutlineIdcard/>} 
+                                    styles="fullWidth no_padding no_margin boton btn-blanco padding-top7" 
+                                    text="Credencial"/>
                             </div>
                         </div>
                         <div className="columns">
@@ -313,8 +332,18 @@ export class ConsultaAlumnos extends Component {
                 <div className="fila">
                     <div className="contenedor blanco full_width relleno">
                         <div className="contenidoMod">
-                            <h1 className="title">Usuarios</h1>
-                            <p className="texto"><BiIcons.BiHelpCircle/>  Para conocer más detalles del usuario, haga click sobre él.</p>
+                            <div className="fila justificado">
+                                <div className="columns">
+                                    <h1 className="title">Usuarios</h1>
+                                    <p className="texto"><BiIcons.BiHelpCircle/>  Para conocer más detalles del usuario, haga click sobre él. De ser necesario,</p><p> seleccione el botón a la derecha para generar las credenciales de todos los alumnos de la tabla.</p>
+                                </div>
+                                <div className="columns">
+                                    <SubmitButton
+                                    styles='btn-blanco large-text'
+                                    text='Generar credenciales'/>
+                                </div>
+                            </div>
+                            
                             { !this.state.userQry[0] ? <><br/><br/><span className="texto_mediano"> Usuarios no encontrados </span></> : 
                             <table className="tabla">
                                 <tbody>

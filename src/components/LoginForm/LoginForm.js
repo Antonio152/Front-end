@@ -71,9 +71,6 @@ export class LoginForm extends Component {
                 UserStore.role = result.role;
                 UserStore.photo = result.foto;
                 UserStore.email = result.contacto[0].email;
-                result.modulos.forEach(module => {
-                  UserStore.modules.push(module)
-                });
             }
             else if (result && result.success === false) {
                 this.resetForm();

@@ -6,6 +6,7 @@ import SelectField from '../GeneralUseComp/SelectField'
 import InputField from '../GeneralUseComp/InputField'
 import SubmitButton from '../GeneralUseComp/SubmitButton'
 import * as BiIcons from 'react-icons/bi'
+import UserStore from '../Stores/UserStore'
 
 export class ConsultaUsuarios extends Component {
     // Estado de la clase
@@ -18,7 +19,8 @@ export class ConsultaUsuarios extends Component {
         aPaterno: '',
         aMaterno: '',
         rol: 'Super administrador',
-        estado: 'Activo'
+        estado: 'Activo',
+        permisos: []
     }
     // Obtiene los usuarios del servidor
     getUsuarios = async () => {
@@ -27,6 +29,11 @@ export class ConsultaUsuarios extends Component {
             usuarios: res.data,
             userQry: res.data
         });
+    }
+    // Obtiene los modulos del servidor
+    getModulos = async () => {
+        const res = await axios.get(`http://localhost:4000/api/users/${UserStore.id}`);
+        this.setState({permisos: res.data.rol[0].modulos[0].permisos});
     }
 
     // Estado cambia con inputs
@@ -132,7 +139,7 @@ export class ConsultaUsuarios extends Component {
         var usuarioSeleccionado =[]
         if (this.state.consulta === 'Por nombre')
                 this.state.usuarios.forEach(usuario => {
-                    if (usuario.nombre.includes(this.state.nombre) || usuario.nombre.includes(this.state.nombre) !== '')
+                    if (usuario.nombre.includes(this.state.nombre))
                         usuarioSeleccionado.push(usuario); 
                 });
         if (this.state.consulta === 'Por apellidos')
@@ -166,6 +173,7 @@ export class ConsultaUsuarios extends Component {
 
     componentDidMount() {
         this.getUsuarios();
+        this.getModulos();
     }
 
     // Renderiza los datos del usuario seleccionado
@@ -179,8 +187,16 @@ export class ConsultaUsuarios extends Component {
                                 <img className="foto_usuario" alt="" src={`data:image/jpg;base64,${this.state.userSelected.foto}`}/>
                             </div>
                             <div className="botones">
-                                <SubmitButton icon={<BiIcons.BiTrash/>} styles="fullWidth no_padding no_margin boton consulta btn-blanco" text="Eliminar"/>
-                                <SubmitButton icon={<BiIcons.BiPencil/>} styles="fullWidth no_padding no_margin boton btn-blanco" text="Editar   "/>
+                                <SubmitButton 
+                                    icon={<BiIcons.BiTrash/>} 
+                                    styles={'fullWidth no_padding no_margin boton consulta btn-blanco'}
+                                    text="Eliminar"
+                                    disabled={this.state.permisos.includes('Eliminar') ? false : true}/>
+                                <SubmitButton 
+                                    icon={<BiIcons.BiPencil/>} 
+                                    styles="fullWidth no_padding no_margin boton btn-blanco" 
+                                    text="Editar   "
+                                    disabled={this.state.permisos.includes('Modificar') ? false : true}/>
                             </div>
                         </div>
                         <div className="columns">
@@ -281,12 +297,12 @@ export class ConsultaUsuarios extends Component {
                                             <td>{usuario.rol[0].nombre}</td>
                                             <td className="modulos">
                                                 {/* Imprime los datos de cada uno de los módulos que tiene acceso */}
-                                                {usuario.rol[0].modulos.map(modulo => {
+                                                {usuario.rol[0].modulos.map((modulo, modIndex) => {
                                                     return(
-                                                        <div className="fila">
+                                                        <div className="fila" key={modIndex}>
                                                         <p><b>{modulo.nombre}</b>:  
                                                             {modulo.permisos.map((permiso, perIndex) => {
-                                                                return(<>{`${perIndex === 0 ? ' ' : ', '} ${permiso} ${modulo.nombre.toLowerCase()  }`}</>)
+                                                                return(<span key={perIndex} style={{margin:0}}>{`${perIndex === 0 ? ' ' : ', '} ${permiso} ${modulo.nombre.toLowerCase()  }`}</span>)
                                                             })}
                                                         </p>
                                                         </div>

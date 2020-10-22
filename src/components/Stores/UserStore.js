@@ -11,8 +11,7 @@ export class UserStore {
             lastName: '',
             role: '',
             photo: '',
-            email: '',
-            modules: [{ type: String }]
+            email: ''
         })
     }
 }

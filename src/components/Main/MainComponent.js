@@ -5,6 +5,7 @@ import * as AiIcons from 'react-icons/ai';
 import * as FaIcons from 'react-icons/fa';
 import ContenedoresMain from './ContenedoresMain'
 import './MainComponent.css'
+import UserStore from '../Stores/UserStore'
 
 import { observer } from 'mobx-react'
 
@@ -21,11 +22,8 @@ export class MainComponent extends Component {
     }
 
     componentDidMount() {
-        // const res = await axios.get('http://localhost:4000/api/users/' + this.props.match.params.userId);
-        // if (usuario.contacto[0].email)
-        // usuario = res.data;
         try {
-             axios.get('http://localhost:4000/api/users/' + this.props.match.params.userId)
+             axios.get('http://localhost:4000/api/users/' + UserStore.id)
                 .then(res => {
                     const usuario = res.data;
                     this.setState({ usuario:usuario });
@@ -78,7 +76,7 @@ export class MainComponent extends Component {
                                 },{
                                     nombre:'Consultas',
                                     desc: 'Ver, editar y eliminar usuarios.',
-                                    path: '/usuarios/consulta'
+                                    path: '/usuarios/consultar'
                                 }]}}/>
                             
                             <div className="fila subitulo-main">
@@ -97,7 +95,7 @@ export class MainComponent extends Component {
                                     nombre:'Consultas',
                                     desc: 'Ver, editar y eliminar alumnos.',
                                     icono:  <BiIcons.BiGlassesAlt/>,
-                                    path: '/alumnos/consulta'
+                                    path: '/alumnos/consultar'
                                 }]}}/>
                         </div>
                     </div>

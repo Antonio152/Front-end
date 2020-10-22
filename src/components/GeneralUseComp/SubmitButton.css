@@ -113,6 +113,11 @@
     background-color: rgb(235, 235, 235);
 }
 
+.btn-blanco:disabled{
+    background: white;
+    color: rgb(206, 206, 206);
+}
+
 .margin-top0{
     margin-top: 0;
 }
@@ -143,4 +148,14 @@
 
 .left-padding{
     padding-left: 16px;
+}
+
+.disabled-blanco{
+    color: rgb(206, 206, 206);
+}
+
+.large-text{
+    max-width: 130px;
+    padding-left:20px;
+    margin:0;
 }

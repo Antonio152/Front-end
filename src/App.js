@@ -87,9 +87,6 @@ class App extends Component {
         UserStore.role = result.role;
         UserStore.photo = result.foto;
         UserStore.email = result.contacto[0].email;
-        result.modulos.forEach(module => {
-          UserStore.modules.push(module)
-        });
       }
       else {
         UserStore.loading = false;
@@ -134,14 +131,11 @@ class App extends Component {
               <div className={this.state.navActivado ? 'contenido nav-activado' : 'contenido'}>
                 <Switch>
                     <Route exact path="/auth">
-                      <Redirect to={`/${UserStore.id}`} />
+                      <Redirect to='/' />
                     </Route>
-                    <Route exact path="/">
-                      <Redirect to={`/${UserStore.id}`} />
-                    </Route>
-                    <Route path='/usuarios/consulta' component= {ConsultaUsuarios} />
-                    <Route path='/alumnos/consulta' component= {ConsultaAlumnos} />
-                    <Route path='/:userId' component= {MainComponent} />
+                    <Route path='/usuarios/consultar' component= {ConsultaUsuarios} />
+                    <Route path='/alumnos/consultar' component= {ConsultaAlumnos} />
+                    <Route path='/' component= {MainComponent} />
                 </Switch>
               </div>
             </Router>
@@ -167,12 +161,9 @@ class App extends Component {
               <div className={this.state.navActivado ? 'contenido nav-activado' : 'contenido'}>
                 <Switch>
                     <Route exact path="/auth">
-                        <Redirect to={`${UserStore.id}`} />
+                        <Redirect to='/' />
                     </Route>
-                    <Route exact path="/">
-                      <Redirect to={`/${UserStore.id}`} />
-                    </Route>
-                    <Route path='/:userId' component= {ConsultaCredencial} />
+                    <Route path='/' component= {ConsultaCredencial} />
                 </Switch>
               </div>
             </Router>
@@ -183,9 +174,6 @@ class App extends Component {
           <div className="container">
             <Router>
               <Switch>
-                <Route exact path={`/${UserStore.id}`}>
-                    <Redirect to="/auth" />
-                </Route>
                 <Route exact path="/">
                     <Redirect to="/auth" />
                 </Route>

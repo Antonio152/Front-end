@@ -13,7 +13,7 @@ export const Menus = [
             {
                 name: 'Consultar usuarios',
                 cName: 'inside-text',
-                path: '/usuarios/consulta',
+                path: '/usuarios/consultar',
             }
             // {
             //     name: 'Modificar usuarios',
@@ -39,7 +39,7 @@ export const Menus = [
             {
                 name: 'Consultar alumnos',
                 cName: 'inside-text',
-                path: '/alumnos/consulta',
+                path: '/alumnos/consultar',
             }
             // {
             //     name: 'Modificar alumnos',

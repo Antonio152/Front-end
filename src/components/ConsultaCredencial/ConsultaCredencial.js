@@ -5,6 +5,7 @@ import './ConsultaCredencial.css'
 import Credencial from './Cedencial'
 import SubmitButton from '../GeneralUseComp/SubmitButton'
 import * as AiIcons from 'react-icons/ai'
+import UserStore from '../Stores/UserStore'
 
 export class ConsultaCredencial extends Component {
 
@@ -18,7 +19,7 @@ export class ConsultaCredencial extends Component {
 
     //Obtiene el usuario el id
     async componentDidMount() {
-        const res = await axios.get('http://localhost:4000/api/users/' + this.props.match.params.userId);
+        const res = await axios.get('http://localhost:4000/api/users/' + UserStore.id);
         this.setState({ 
             usuario: res.data ,
             rol: res.data.rol[0],

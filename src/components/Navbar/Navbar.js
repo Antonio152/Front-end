@@ -1,14 +1,15 @@
 //snippet rfce
 import React, { useState, useEffect, useRef } from 'react';
+import axios from 'axios'
 
 import * as FaIcons from 'react-icons/fa'; // This way you import all Font Awesome Icons
 import * as AiIcons from 'react-icons/ai';
 import { Link } from 'react-router-dom';
-import { Menus } from './Menus'
 import './Navbar.css'
 import { IconContext } from 'react-icons'
 
 import Accordion from '../Accordion/Accordion'
+import UserStore from '../Stores/UserStore'
 
 function useOutsideClick(ref, callback, when) {
 
@@ -34,6 +35,9 @@ function useOutsideClick(ref, callback, when) {
 
 // Navbar and sidebar fuction
 function Navbar(props) {
+    // var modules = [];
+    const [modules, setModules] = useState([]);
+
     // Appear and disappear sidebar and menu behavior
     const [sidebar, setSidebar] = useState(true)
     const [menuBars, setMenuBars] = useState(true)
@@ -47,18 +51,22 @@ function Navbar(props) {
     const showConfMenu = () => setConfMenu(!confMenu)
     const hideConfMenu = () => setConfMenu(false)
 
-    // Travels inside the menus as submenus an concatenate them into a string
-    const subMenuToString = (array) => {
-        var nameSubMenus = '';
-        array.forEach(subMenu => { nameSubMenus += `${subMenu.name}, ` })
-        return nameSubMenus;
-    }
 
     const confMenuRef = useRef();
 
     // Close conf menu by clicking outside
     // (ref: the element, calback: affected dom element, when: boolean when happen?)
     useOutsideClick(confMenuRef, hideConfMenu, confMenu)
+
+    useEffect(() => {
+        async function getUser() {
+            const uri = `http://localhost:4000/api/users/${UserStore.id}`;
+            const res = await axios.get(uri);
+            if (res.data.rol[0].modulos)
+                setModules({modules: res.data.rol[0].modulos});
+        }
+        getUser();
+    }, []);
 
     return (
         <div>
@@ -87,20 +95,27 @@ function Navbar(props) {
                         
                         {/* Map all the menus into the Menus JSarray file */}
                         {/* Map every submenu inside the menus array too */}
-                        { Menus.map((menu, index) => {
-                            return (
+                        {modules.modules !== undefined ? 
+                        modules.modules.map((menu, index) => {
+                            var concPermisos = '';
+                            menu.permisos.forEach((permiso, perIndex) => {
+                                concPermisos += `${perIndex === 0 ? '': ', '} ${permiso} ${menu.nombre.toLowerCase().replace('credenciales','')}`
+                            });
+                            return(
                                 <Accordion
                                 key={index}
-                                title={ menu.title }
-                                icon={ menu.icon }
-                                subMenus={ subMenuToString(menu.subMenus) }
+                                title={ menu.nombre }
+                                subMenus={concPermisos}
                                 content={
-                                    menu.subMenus.map((subMenu, smIndex) => {
+                                    menu.permisos
+                                    .filter(subMenu => subMenu !== 'Eliminar')
+                                    .filter(subMenu => subMenu !== 'Modificar')
+                                    .map((subMenu, smIndex) => {
                                         return(
-                                            <li key={ smIndex } className={ subMenu.cName }>
-                                                <Link className="link" to={ subMenu.path }>
+                                            <li key={ smIndex } className='inside-text'>
+                                                <Link className="link" to={ `/${menu.nombre.toLowerCase()}/${subMenu.toLowerCase().replace(' ','-')}` }>
                                                     <AiIcons.AiOutlineCaretRight/>
-                                                    <span>{ subMenu.name }</span>
+                                                    <span>{ `${subMenu} ${menu.nombre.toLowerCase()!=='credenciales' ? menu.nombre.toLowerCase() : ''}` }</span>
                                                 </Link>
                                             </li>
                                         )
@@ -109,7 +124,9 @@ function Navbar(props) {
                                 >
                                 </Accordion>
                             )
-                        })}
+                        })
+                        : 'Cargando...'}
+                        
                     </ul>
                     <div className="profile-info-section">
                         <div className="profile-img" id="profile_img">
@@ -146,4 +163,6 @@ function Navbar(props) {
     )
 }
 
+
 export default Navbar
+
