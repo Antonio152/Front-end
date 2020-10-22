@@ -7,6 +7,7 @@ import sep from './img/SEP.png'
 import firma from './img/FIRMA.png'
 import periodo from './img/PERIODO.png'
 import qr from './img/QR.png'
+import Loader from '../GeneralUseComp/Loader'
 
 export class Cedencial extends Component {
     render() {
@@ -123,7 +124,11 @@ export class Cedencial extends Component {
             </div>
         )
         else
-            return('Cargando...')
+            return(
+                <div>
+                    <Loader/>{`    Cargando...`} 
+                </div>
+            )
     }
 }
 

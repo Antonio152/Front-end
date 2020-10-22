@@ -6,6 +6,7 @@ import Credencial from './Cedencial'
 import SubmitButton from '../GeneralUseComp/SubmitButton'
 import * as AiIcons from 'react-icons/ai'
 import UserStore from '../Stores/UserStore'
+import Loader from '../GeneralUseComp/Loader'
 
 export class ConsultaCredencial extends Component {
 
@@ -87,7 +88,11 @@ export class ConsultaCredencial extends Component {
             </div>
         )
         else
-            return('Cargando...')
+            return(
+                <div>
+                    <Loader/>{`    Cargando...`} 
+                </div>
+            )
     }
 
     render() {

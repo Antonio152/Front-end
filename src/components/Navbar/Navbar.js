@@ -11,6 +11,8 @@ import { IconContext } from 'react-icons'
 import Accordion from '../Accordion/Accordion'
 import UserStore from '../Stores/UserStore'
 
+import Loader from '../GeneralUseComp/Loader'
+
 function useOutsideClick(ref, callback, when) {
 
     const savedCallback = useRef(callback);
@@ -125,7 +127,11 @@ function Navbar(props) {
                                 </Accordion>
                             )
                         })
-                        : 'Cargando...'}
+                        : 
+                            <div>
+                                <Loader/>{`    Cargando...`} 
+                            </div>
+                        }
                         
                     </ul>
                     <div className="profile-info-section">
