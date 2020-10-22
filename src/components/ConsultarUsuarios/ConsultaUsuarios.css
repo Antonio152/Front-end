@@ -79,6 +79,11 @@
 
 .relleno{ flex: 1 1 auto; }
 
+.altura-ajustable{
+    /* max-height: calc(100vh - 390px); */
+    overflow-y: auto;
+}
+
 .tabla{
     border-collapse: collapse;
     margin-top: 15px;
@@ -87,33 +92,44 @@
 
 .tabla th, .tabla td {
     padding: 5px;
-    border: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+}
+
+.tabla td{
+    padding: 15px 15px;
+    text-align: center;
 }
 
 .tabla th {
-    background-color: #456F97;
-    font-weight: 400;
-    color: white;
+    background-color: white;
+    font-weight: 600;
+    color:  #051E34;
     cursor: auto;
     width: 200px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .tabla .rol {
-    min-width: 170px;
+    min-width: 190px;
+    width: 25%;
 }
 .tabla .matricula {
     min-width: 200px;
+    width: 25%;
 }
 
 .tabla .activo {
-    min-width: 50px;
+    min-width: 150px;
+    width: 25%;
 }
 
 .tabla .th-nombre{
     min-width: 200px;
+    width: 25%;
 }
 
-.tabla tr:nth-child(even){ background-color: #f2f2f2; }
+.tabla tr:nth-child(even){ background-color: #fafafa; }
 .tabla tr:hover {
     background-color: #ddd;
     cursor: pointer;
@@ -215,6 +231,10 @@
 .max-1357px{
     max-width: 1357px;
 }
+.resize-columna{
+    display: flex;
+    flex-direction: row;
+}
 
 @media only screen and (max-width: 1538px){
     .img_contenedor_principal{
@@ -222,8 +242,51 @@
     }
 }
 
-@media only screen and (max-width: 737px){
+
+@media only screen and (max-width: 1397px){
+    .resize-title-alu{
+        font-size: 24px;
+    }
+}
+@media only screen and (max-width: 1149px){
+    .resize-title{
+        font-size: 24px;
+    }
+
+    .tabla .th-nombre, .tabla .rol{
+        min-width: 100px;
+        width: fit-content;
+    }
+    .tabla .activo{
+        min-width: 75px;
+        width: fit-content;
+    }
+}
+
+@media only screen and (max-width: 1115px){
+    .resize-title{
+        font-size: 32px;
+    }
+    .resize-title-alu{
+        font-size: 32px;
+    }
+
+    .datos_usuario{
+        width: 100%;
+    }
+
     .resize-columna{
         flex-direction: column;
     }
+
+    .contenedor{
+        margin-right: 0px;
+    }
+    .img_contenedor_principal{
+        display: block;
+    }
+
+}
+
+@media only screen and (max-width: 737px){
 }

@@ -75,18 +75,21 @@ export class ConsultaUsuarios extends Component {
         if (this.state.consulta === 'Por apellidos') {
             return(
                 <div className="fila justificado">
-                    <InputField
-                        type='text'
-                        placeholder='Apellido paterno'
-                        value={this.state.aPaterno}
-                        name='aPaterno'
-                        onChange={ (val) => this.setInputValue('aPaterno',val, 50) }/>
-                    <InputField
-                        type='text'
-                        placeholder='Apellido Materno'
-                        value={this.state.aMaterno}
-                        name='aMaterno'
-                        onChange={ (val) => this.setInputValue('aMaterno',val, 50) }/>
+                    <div className="columns">
+                        <InputField
+                            type='text'
+                            placeholder='Apellido paterno'
+                            value={this.state.aPaterno}
+                            name='aPaterno'
+                            onChange={ (val) => this.setInputValue('aPaterno',val, 50) }/>
+                        <InputField
+                            type='text'
+                            placeholder='Apellido Materno'
+                            value={this.state.aMaterno}
+                            name='aMaterno'
+                            onChange={ (val) => this.setInputValue('aMaterno',val, 50) }/>
+                    </div>
+                    
                     <SubmitButton 
                         styles=' btn-blanco no_margin no_padding width-auto size18 input-size'
                         icon={<BiIcons.BiSearch/>}
@@ -242,11 +245,11 @@ export class ConsultaUsuarios extends Component {
     render() {
         return (
             <div className="modulo">
-                <div className="fila justificado resize-columna">
+                <div className="resize-columna justificado ">
                     <div className="contenedor blanco full_width mh_img">
                         <img src={imgBusqueda} alt="" className="img_contenedor_principal"></img>
                         <div className="contenidoMod">
-                            <h1 className="title">Buscar usuario por...</h1><br/>
+                            <h1 className="resize-title title">Buscar usuario por...</h1><br/>
                             {/* Filtro de búsqueda */}
                             <SelectField
                                 options={{
@@ -275,8 +278,8 @@ export class ConsultaUsuarios extends Component {
                     </div>
                 </div>
 
-                <div className="fila">
-                    <div className="contenedor blanco full_width relleno">
+                <div className="fila ">
+                    <div className="contenedor blanco full_width relleno ">
                         <div className="contenidoMod">
                             <h1 className="title">Usuarios</h1>
                             <p className="texto"><BiIcons.BiHelpCircle/>  Para conocer más detalles del usuario, haga click sobre él.</p>
@@ -299,10 +302,10 @@ export class ConsultaUsuarios extends Component {
                                                 {/* Imprime los datos de cada uno de los módulos que tiene acceso */}
                                                 {usuario.rol[0].modulos.map((modulo, modIndex) => {
                                                     return(
-                                                        <div className="fila" key={modIndex}>
-                                                        <p><b>{modulo.nombre}</b>:  
+                                                        <div className="fila" key={modIndex} styles={{textAlign:'center'}}>
+                                                        <p><span style={{fontWeight:'500'}}>{modulo.nombre}</span>:  
                                                             {modulo.permisos.map((permiso, perIndex) => {
-                                                                return(<span key={perIndex} style={{margin:0}}>{`${perIndex === 0 ? ' ' : ', '} ${permiso} ${modulo.nombre.toLowerCase()  }`}</span>)
+                                                                return(<span key={perIndex} style={{margin:0, paddingLeft:'1px'}}>{`${perIndex === 0 ? ' ' : ', '} ${permiso}`}</span>)
                                                             })}
                                                         </p>
                                                         </div>

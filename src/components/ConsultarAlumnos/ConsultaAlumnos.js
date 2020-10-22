@@ -296,11 +296,11 @@ export class ConsultaAlumnos extends Component {
     render() {
         return (
             <div className="modulo max-1357px">
-                <div className="fila justificado resize-columna">
+                <div className="resize-columna justificado ">
                     <div className="contenedor blanco full_width mh_img">
                         <img src={imgBusqueda} alt="" className="img_contenedor_principal"></img>
                         <div className="contenidoMod">
-                            <h1 className="title">Buscar alumno por...</h1><br/>
+                            <h1 className="resize-title-alu title">Buscar alumno por...</h1><br/>
                             {/* Filtro de búsqueda */}
                             <SelectField
                                 options={{
