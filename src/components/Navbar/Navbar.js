@@ -80,9 +80,9 @@ function Navbar(props) {
                 {/* Define if is active or not */}
                 <nav className={sidebar ? 'nav-menu active': 'nav-menu'}>
                     <ul className="nav-menu-items" >
-                        <li className="navbar-toggle" onClick={ showSideBar }>
-                            <Link to="#" className="menu-bars">
-                                {/* <AiIcons.AiOutlineClose /> */}
+                        <li className="navbar-toggle" >
+                            <Link to="/" className="menu-bars">
+                                Logotipo
                             </Link>
                          </li>
                          {/* Configuration button */}
