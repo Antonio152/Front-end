@@ -286,7 +286,7 @@ export class ConsultaAlumnos extends Component {
         }
         return(
             <div className="centrado">
-                <span className="text no-seleccionado">No ha seleccionado un usuario</span>
+                <span className="text no-seleccionado">No ha seleccionado un alumno</span>
             </div>
         )
     }
@@ -334,8 +334,8 @@ export class ConsultaAlumnos extends Component {
                         <div className="contenidoMod">
                             <div className="fila justificado">
                                 <div className="columns">
-                                    <h1 className="title">Usuarios</h1>
-                                    <p className="texto"><BiIcons.BiHelpCircle/>  Para conocer más detalles del usuario, haga click sobre él. De ser necesario,</p><p> seleccione el botón a la derecha para generar las credenciales de todos los alumnos de la tabla.</p>
+                                    <h1 className="title">Alumnos</h1>
+                                    <p className="texto"><BiIcons.BiHelpCircle/>  Para conocer más detalles del alumno, haga click sobre él. De ser necesario,</p><p> seleccione el botón a la derecha para generar las credenciales de todos los alumnos de la tabla.</p>
                                 </div>
                                 <div className="columns">
                                     <SubmitButton
@@ -344,7 +344,7 @@ export class ConsultaAlumnos extends Component {
                                 </div>
                             </div>
                             
-                            { !this.state.userQry[0] ? <><br/><br/><span className="texto_mediano"> Usuarios no encontrados </span></> : 
+                            { !this.state.userQry[0] ? <><br/><br/><span className="texto_mediano"> Alumnos no encontrados </span></> : 
                             <table className="tabla">
                                 <tbody>
                                     <tr>
