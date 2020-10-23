@@ -7,12 +7,15 @@ import ContenedoresMain from './ContenedoresMain'
 import './MainComponent.css'
 import UserStore from '../Stores/UserStore'
 
+import Loader from '../GeneralUseComp/Loader'
+
 import { observer } from 'mobx-react'
 
 export class MainComponent extends Component {
 
     state = {
-        usuario: {}
+        usuario: {},
+        concatDesc: ''
     }
 
     primeraPalabra(palabra){
@@ -32,6 +35,8 @@ export class MainComponent extends Component {
             console.log('Existió un error', error)
         }
     }
+
+    resetAccion = () => this.setState({accion : []})
 
     render() {
         if (this.state.usuario.nombre)
@@ -62,41 +67,40 @@ export class MainComponent extends Component {
                         <div className="caja-main-iz">
                             <p className="title titulo-main">Revisa nuestras funciones</p>
                             <br/>
-                            <div className="fila subitulo-main">
-                                <FaIcons.FaUser className="title-icon" />
-                                <p className="title subitulo-main">Usuarios</p>
-                            </div>                        
-                            <ContenedoresMain 
-                                nombre="Usuarios" 
-                                permisos={{
-                                accion:[{
-                                    nombre:'Altas',
-                                    desc: 'Dar de alta un usuario.',
-                                    path: '/usuarios/alta'
-                                },{
-                                    nombre:'Consultas',
-                                    desc: 'Ver, editar y eliminar usuarios.',
-                                    path: '/usuarios/consultar'
-                                }]}}/>
-                            
-                            <div className="fila subitulo-main">
-                                <FaIcons.FaGraduationCap className="title-icon"/>
-                                <p className="title subitulo-main">Alumnos</p>
-                            </div>
-                            <ContenedoresMain 
-                                nombre="Usuarios" 
-                                permisos={{
-                                accion:[{
-                                    nombre:'Altas',
-                                    desc: 'Dar de alta un alumno.',
-                                    icono:  <BiIcons.BiPencil/>,
-                                    path: '/usuarios/alta'
-                                },{
-                                    nombre:'Consultas',
-                                    desc: 'Ver, editar y eliminar alumnos.',
-                                    icono:  <BiIcons.BiGlassesAlt/>,
-                                    path: '/alumnos/consultar'
-                                }]}}/>
+                            {
+                                this.state.usuario.rol[0].modulos.map((modulo, modIndex) => {
+                                    // this.resetAccion();
+                                    var data = []
+                                    return(
+                                        <div key={modIndex}>
+                                            <div className="fila subitulo-main">
+                                                {modulo.nombre === 'Usuarios' ? <FaIcons.FaUser className="title-icon" /> :
+                                                modulo.nombre === 'Alumnos' ? <FaIcons.FaGraduationCap className="title-icon"/> :
+                                                <FaIcons.FaRegCreditCard className="title-icon" />}
+                                                
+                                                <p className="title subitulo-main">{modulo.nombre}</p>
+                                            </div>
+                                            {modulo.permisos
+                                                .filter(permiso => permiso !== 'Eliminar')
+                                                .filter(permiso => permiso !== 'Modificar')
+                                                .forEach( permiso => {
+                                                    data.push( {
+                                                        nombre: `${permiso === 'Crear' ? 'Altas' : permiso === 'Consultar' ? 'Consultar' : 'Modificar formato'}`,
+                                                        desc: 
+                                                        `${permiso === 'Crear' ? `Dar de alta ${modulo.nombre.toLowerCase()}.` : permiso === 'Consultar' ?
+                                                        `Ver, editar y eliminar ${modulo.nombre.toLowerCase()}.` : 'Modificar el formato predeterminado de las credenciales.'}`,
+                                                        path: `/${modulo.nombre.toLowerCase()}/${permiso.toLowerCase().replace(' ','-')}`
+                                                    })
+                                                })}
+                                            <ContenedoresMain 
+                                                key={modIndex}
+                                                nombre={modulo.nombre}
+                                                permisos={{accion: data}}
+                                            />
+                                        </div>
+                                    )
+                                })
+                            }
                         </div>
                     </div>
                 </div>
@@ -104,7 +108,9 @@ export class MainComponent extends Component {
                 
             )
         else
-            return('')
+            return(<div>
+                <Loader/>{`    Cargando...`} 
+            </div>)
     }
 }
 

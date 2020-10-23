@@ -31,7 +31,6 @@ body{
     /* height: calc(100vh - 80px); */
     padding: 20px;
     min-width: 445px;
-    overflow-x: auto;
     overflow-y: auto;
 }
 
