@@ -10,6 +10,12 @@ import InputField from '../GeneralUseComp/InputField'
 import UserStore from '../Stores/UserStore'
 
 export class AltaAlumnos extends Component {
-
+    render(){
+        return(
+            <div>
+                
+            </div>
+        )
+    }
 }
 export default AltaAlumnos

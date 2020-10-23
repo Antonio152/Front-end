@@ -150,11 +150,36 @@ class App extends Component {
                       <Redirect to='/' />
                     </Route>
                     <Route path='/' exact component= {MainComponent} />
-                    {/* {UserStore.Usuarios[0] === 'Crear' ? <Route path='/usuarios/crear' component= {AltaUsuarios} /> : <Redirect to='/' />} */}
-                    {UserStore.Usuarios[2] === 'Consultar' ? <Route path='/usuarios/consultar' component= {ConsultaUsuarios} /> : <Redirect to='/notFound' />}
-                    {UserStore.Alumnos[0] === 'Crear' ? <Route path='/alumnos/crear' component= {AltaAlumnos} /> : <Redirect to='/notFound' />}
-                    {UserStore.Alumnos[2] === 'Consultar' ? <Route path='/alumnos/consultar' component= {ConsultaAlumnos} /> : <Redirect to='/notFound' />}
-                    {/* {UserStore.Credenciales[0] === 'Modificar formato' ? <Route path='/credenciales/modificar-formato' component= {ModificarCredencial} /> : <Redirect to='/' />} */}
+                    {/* Para los usuarios con acceso a los datos de los usuarios */}
+                    {UserStore.Usuarios.map((permiso, perIndex) => {
+                      // console.log(permiso)
+                      if (permiso === 'Consultar')
+                        return(<Route key={perIndex} path='/usuarios/consultar' component= {ConsultaUsuarios} />)
+                      // if (permiso === 'Crear')
+                      //   return(<Route key={perIndex} path='/usuarios/crear' component= {AltaUsuarios} />)
+                      // else
+                      //   return(<Redirect key={perIndex} to='/notFound' />)
+                    })}
+
+                    {/* Para los usuarios con acceso a los datos de los alumnos  */}
+                    {UserStore.Alumnos.map((permiso, perIndex) => {
+                      // console.log(permiso)
+                      if (permiso === 'Consultar')
+                        return(<Route key={perIndex} path='/alumnos/consultar' component= {ConsultaAlumnos} />)
+                      if (permiso === 'Crear')
+                        return(<Route key={perIndex} path='/alumnos/crear' component= {AltaAlumnos} />)
+                      // else
+                      //   return(<Redirect key={perIndex} to='/notFound' />)
+                    })}
+
+                    {/* Para los usuarios con acceso a la modificación de credenciales  */}
+                    {UserStore.Credenciales.map((permiso, perIndex) => {
+                      // console.log(permiso)
+                      // if (permiso === 'Modificar formato')
+                      //   return(<Route key={perIndex} path='/credenciales/modificar-formato' component= {ModificarCredencial} />)
+                      // else
+                      //   return(<Redirect key={perIndex} to='/notFound' />)
+                    })}
                     <Route component={PaginaNoEncontrada} />
                 </Switch>
               </div>
