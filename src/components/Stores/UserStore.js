@@ -11,7 +11,10 @@ export class UserStore {
             lastName: '',
             role: '',
             photo: '',
-            email: ''
+            email: '',
+            Usuarios:[],
+            Alumnos: [],
+            Credenciales: []
         })
     }
 }

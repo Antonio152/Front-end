@@ -17,16 +17,16 @@ import Navbar from './components/Navbar/Navbar'
 import ConsultaUsuarios from './components/ConsultarUsuarios/ConsultaUsuarios'
 import ConsultaAlumnos from './components/ConsultarAlumnos/ConsultaAlumnos'
 import ConsultaCredencial from './components/ConsultaCredencial/ConsultaCredencial'
-import MainComponent from './components/Main/MainComponent';
+import MainComponent from './components/Main/MainComponent'
+import PaginaNoEncontrada from './components/PaginaNoEncontrada/PaginaNoEncontrada'
 
 
 import {Redirect} from 'react-router-dom'
 
-
 class App extends Component {
 
   state = {
-    navActivado: true
+    navActivado: true,
   }
 
   // For logging out
@@ -49,6 +49,9 @@ class App extends Component {
         UserStore.isLoggedIn = false;
         UserStore.username = '';
         UserStore.id = '';
+        UserStore.Usuarios = [];
+        UserStore.Alumnos = [];
+        UserStore.Credenciales = [];
       }
     } catch (error) {
       console.log(error);
@@ -87,6 +90,18 @@ class App extends Component {
         UserStore.role = result.role;
         UserStore.photo = result.foto;
         UserStore.email = result.contacto[0].email;
+        if(UserStore.role !== 'Alumno'){
+          if(result.modulos[0].permisos)
+            UserStore.Usuarios = result.modulos[0].permisos;
+          if(result.modulos[1].permisos)
+            UserStore.Alumnos = result.modulos[1].permisos;
+          if(result.modulos[2].permisos)
+            UserStore.Credenciales = result.modulos[2].permisos;
+        }
+        else {
+          if(result.modulos[0].permisos)
+            UserStore.Credenciales = result.modulos[0].permisos;
+        }
       }
       else {
         UserStore.loading = false;
@@ -109,7 +124,7 @@ class App extends Component {
       );
     }
     else {
-      if(UserStore.isLoggedIn && UserStore.id){
+      if(UserStore.isLoggedIn && UserStore.id && (UserStore.Usuarios[2] || UserStore.Credenciales[0])){
         if (UserStore.role !== 'Alumno')
           return (
             <Router>
@@ -133,9 +148,13 @@ class App extends Component {
                     <Route exact path="/auth">
                       <Redirect to='/' />
                     </Route>
-                    <Route path='/usuarios/consultar' component= {ConsultaUsuarios} />
-                    <Route path='/alumnos/consultar' component= {ConsultaAlumnos} />
-                    <Route path='/' component= {MainComponent} />
+                    {/* {UserStore.Usuarios[0] === 'Crear' ? <Route path='/usuarios/crear' component= {AltaUsuarios} /> : <Redirect to='/' />} */}
+                    {UserStore.Usuarios[2] === 'Consultar' ? <Route path='/usuarios/consultar' component= {ConsultaUsuarios} /> : <Redirect to='/' />}
+                    {/* {UserStore.Alumnos[0] === 'Crear' ? <Route path='/alumnos/crear' component= {AltaUsuarios} /> : <Redirect to='/' />} */}
+                    {UserStore.Alumnos[2] === 'Consultar' ? <Route path='/alumnos/consultar' component= {ConsultaAlumnos} /> : <Redirect to='/' />}
+                    {/* {UserStore.Credenciales[0] === 'Modificar formato' ? <Route path='/credenciales/modificar-formato' component= {ModificarCredencial} /> : <Redirect to='/' />} */}
+                    <Route path='/' exact component= {MainComponent} />
+                    <Route component={PaginaNoEncontrada} />
                 </Switch>
               </div>
             </Router>
@@ -163,7 +182,10 @@ class App extends Component {
                     <Route exact path="/auth">
                         <Redirect to='/' />
                     </Route>
-                    <Route path='/' component= {ConsultaCredencial} />
+                    {/* {UserStore.Usuarios[2] === 'Consultar' ? <Route path='/usuarios/consultar' component= {ConsultaUsuarios} /> : <Redirect to='/' />} */}
+                    <Route path='/' exact component= {MainComponent} />
+                    {UserStore.Credenciales[0] === 'Generar formato' ? <Route path='/credenciales/generar-formato' component= {ConsultaCredencial} /> : <Redirect to='/' />}
+                    <Route component={PaginaNoEncontrada} />
                 </Switch>
               </div>
             </Router>

@@ -71,6 +71,23 @@ export class LoginForm extends Component {
                 UserStore.role = result.role;
                 UserStore.photo = result.foto;
                 UserStore.email = result.contacto[0].email;
+
+                console.log(result)
+
+
+                if(UserStore.role !== 'Alumno'){
+                    if(result.modulos[0].permisos)
+                        UserStore.Usuarios = result.modulos[0].permisos;
+                    if(result.modulos[1].permisos)
+                        UserStore.Alumnos = result.modulos[1].permisos;
+                    if(result.modulos[2].permisos)
+                        UserStore.Credenciales = result.modulos[2].permisos;
+                }
+                else {
+                    if(result.modulos[0].permisos)
+                        UserStore.Credenciales = result.modulos[0].permisos;
+                }
+                
             }
             else if (result && result.success === false) {
                 this.resetForm();
