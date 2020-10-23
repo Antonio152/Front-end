@@ -23,6 +23,7 @@ import PaginaNoEncontrada from './components/PaginaNoEncontrada/PaginaNoEncontra
 
 
 import {Redirect} from 'react-router-dom'
+import Loader from './components/GeneralUseComp/Loader';
 
 class App extends Component {
 
@@ -45,11 +46,16 @@ class App extends Component {
 
       let result = await res.json();
 
-
+      // Regresa al estado original
       if (result && result.success) {
         UserStore.isLoggedIn = false;
         UserStore.username = '';
         UserStore.id = '';
+        UserStore.name = '';
+        UserStore.lastName = '';
+        UserStore.role = '';
+        UserStore.photo = '';
+        UserStore.email = '';
         UserStore.Usuarios = [];
         UserStore.Alumnos = [];
         UserStore.Credenciales = [];
@@ -91,6 +97,7 @@ class App extends Component {
         UserStore.role = result.role;
         UserStore.photo = result.foto;
         UserStore.email = result.contacto[0].email;
+        //Asignación de permisos
         if(UserStore.role !== 'Alumno'){
           if(result.modulos[0].permisos)
             UserStore.Usuarios = result.modulos[0].permisos;
@@ -115,20 +122,26 @@ class App extends Component {
   }
 
   render() {
-    if (UserStore.loading) {
+    // En caso de que se estén cargando datos del servidor
+    if (UserStore.loading && !UserStore.isLoggedIn) {
       return (
         <div className="app">
           <div className="container">
-            <span>Loading, please wait...</span>
+              <div className="absoluto-centrado" style={{top:'calc(50% - 16px)'}}>
+                  <Loader/>
+              </div>
           </div>
         </div>
       );
     }
+    // Verifica si se encuentra logueado y ya se cargó todo
     else {
       if(UserStore.isLoggedIn && UserStore.id && (UserStore.Alumnos[0] || UserStore.Credenciales[0])){
+        // En caso de ser alumno
         if (UserStore.role !== 'Alumno')
           return (
             <Router>
+              {/* Barra de navegación */}
               <Navbar 
                 profile_name={UserStore.name} 
                 profile_photo={UserStore.photo} 
@@ -186,6 +199,7 @@ class App extends Component {
             </Router>
           );
         else
+          // En caso de ser alumno
           return (
             <Router>
               <Navbar 
@@ -217,6 +231,7 @@ class App extends Component {
             </Router>
           );
       }
+      // Si no ha iniciado sesión 
       return(
         <div className="app">
           <div className="container">

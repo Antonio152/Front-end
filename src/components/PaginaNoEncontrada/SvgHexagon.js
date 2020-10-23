@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import './PaginaNoEncontrada.css'
-
+// Hexágonos de la página de error
 export class SvgHexagon extends Component {
     render() {
         return (

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import './InputField.css'
 
+// Customized input field
 export class InputField extends Component {
     render() {
         return (
@@ -12,7 +13,6 @@ export class InputField extends Component {
                     value= {this.props.value}
                     name={this.props.name}
                     onChange={ (e) => this.props.onChange(e.target.value) }
-                    // onChange={ this.props.onChange }
                 ></input>
             </div>
         )

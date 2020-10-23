@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import './SubmitButton.css'
-
+// Customized submit button
 export class SubmitButton extends Component {
     render() {
         return (

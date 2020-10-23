@@ -25,7 +25,7 @@ export class LoginForm extends Component {
             [property]: val // property = username or password
         });
     }
-
+    // Deja el formulario en su estado original
     resetForm(){
         this.setState({
             username: '', 
@@ -33,17 +33,12 @@ export class LoginForm extends Component {
             buttonDisabled: false 
         })
     }
-
+    // Realiza el login del usuario
     async doLogin() {
         if (!this.state.username)
             return;
         if (!this.state.password)
             return;
-
-        // this.setState({
-        //     buttonDisabled: true
-        // })
-
         try {
             // From API
             let res = await fetch('http://localhost:4000/session/logIn', {
@@ -71,10 +66,7 @@ export class LoginForm extends Component {
                 UserStore.role = result.role;
                 UserStore.photo = result.foto;
                 UserStore.email = result.contacto[0].email;
-
-                console.log(result)
-
-
+                //Asignación de permisos
                 if(UserStore.role !== 'Alumno'){
                     if(result.modulos[0].permisos)
                         UserStore.Usuarios = result.modulos[0].permisos;

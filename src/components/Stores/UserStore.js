@@ -1,5 +1,5 @@
 import { extendObservable } from 'mobx';
-
+// ALMACENA LOS DATOS DEL USUARIO LOGUEADO
 export class UserStore {
     constructor() {
         extendObservable (this, {

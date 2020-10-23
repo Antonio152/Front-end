@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import * as BiIcons from 'react-icons/bi';
 import * as AiIcons from 'react-icons/ai';
 import * as FaIcons from 'react-icons/fa';
 import ContenedoresMain from './ContenedoresMain'
@@ -10,20 +9,19 @@ import UserStore from '../Stores/UserStore'
 import Loader from '../GeneralUseComp/Loader'
 
 import { observer } from 'mobx-react'
-
+// Primer componente mostrado al iniciar sesión
 export class MainComponent extends Component {
-
+    // Estado de laclase
     state = {
         usuario: {},
         concatDesc: ''
     }
-
+    // Obtiene la primer palabra de una cadena
     primeraPalabra(palabra){
-        // var firstWord = palabra.substr(0, codeLine.indexOf(" "));
         var firstWord = palabra.split(" ");
         return firstWord[0];
     }
-
+    // Obtiene los permisos del usuario accedido
     componentDidMount() {
         try {
              axios.get('http://localhost:4000/api/users/' + UserStore.id)
@@ -36,9 +34,9 @@ export class MainComponent extends Component {
         }
     }
 
-    resetAccion = () => this.setState({accion : []})
-
     render() {
+        // En caso de que haya cargado el usuario
+        // Muestra el módulo
         if (this.state.usuario.nombre)
             return (
                 <div className="fila main">
@@ -54,6 +52,7 @@ export class MainComponent extends Component {
                             <div className="fila cont_foto_usuario">
                                 <img className="foto_usuario" alt="" src={`data:image/jpg;base64,${this.state.usuario.foto}`}/>
                             </div>
+                            {/* Datos del usuario */}
                             <span className="etiqueta" style={{marginLeft:'0'}}>NOMBRE COMPLETO</span>
                             <span style={{marginLeft:'0'}}>{`${this.state.usuario.nombre} ${this.state.usuario.aPaterno} ${this.state.usuario.aMaterno}`}</span>
                             <span className="etiqueta" style={{marginLeft:'0'}}>ROL</span>
@@ -68,8 +67,8 @@ export class MainComponent extends Component {
                             <p className="title titulo-main">Revisa nuestras funciones</p>
                             <br/>
                             {
+                                // Agrega los modulos al div
                                 this.state.usuario.rol[0].modulos.map((modulo, modIndex) => {
-                                    // this.resetAccion();
                                     var data = []
                                     return(
                                         <div key={modIndex}>
@@ -84,6 +83,7 @@ export class MainComponent extends Component {
                                                 .filter(permiso => permiso !== 'Eliminar')
                                                 .filter(permiso => permiso !== 'Modificar')
                                                 .forEach( permiso => {
+                                                    // Agrega los permisos
                                                     data.push( {
                                                         nombre: `${permiso === 'Crear' ? 'Altas' : permiso === 'Consultar' ? 'Consultar' : permiso === 'Modificar formato' ? 'Modificar formato' : 'Consultar credencial'}`,
                                                         desc: 
@@ -92,6 +92,7 @@ export class MainComponent extends Component {
                                                         path: `/${modulo.nombre.toLowerCase()}/${permiso.toLowerCase().replace(' ','-')}`
                                                     })
                                                 })}
+                                            {/* Renderiza los contenedores con permiso */}
                                             <ContenedoresMain 
                                                 key={modIndex}
                                                 nombre={modulo.nombre}

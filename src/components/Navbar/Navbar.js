@@ -13,20 +13,17 @@ import UserStore from '../Stores/UserStore'
 
 import Loader from '../GeneralUseComp/Loader'
 
+//This function makes that when you click outside some component, it dissapears
 function useOutsideClick(ref, callback, when) {
-
     const savedCallback = useRef(callback);
-
     useEffect(() => {
         savedCallback.current = callback
     });
-
     function handler(event) {
         if (ref.current && !ref.current.contains(event.target)) {
             savedCallback.current();
         }
     }
-
     useEffect(() => { // after each render
         if (when) {
             document.addEventListener("click",handler)
@@ -44,6 +41,7 @@ function Navbar(props) {
     const [sidebar, setSidebar] = useState(true)
     const [menuBars, setMenuBars] = useState(true)
     const [confMenu, setConfMenu] = useState(false)
+    // Toggles the state of the navbar
     const showSideBar = () => {
         setSidebar(!sidebar);
         setMenuBars(!menuBars);
@@ -54,12 +52,12 @@ function Navbar(props) {
     const hideConfMenu = () => setConfMenu(false)
 
 
-    const confMenuRef = useRef();
+    const confMenuRef = useRef(); // Uses the function for outside click
 
     // Close conf menu by clicking outside
     // (ref: the element, calback: affected dom element, when: boolean when happen?)
     useOutsideClick(confMenuRef, hideConfMenu, confMenu)
-
+    // Similiar to ComponentDidMount 
     useEffect(() => {
         async function getUser() {
             const uri = `http://localhost:4000/api/users/${UserStore.id}`;
@@ -68,7 +66,7 @@ function Navbar(props) {
                 setModules({modules: res.data.rol[0].modulos});
         }
         getUser();
-    }, []);
+    }, []); // Is executed once
 
     return (
         <div>

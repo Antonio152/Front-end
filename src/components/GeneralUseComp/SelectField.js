@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import './InputField.css'
-
+// Customized select field
 export class SelectField extends Component {
     render() {
         return (
