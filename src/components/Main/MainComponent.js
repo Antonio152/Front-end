@@ -85,10 +85,10 @@ export class MainComponent extends Component {
                                                 .filter(permiso => permiso !== 'Modificar')
                                                 .forEach( permiso => {
                                                     data.push( {
-                                                        nombre: `${permiso === 'Crear' ? 'Altas' : permiso === 'Consultar' ? 'Consultar' : 'Modificar formato'}`,
+                                                        nombre: `${permiso === 'Crear' ? 'Altas' : permiso === 'Consultar' ? 'Consultar' : permiso === 'Modificar formato' ? 'Modificar formato' : 'Consultar credencial'}`,
                                                         desc: 
                                                         `${permiso === 'Crear' ? `Dar de alta ${modulo.nombre.toLowerCase()}.` : permiso === 'Consultar' ?
-                                                        `Ver, editar y eliminar ${modulo.nombre.toLowerCase()}.` : 'Modificar el formato predeterminado de las credenciales.'}`,
+                                                        `Ver, editar y eliminar ${modulo.nombre.toLowerCase()}.` : permiso === 'Modificar formato' ? 'Modificar el formato predeterminado de las credenciales.' : 'Consultar la credencial que me fue proporcionada por mi institución.'}`,
                                                         path: `/${modulo.nombre.toLowerCase()}/${permiso.toLowerCase().replace(' ','-')}`
                                                     })
                                                 })}

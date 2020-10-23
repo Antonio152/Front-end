@@ -124,7 +124,7 @@ class App extends Component {
       );
     }
     else {
-      if(UserStore.isLoggedIn && UserStore.id && (UserStore.Usuarios[2] || UserStore.Credenciales[0])){
+      if(UserStore.isLoggedIn && UserStore.id && (UserStore.Alumnos[0] || UserStore.Credenciales[0])){
         if (UserStore.role !== 'Alumno')
           return (
             <Router>
@@ -148,12 +148,12 @@ class App extends Component {
                     <Route exact path="/auth">
                       <Redirect to='/' />
                     </Route>
-                    {/* {UserStore.Usuarios[0] === 'Crear' ? <Route path='/usuarios/crear' component= {AltaUsuarios} /> : <Redirect to='/' />} */}
-                    {UserStore.Usuarios[2] === 'Consultar' ? <Route path='/usuarios/consultar' component= {ConsultaUsuarios} /> : <Redirect to='/' />}
-                    {/* {UserStore.Alumnos[0] === 'Crear' ? <Route path='/alumnos/crear' component= {AltaUsuarios} /> : <Redirect to='/' />} */}
-                    {UserStore.Alumnos[2] === 'Consultar' ? <Route path='/alumnos/consultar' component= {ConsultaAlumnos} /> : <Redirect to='/' />}
-                    {/* {UserStore.Credenciales[0] === 'Modificar formato' ? <Route path='/credenciales/modificar-formato' component= {ModificarCredencial} /> : <Redirect to='/' />} */}
                     <Route path='/' exact component= {MainComponent} />
+                    {/* {UserStore.Usuarios[0] === 'Crear' ? <Route path='/usuarios/crear' component= {AltaUsuarios} /> : <Redirect to='/' />} */}
+                    {UserStore.Usuarios[2] === 'Consultar' ? <Route path='/usuarios/consultar' component= {ConsultaUsuarios} /> : <Redirect to='/notFound' />}
+                    {/* {UserStore.Alumnos[0] === 'Crear' ? <Route path='/alumnos/crear' component= {AltaUsuarios} /> : <Redirect to='/' />} */}
+                    {UserStore.Alumnos[2] === 'Consultar' ? <Route path='/alumnos/consultar' component= {ConsultaAlumnos} /> : <Redirect to='/notFound' />}
+                    {/* {UserStore.Credenciales[0] === 'Modificar formato' ? <Route path='/credenciales/modificar-formato' component= {ModificarCredencial} /> : <Redirect to='/' />} */}
                     <Route component={PaginaNoEncontrada} />
                 </Switch>
               </div>
@@ -184,7 +184,7 @@ class App extends Component {
                     </Route>
                     {/* {UserStore.Usuarios[2] === 'Consultar' ? <Route path='/usuarios/consultar' component= {ConsultaUsuarios} /> : <Redirect to='/' />} */}
                     <Route path='/' exact component= {MainComponent} />
-                    {UserStore.Credenciales[0] === 'Generar formato' ? <Route path='/credenciales/generar-formato' component= {ConsultaCredencial} /> : <Redirect to='/' />}
+                    {UserStore.Credenciales[0] === 'Generar formato' ? <Route path='/credenciales/generar-formato' component= {ConsultaCredencial} /> : <Redirect to='/notFound' />}
                     <Route component={PaginaNoEncontrada} />
                 </Switch>
               </div>
