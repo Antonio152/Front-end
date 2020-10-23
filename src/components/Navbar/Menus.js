@@ -34,7 +34,7 @@ export const Menus = [
             {
                 name: 'Crear alumnos',
                 cName: 'inside-text',
-                path: '/',
+                path: '/alumnos/crear',
             },
             {
                 name: 'Consultar alumnos',

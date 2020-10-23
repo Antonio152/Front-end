@@ -15,6 +15,7 @@ import Navbar from './components/Navbar/Navbar'
 
 // Módulos
 import ConsultaUsuarios from './components/ConsultarUsuarios/ConsultaUsuarios'
+import AltaAlumnos from './components/AgregarAlumnos/AltaAlumnos'
 import ConsultaAlumnos from './components/ConsultarAlumnos/ConsultaAlumnos'
 import ConsultaCredencial from './components/ConsultaCredencial/ConsultaCredencial'
 import MainComponent from './components/Main/MainComponent'
@@ -151,7 +152,7 @@ class App extends Component {
                     <Route path='/' exact component= {MainComponent} />
                     {/* {UserStore.Usuarios[0] === 'Crear' ? <Route path='/usuarios/crear' component= {AltaUsuarios} /> : <Redirect to='/' />} */}
                     {UserStore.Usuarios[2] === 'Consultar' ? <Route path='/usuarios/consultar' component= {ConsultaUsuarios} /> : <Redirect to='/notFound' />}
-                    {/* {UserStore.Alumnos[0] === 'Crear' ? <Route path='/alumnos/crear' component= {AltaUsuarios} /> : <Redirect to='/' />} */}
+                    {UserStore.Alumnos[0] === 'Crear' ? <Route path='/alumnos/crear' component= {AltaAlumnos} /> : <Redirect to='/notFound' />}
                     {UserStore.Alumnos[2] === 'Consultar' ? <Route path='/alumnos/consultar' component= {ConsultaAlumnos} /> : <Redirect to='/notFound' />}
                     {/* {UserStore.Credenciales[0] === 'Modificar formato' ? <Route path='/credenciales/modificar-formato' component= {ModificarCredencial} /> : <Redirect to='/' />} */}
                     <Route component={PaginaNoEncontrada} />
