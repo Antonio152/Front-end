@@ -79,9 +79,27 @@ export class AltaAlumnos extends Component {
     // Deja el formulario en su estado original
     resetForm(){
         this.setState({
-            username: '', 
+            username: '',
             password: '', 
-            buttonDisabled: false 
+            foto: '',
+            nombre: '',
+            aPaterno: '',
+            aMaterno: '',
+            curp: '',
+            sanguineo: 'Selecciona',
+            con_telefono: '',
+            con_email: '',
+            con_telEmergencia: '',
+            dir_numero: '',
+            dir_calle: '',
+            dir_localidad: '',
+            dir_ciudad: '',
+            dir_estado: '',
+            dir_cp: '',
+            aca_carrera: 'Selecciona',
+            aca_matricula: '',
+            aca_cuatrimestre: 'Selecciona',
+            buttonDisabled: false,
         })
     }
 
