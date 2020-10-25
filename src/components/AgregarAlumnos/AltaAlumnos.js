@@ -59,7 +59,14 @@ export class AltaAlumnos extends Component {
     }
 
     setInputValue(property, val, maxLenght) {
-        if (property === 'username') {  // only de username property
+        if (property === 'username' || 
+            property === 'curp' || 
+            property === 'con_telefono' || 
+            property === 'con_telEmergencia' || 
+            property === 'con_email' ||
+            property === 'dir_cp' ||
+            property === 'aca_matricula') 
+        {
             val = val.trim(); // We don't want spaces
         }
         if (val.length > maxLenght)  // Max lenght
@@ -437,8 +444,8 @@ export class AltaAlumnos extends Component {
                                                 '9',
                                                 'Estadía'
                                             ]}}
-                                        value={this.state.aca_carrera}
-                                        name='aca_carrera'
+                                        value={this.state.aca_cuatrimestre}
+                                        name='aca_cuatrimestre'
                                         onChange={this.setSelectValue}
                                     />
                                     <span className="text inputDesc">
