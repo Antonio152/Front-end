@@ -83,6 +83,39 @@ export class AltaAlumnos extends Component {
         });
     }
 
+    altaAlumnos = async () => {
+        await axios.post('http://localhost:4000/api/users', {
+            username: this.state.username,
+            password: this.state.password, 
+            //foto: this.state.foto,
+            nombre: this.state.nombre,
+            aPaterno: this.state.aPaterno,
+            aMaterno: this.state.aMaterno,
+            curp: this.state.curp,
+            sanguineo: this.state.sanguineo,
+            contacto:[{
+                telefono: this.state.con_telefono,
+                email: this.state.con_email,
+                telEmergencia: this.state.con_telEmergencia
+            }],
+            direccion:[{
+                numero: this.state.dir_numero,
+                calle: this.state.dir_calle,
+                localidad: this.state.dir_localidad,
+                ciudad: this.state.dir_ciudad,
+                estado: this.state.dir_estado,
+                cp: this.state.dir_cp
+            }],
+            academico:[{
+                carrera: this.state.aca_carrera,
+                matricula: this.state.aca_matricula,
+                cuatrimestre: this.state.aca_cuatrimestre
+            }]
+        })
+        //this.resetForm();
+        //this.renderUserAdded();
+    }
+
     // Deja el formulario en su estado original
     resetForm(){
         this.setState({
@@ -222,8 +255,11 @@ export class AltaAlumnos extends Component {
                                 </div>
                                 <div className="columns">
                                     <SubmitButton
-                                    styles='btn large-text'
-                                    text='Agregar'/>
+                                        styles='btn width-auto size18 input-size-select'
+                                        text='Agregar'
+                                        icon={<BiIcons.BiUserPlus/>}
+                                        onclick={() => this.altaAlumnos() }
+                                    />
                                 </div>
                             </div>
 
@@ -249,7 +285,7 @@ export class AltaAlumnos extends Component {
                                         type='password'
                                         placeholder="Contraseña"
                                         value={ this.state.password ? this.state.password : ''}
-                                        onChange={ (val) => this.setInputValue('password',val, 18) }
+                                        onChange={ (val) => this.setInputValue('password',val, 32) }
                                     />
                                     <span className="text inputDesc">
                                         Nombre/s
@@ -258,7 +294,7 @@ export class AltaAlumnos extends Component {
                                         type='text'
                                         placeholder="Nombre/s"
                                         value={ this.state.nombre ? this.state.nombre : ''}
-                                        onChange={ (val) => this.setInputValue('nombre',val, 12) }
+                                        onChange={ (val) => this.setInputValue('nombre',val, 100) }
                                     />
                                     <span className="text inputDesc">
                                         Apellido paterno
@@ -267,7 +303,7 @@ export class AltaAlumnos extends Component {
                                         type='text'
                                         placeholder="Apellido paterno"
                                         value={ this.state.aPaterno ? this.state.aPaterno : ''}
-                                        onChange={ (val) => this.setInputValue('aPaterno',val, 12) }
+                                        onChange={ (val) => this.setInputValue('aPaterno',val, 100) }
                                     />
                                     <span className="text inputDesc">
                                         Apellido materno
@@ -276,7 +312,7 @@ export class AltaAlumnos extends Component {
                                         type='text'
                                         placeholder="Apellido materno"
                                         value={ this.state.aMaterno ? this.state.aMaterno : ''}
-                                        onChange={ (val) => this.setInputValue('aMaterno',val, 12) }
+                                        onChange={ (val) => this.setInputValue('aMaterno',val, 100) }
                                     />
                                     <span className="text inputDesc">
                                         CURP
@@ -442,7 +478,7 @@ export class AltaAlumnos extends Component {
                                                 '7',
                                                 '8',
                                                 '9',
-                                                'Estadía'
+                                                '10'
                                             ]}}
                                         value={this.state.aca_cuatrimestre}
                                         name='aca_cuatrimestre'
