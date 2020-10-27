@@ -163,7 +163,7 @@ function Navbar(props) {
                     <AiIcons.AiOutlineCaretRight/>
                     <span>Gestionar mi cuenta</span>
                 </Link>
-                <Link className="link-config" to='/'>
+                <Link className="link-config" to='/dashboard/acerca-de'>
                     <AiIcons.AiOutlineCaretRight/>
                     <span>Acerca de</span>
                 </Link>

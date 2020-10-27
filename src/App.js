@@ -20,6 +20,7 @@ import ConsultaAlumnos from './components/ConsultarAlumnos/ConsultaAlumnos'
 import ConsultaCredencial from './components/ConsultaCredencial/ConsultaCredencial'
 import MainComponent from './components/Main/MainComponent'
 import PaginaNoEncontrada from './components/PaginaNoEncontrada/PaginaNoEncontrada'
+import AcercaDe from './components/AcercaDe/AcercaDe'
 
 
 import {Redirect} from 'react-router-dom'
@@ -194,6 +195,7 @@ class App extends Component {
                       // else
                       //   return(<Redirect key={perIndex} to='/notFound' />)
                     })}
+                    <Route path='/dashboard/acerca-de' component= {AcercaDe} />
                     <Route component={PaginaNoEncontrada} />
                 </Switch>
               </div>
@@ -227,6 +229,7 @@ class App extends Component {
                     {/* {UserStore.Usuarios[2] === 'Consultar' ? <Route path='/usuarios/consultar' component= {ConsultaUsuarios} /> : <Redirect to='/' />} */}
                     <Route path='/' exact component= {MainComponent} />
                     {UserStore.Credenciales[0] === 'Generar formato' ? <Route path='/credenciales/generar-formato' component= {ConsultaCredencial} /> : <Redirect to='/notFound' />}
+                    <Route path='/dashboard/acerca-de' component= {AcercaDe} />
                     <Route component={PaginaNoEncontrada} />
                 </Switch>
               </div>

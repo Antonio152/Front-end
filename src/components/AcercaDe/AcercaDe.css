@@ -1,0 +1,24 @@
+.acercade{
+    color: #555555;
+}
+
+.logo-centrado{
+    width: 150px;
+    margin: 20px;
+}
+
+.centrado-acercade{
+    margin-top: calc(50vh - 216px);
+    width: 100%;
+    text-align: center;
+}
+
+.abajo{
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+}
+
+.texto-derecha{
+    text-align: right;
+}
