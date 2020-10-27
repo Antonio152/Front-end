@@ -39,9 +39,13 @@ export class ConsultaAlumnos extends Component {
 
         let result = await res.json();
         if (result && res.status === 200){
+            let usuarios = [];
+            result
+                .filter(usuario => usuario.rol[0].nombre === 'Alumno')
+                .forEach(usuario => usuarios.push(usuario))
             this.setState({
-            usuarios: result,
-            userQry: result
+                usuarios: usuarios,
+                userQry: usuarios
             })
         }
     }
@@ -352,7 +356,7 @@ export class ConsultaAlumnos extends Component {
                                 </div>
                                 <div className="columns">
                                     <SubmitButton
-                                    styles='btn-blanco large-text'
+                                    styles='large-text'
                                     text='Generar credenciales'/>
                                 </div>
                             </div>
@@ -370,7 +374,7 @@ export class ConsultaAlumnos extends Component {
                                     {/* Carga los datos de los alumnos */}
                                     {
                                     this.state.userQry.length > 0 ?
-                                    this.state.usuarios.filter(usuario => usuario.rol[0].nombre === 'Alumno').map((usuario, usIndex) => {
+                                    this.state.usuarios.map((usuario, usIndex) => {
                                         return(
                                             <tr key = {usIndex} onClick={() => this.setState({userSelected:usuario})}>
                                                 <td className="adjustable_td">{`${usuario.nombre} ${usuario.aPaterno} ${usuario.aMaterno} `}</td>

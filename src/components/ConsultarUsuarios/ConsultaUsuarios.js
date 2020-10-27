@@ -33,12 +33,15 @@ export class ConsultaUsuarios extends Component {
             },
             credentials: 'include'
         }); // From API
-
         let result = await res.json();
         if (result && res.status === 200){
+            let usuarios = [];
+            result
+                .filter(usuario => usuario.rol[0].nombre !== 'Alumno')
+                .forEach(usuario => usuarios.push(usuario))
             this.setState({
-            usuarios: result,
-            userQry: result
+                usuarios: usuarios,
+                userQry: usuarios
             })
         }
     }
@@ -308,7 +311,7 @@ export class ConsultaUsuarios extends Component {
                                     {/* Carga los datos de los alumnos */}
                                     {/* Adjuntar en función con trycatch */
                                     this.state.userQry.length > 0 ?
-                                    this.state.userQry.filter(usuario => usuario.rol[0].nombre !== 'Alumno').map((usuario, usIndex) => {
+                                    this.state.userQry.map((usuario, usIndex) => {
                                         return(
                                         <tr key = {usIndex} onClick={() => this.setState({userSelected:usuario})}>
                                             <td>{`${usuario.nombre} ${usuario.aPaterno} ${usuario.aMaterno} `}</td>
