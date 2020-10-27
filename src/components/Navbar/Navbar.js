@@ -83,8 +83,11 @@ function Navbar(props) {
                 <nav className={sidebar ? 'nav-menu active': 'nav-menu'}>
                     <ul className="nav-menu-items" >
                         <li className="navbar-toggle" >
-                            <Link to="/" className="menu-bars">
-                                <img src={Logo} alt="" style={{maxWidth:'160px', paddingTop:'5px'}}/>
+                            <Link to="/" className="menu-bars main-title" >
+                                <div className="fila">
+                                    <img src={Logo} alt="" style={{maxWidth:'40px', paddingTop:'5px'}}/>
+                                    <p style={{padding:'10px 0px 0px 10px', fontSize:'28px'}}> Mandatum</p>
+                                </div>
                             </Link>
                          </li>
                          {/* Configuration button */}
@@ -129,7 +132,7 @@ function Navbar(props) {
                         })
                         : 
                             <div>
-                                <Loader/>{`    Cargando...`} 
+                                <Loader/>
                             </div>
                         }
                         
