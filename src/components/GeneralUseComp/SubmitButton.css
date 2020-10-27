@@ -37,7 +37,7 @@
     font-size: 24px;
     vertical-align: middle;
     padding-top: 0;
-    right: 18px;
+    right: 0;
     height: 63px;
     width: 64px;
     background-color: #051E34;
@@ -54,17 +54,16 @@
 .right-icon.top {
     font-family: "Roboto", sans-serif;
     color: #768597;
+    border-radius: 0;
     font-weight: 400;
     font-size: 16px;
     background-color: white;
     position: absolute;
-    margin-left: auto;
-    top: 8px;
+    top: 0;
     right: 0;
-    height: 100%;
     width: auto;
-    padding-left: 16px;
-    padding-right: 16px;
+    padding-left: 0;
+    padding-right: 20px;
     padding-bottom: 0;
     height: 63px;
     /* Disable text selection highlighting  */
@@ -158,4 +157,16 @@
     max-width: 130px;
     padding-left:20px;
     margin:0;
+}
+
+@media only screen and (max-width: 445px){
+    .right-icon.top{
+        width: 32px;
+        padding: 0;
+        padding-top: 19.5px;
+    }
+    .logout-icon{
+        margin: 0;
+        right: 15px;
+    }
 }

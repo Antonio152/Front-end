@@ -8,6 +8,8 @@ import { Link } from 'react-router-dom';
 import './Navbar.css'
 import { IconContext } from 'react-icons'
 
+import Logo from './img/logo-linea.jpg'
+
 import Accordion from '../Accordion/Accordion'
 import UserStore from '../Stores/UserStore'
 
@@ -81,8 +83,11 @@ function Navbar(props) {
                 <nav className={sidebar ? 'nav-menu active': 'nav-menu'}>
                     <ul className="nav-menu-items" >
                         <li className="navbar-toggle" >
-                            <Link to="/" className="menu-bars">
-                                Logotipo
+                            <Link to="/" className="menu-bars main-title" >
+                                <div className="fila">
+                                    <img src={Logo} alt="" style={{maxWidth:'40px', paddingTop:'5px'}}/>
+                                    <p style={{padding:'10px 0px 0px 10px', fontSize:'28px'}}> Mandatum</p>
+                                </div>
                             </Link>
                          </li>
                          {/* Configuration button */}
@@ -127,7 +132,7 @@ function Navbar(props) {
                         })
                         : 
                             <div>
-                                <Loader/>{`    Cargando...`} 
+                                <Loader/>
                             </div>
                         }
                         

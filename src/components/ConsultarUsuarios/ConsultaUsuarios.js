@@ -7,6 +7,7 @@ import InputField from '../GeneralUseComp/InputField'
 import SubmitButton from '../GeneralUseComp/SubmitButton'
 import * as BiIcons from 'react-icons/bi'
 import UserStore from '../Stores/UserStore'
+import Loader from '../GeneralUseComp/Loader'
 
 export class ConsultaUsuarios extends Component {
     // Estado de la clase
@@ -24,16 +25,31 @@ export class ConsultaUsuarios extends Component {
     }
     // Obtiene los usuarios del servidor
     getUsuarios = async () => {
-        const res = await axios.get('http://localhost:4000/api/users');
-        this.setState({
-            usuarios: res.data,
-            userQry: res.data
-        });
+        let res = await fetch('http://localhost:4000/api/users', {
+            method: 'get',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+        }); // From API
+        let result = await res.json();
+        if (result && res.status === 200){
+            let usuarios = [];
+            result
+                .filter(usuario => usuario.rol[0].nombre !== 'Alumno')
+                .forEach(usuario => usuarios.push(usuario))
+            this.setState({
+                usuarios: usuarios,
+                userQry: usuarios
+            })
+        }
     }
     // Obtiene los modulos del servidor
     getModulos = async () => {
         const res = await axios.get(`http://localhost:4000/api/users/${UserStore.id}`);
-        this.setState({permisos: res.data.rol[0].modulos[0].permisos});
+        if (res.status === 200)
+            this.setState({permisos: res.data.rol[0].modulos[0].permisos});
     }
 
     // Estado cambia con inputs
@@ -283,7 +299,7 @@ export class ConsultaUsuarios extends Component {
                         <div className="contenidoMod">
                             <h1 className="title">Usuarios</h1>
                             <p className="texto"><BiIcons.BiHelpCircle/>  Para conocer más detalles del usuario, haga click sobre él.</p>
-                            { !this.state.userQry[0] ? <span className="texto_mediano"> Usuarios no encontrados </span> : 
+                            { this.state.userQry.length === 0 ? <span className="texto_mediano"> Usuarios no encontrados </span> : 
                             <table className="tabla">
                                 <tbody>
                                     <tr>
@@ -293,7 +309,9 @@ export class ConsultaUsuarios extends Component {
                                         <th className="activo">Activo</th>
                                     </tr>
                                     {/* Carga los datos de los alumnos */}
-                                    {this.state.userQry.filter(usuario => usuario.rol[0].nombre !== 'Alumno').map((usuario, usIndex) => {
+                                    {/* Adjuntar en función con trycatch */
+                                    this.state.userQry.length > 0 ?
+                                    this.state.userQry.map((usuario, usIndex) => {
                                         return(
                                         <tr key = {usIndex} onClick={() => this.setState({userSelected:usuario})}>
                                             <td>{`${usuario.nombre} ${usuario.aPaterno} ${usuario.aMaterno} `}</td>
@@ -315,7 +333,10 @@ export class ConsultaUsuarios extends Component {
                                             <td>{usuario.published ? 'Sí' : 'No'}</td>
                                         </tr>
                                         )
-                                    })} 
+                                    }) : 
+                                    <div className="centrado">
+                                        <Loader/>
+                                    </div>} 
                                 </tbody>
                             </table>
                             }

@@ -11,7 +11,7 @@ export class SubmitButton extends Component {
                     onClick={ () => this.props.onclick() }
                 >
                     {this.props.icon}
-                    <span className="text-btn">{this.props.text}</span>
+                    <span className={`text-btn `}>{this.props.minText && window.innerWidth < 885 ? '' : this.props.text}</span>
                 </button>
             </div>
         )
