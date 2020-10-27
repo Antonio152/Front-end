@@ -55,6 +55,7 @@ export class LoginForm extends Component {
             }); 
             let result = await res.json();
             console.log(result)
+            //Almacenamos el token en el sistema local.
             localStorage.setItem('token', result.token)
             // If user is logged
             if (result && result.success) {
