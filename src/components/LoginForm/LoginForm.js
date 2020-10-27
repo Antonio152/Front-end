@@ -54,6 +54,7 @@ export class LoginForm extends Component {
                 })
             }); 
             let result = await res.json();
+            console.log(result)
             // If user is logged
             if (result && result.success) {
                 var apellidos = `${result.apellidoPaterno} ${result.apellidoMaterno ? result.apellidoMaterno : ''}`;
