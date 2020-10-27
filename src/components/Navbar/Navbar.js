@@ -8,6 +8,8 @@ import { Link } from 'react-router-dom';
 import './Navbar.css'
 import { IconContext } from 'react-icons'
 
+import Logo from './img/logo-linea.jpg'
+
 import Accordion from '../Accordion/Accordion'
 import UserStore from '../Stores/UserStore'
 
@@ -82,7 +84,7 @@ function Navbar(props) {
                     <ul className="nav-menu-items" >
                         <li className="navbar-toggle" >
                             <Link to="/" className="menu-bars">
-                                Logotipo
+                                <img src={Logo} alt="" style={{maxWidth:'160px', paddingTop:'5px'}}/>
                             </Link>
                          </li>
                          {/* Configuration button */}
