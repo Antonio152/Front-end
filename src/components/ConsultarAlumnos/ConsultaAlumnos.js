@@ -8,6 +8,7 @@ import InputField from '../GeneralUseComp/InputField'
 import * as BiIcons from 'react-icons/bi'
 import * as AiIcons from 'react-icons/ai'
 import UserStore from '../Stores/UserStore'
+import Loader from '../GeneralUseComp/Loader'
 
 export class ConsultaAlumnos extends Component {
 
@@ -27,16 +28,28 @@ export class ConsultaAlumnos extends Component {
     }
     // Obtiene los usuarios del servidor
     getUsuarios = async () => {
-        const res = await axios.get('http://localhost:4000/api/users');
-        this.setState({
-            usuarios: res.data,
-            userQry: res.data
-        });
+        let res = await fetch('http://localhost:4000/api/users', {
+            method: 'get',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+        }); // From API
+
+        let result = await res.json();
+        if (result && res.status === 200){
+            this.setState({
+            usuarios: result,
+            userQry: result
+            })
+        }
     }
     // Obtiene los modulos del servidor
     getModulos = async () => {
         const res = await axios.get(`http://localhost:4000/api/users/${UserStore.id}`);
-        this.setState({permisos: res.data.rol[0].modulos[1].permisos});
+        if (res.status === 200)
+            this.setState({permisos: res.data.rol[0].modulos[1].permisos});
     }
 
     // Estado cambia con inputs
@@ -344,7 +357,7 @@ export class ConsultaAlumnos extends Component {
                                 </div>
                             </div>
                             
-                            { !this.state.userQry[0] ? <><br/><br/><span className="texto_mediano"> Alumnos no encontrados </span></> : 
+                            { this.state.userQry.length === 0 ? <><br/><br/><span className="texto_mediano"> Alumnos no encontrados </span></> : 
                             <table className="tabla">
                                 <tbody>
                                     <tr>
@@ -355,7 +368,9 @@ export class ConsultaAlumnos extends Component {
                                         <th className="activo">Activo</th>
                                     </tr>
                                     {/* Carga los datos de los alumnos */}
-                                    {this.state.usuarios.filter(usuario => usuario.rol[0].nombre === 'Alumno').map((usuario, usIndex) => {
+                                    {
+                                    this.state.userQry.length > 0 ?
+                                    this.state.usuarios.filter(usuario => usuario.rol[0].nombre === 'Alumno').map((usuario, usIndex) => {
                                         return(
                                             <tr key = {usIndex} onClick={() => this.setState({userSelected:usuario})}>
                                                 <td className="adjustable_td">{`${usuario.nombre} ${usuario.aPaterno} ${usuario.aMaterno} `}</td>
@@ -365,7 +380,10 @@ export class ConsultaAlumnos extends Component {
                                                 <td>{usuario.published ? 'Sí' : 'No'}</td>
                                             </tr>
                                         )
-                                    })} 
+                                    }):
+                                    <div className="centrado">
+                                        <Loader/>
+                                    </div>} 
                                 </tbody>
                             </table>
                             }

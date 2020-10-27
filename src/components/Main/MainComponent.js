@@ -39,7 +39,7 @@ export class MainComponent extends Component {
         // Muestra el módulo
         if (this.state.usuario.nombre)
             return (
-                <div className="fila main">
+                <div className="main_fila main">
 
                     <div className="columns col-iz">
                         <div className="caja-main-iz">
@@ -63,7 +63,7 @@ export class MainComponent extends Component {
                     </div>
 
                     <div className="columns col-der">
-                        <div className="caja-main-iz">
+                        <div className="caja-main-der">
                             <p className="title titulo-main">Revisa nuestras funciones</p>
                             <br/>
                             {

@@ -2,10 +2,10 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap");
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans&family=Source+Sans+Pro:ital,wght@0,200;0,300;0,400;0,600;0,700;1,200;1,300;1,400;1,600&display=swap');
 
-html{
+/* html{
     width: 100vw;
     height: 100vh;
-}
+} */
 
 * {
     box-sizing: border-box;
@@ -30,7 +30,7 @@ body{
     transition: 350ms;
     /* height: calc(100vh - 80px); */
     padding: 20px;
-    min-width: 445px;
+    min-width: 200px;
     overflow-y: auto;
 }
 
@@ -42,7 +42,7 @@ body{
 
 @media only screen and (max-width: 1365px){
     .nav-activado{
-        padding-left: 20px;
+        padding-left: 20px
     }
 }
 

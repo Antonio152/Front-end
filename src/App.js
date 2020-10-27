@@ -153,8 +153,9 @@ class App extends Component {
               <SubmitButton
                   styles={'right-icon top'}
                   icon={<BiIcons.BiLogOut className="logout-icon"/>}
-                  text = {'Logout'}
+                  text = {'Salir'}
                   disabled = {false}
+                  minText= {true}
                   onclick = {() => {this.doLogout()}}/>
               </Link>
               <div className={this.state.navActivado ? 'contenido nav-activado' : 'contenido'}>
@@ -213,8 +214,9 @@ class App extends Component {
               <SubmitButton
                   styles={'right-icon top'}
                   icon={<BiIcons.BiLogOut className="logout-icon"/>}
-                  text = {'Logout'}
+                  text = {'Salir'}
                   disabled = {false}
+                  minText= {true}
                   onclick = {() => this.doLogout()}/>
               </Link>
               <div className={this.state.navActivado ? 'contenido nav-activado' : 'contenido'}>
