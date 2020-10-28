@@ -222,7 +222,7 @@ class App extends Component {
                 profile_role={UserStore.role}
                 activateNavbar = {() => this.changeNavbar()}
               />
-              <Link to='/dashboard'>
+              <Link to='/'>
               <SubmitButton
                   styles={'right-icon top'}
                   icon={<BiIcons.BiLogOut className="logout-icon"/>}
