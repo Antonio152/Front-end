@@ -15,7 +15,6 @@
     background: none;
     transition: 350ms;
     width: 100%;
-    z-index: 100;
 }
 
 .menu-bars.active {
