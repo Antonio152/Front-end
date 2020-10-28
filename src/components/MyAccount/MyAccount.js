@@ -232,6 +232,7 @@ export class MyAccount extends Component {
                                     id="file" 
                                     className={`inputfile square150px`} 
                                     onChange = {(e) => this.resizeImageFn(e.target.files)}
+                                    accept="image/*"
                                     />
                                 <label htmlFor="file"><AiIcons.AiOutlineCloudUpload/> Subir</label>
                             </div>
