@@ -83,7 +83,7 @@ function Navbar(props) {
                 <nav className={sidebar ? 'nav-menu active': 'nav-menu'}>
                     <ul className="nav-menu-items" >
                         <li className="navbar-toggle" >
-                            <Link to="/" className="menu-bars main-title" >
+                            <Link to="/dashboard" className="menu-bars main-title" >
                                 <div className="fila">
                                     <img src={Logo} alt="" style={{maxWidth:'40px', paddingTop:'5px'}}/>
                                     <p style={{padding:'10px 0px 0px 10px', fontSize:'28px'}}> Mandatum</p>
@@ -118,7 +118,7 @@ function Navbar(props) {
                                     .map((subMenu, smIndex) => {
                                         return(
                                             <li key={ smIndex } className='inside-text'>
-                                                <Link className="link" to={ `/${menu.nombre.toLowerCase()}/${subMenu.toLowerCase().replace(' ','-')}` }>
+                                                <Link className="link" to={ `/dashboard/${menu.nombre.toLowerCase()}/${subMenu.toLowerCase().replace(' ','-')}` }>
                                                     <AiIcons.AiOutlineCaretRight/>
                                                     <span>{ `${subMenu} ${menu.nombre.toLowerCase()!=='credenciales' ? menu.nombre.toLowerCase() : ''}` }</span>
                                                 </Link>

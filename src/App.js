@@ -171,14 +171,14 @@ class App extends Component {
               <div className={this.state.navActivado ? 'contenido nav-activado' : 'contenido'}>
                 <Switch>
                     <Route exact path="/auth">
-                      <Redirect to='/' />
+                      <Redirect to='/dashboard' />
                     </Route>
-                    <Route path='/' exact component= {MainComponent} />
+                    <Route path='/dashboard' exact component= {MainComponent} />
                     {/* Para los usuarios con acceso a los datos de los usuarios */}
                     {UserStore.Usuarios.map((permiso, perIndex) => {
                       // console.log(permiso)
                       if (permiso === 'Consultar')
-                        return(<Route key={perIndex} path='/usuarios/consultar' component= {ConsultaUsuarios} />)
+                        return(<Route key={perIndex} path='/dashboard/usuarios/consultar' component= {ConsultaUsuarios} />)
                       // if (permiso === 'Crear')
                       //   return(<Route key={perIndex} path='/usuarios/crear' component= {AltaUsuarios} />)
                       // else
@@ -189,9 +189,9 @@ class App extends Component {
                     {UserStore.Alumnos.map((permiso, perIndex) => {
                       // console.log(permiso)
                       if (permiso === 'Consultar')
-                        return(<Route key={perIndex} path='/alumnos/consultar' component= {ConsultaAlumnos} />)
+                        return(<Route key={perIndex} path='/dashboard/alumnos/consultar' component= {ConsultaAlumnos} />)
                       if (permiso === 'Crear')
-                        return(<Route key={perIndex} path='/alumnos/crear' component= {AltaAlumnos} />)
+                        return(<Route key={perIndex} path='/dashboard/alumnos/crear' component= {AltaAlumnos} />)
                       // else
                       //   return(<Redirect key={perIndex} to='/notFound' />)
                     })}
@@ -222,7 +222,7 @@ class App extends Component {
                 profile_role={UserStore.role}
                 activateNavbar = {() => this.changeNavbar()}
               />
-              <Link to='/'>
+              <Link to='/dashboard'>
               <SubmitButton
                   styles={'right-icon top'}
                   icon={<BiIcons.BiLogOut className="logout-icon"/>}
@@ -234,11 +234,11 @@ class App extends Component {
               <div className={this.state.navActivado ? 'contenido nav-activado' : 'contenido'}>
                 <Switch>
                     <Route exact path="/auth">
-                        <Redirect to='/' />
+                        <Redirect to='/dashboard' />
                     </Route>
                     {/* {UserStore.Usuarios[2] === 'Consultar' ? <Route path='/usuarios/consultar' component= {ConsultaUsuarios} /> : <Redirect to='/' />} */}
-                    <Route path='/' exact component= {MainComponent} />
-                    {UserStore.Credenciales[0] === 'Generar formato' ? <Route path='/credenciales/generar-formato' component= {ConsultaCredencial} /> : <Redirect to='/notFound' />}
+                    <Route path='/dashboard' exact component= {MainComponent} />
+                    {UserStore.Credenciales[0] === 'Generar formato' ? <Route path='/dashboard/credenciales/generar-formato' component= {ConsultaCredencial} /> : <Redirect to='/notFound' />}
                     <Route path='/dashboard/mi-cuenta' component= {MyAccount} />
                     <Route path='/dashboard/acerca-de' component= {AcercaDe} />
                     <Route component={PaginaNoEncontrada} />
