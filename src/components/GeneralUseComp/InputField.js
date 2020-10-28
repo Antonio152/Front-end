@@ -8,6 +8,7 @@ export class InputField extends Component {
             <div className="inputField">
                 <input
                     className={`input ${this.props.noBorder ? 'no-border': ''}`}
+                    style={this.props.style}
                     type={ this.props.type }
                     placeholder={ this.props.placeholder }
                     value= {this.props.value}

@@ -35,4 +35,13 @@
   height: 200px;
   text-align: center;
   line-height: 200px;
+  border-radius: 5px;
+}
+
+.square150px + label {
+  width: 150px;
+  height: 150px;
+  text-align: center;
+  line-height: 150px;
+  border-radius: 5px;
 }

@@ -7,8 +7,14 @@ export class InputFile extends Component {
     render() {
         return (
             <div>
-                <input type="file" name="file" id="file" className={`inputfile ${this.props.styles}`}/>
-                <label for="file"><AiIcons.AiOutlineCloudUpload/> Subir</label>
+                <input 
+                type="file" 
+                name="file" 
+                id="file" 
+                className={`inputfile ${this.props.styles}`} 
+                onChange = {() => this.props.onChange()}
+                />
+                <label htmlFor="file"><AiIcons.AiOutlineCloudUpload/> Subir</label>
             </div>
         )
     }

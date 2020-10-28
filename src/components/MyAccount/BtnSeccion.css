@@ -1,0 +1,19 @@
+/* Cuando el texto es demasiado largo */
+.tres-puntos{
+    max-width: 270px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+/* Botón que no parece botón */
+.no-boton{
+    border: none;
+    text-align: left;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.activo{
+    border-left: 5px solid #618aaf;
+    background-color: rgb(245, 245, 245);
+}

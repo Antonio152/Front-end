@@ -95,6 +95,9 @@ class App extends Component {
         UserStore.id = result._id;
         UserStore.name = result.nombre;
         UserStore.lastNameP = result.apellidoPaterno;
+        UserStore.curp = result.curp;
+        UserStore.rh = result.seguroSocial[0].gpoSanguineo;
+        UserStore.numSS = result.seguroSocial[0].numSos;
         UserStore.lastNameM = result.apellidoMaterno ? result.apellidoMaterno : '';
         UserStore.role = result.role;
         UserStore.photo = result.foto;
@@ -117,6 +120,9 @@ class App extends Component {
             UserStore.Credenciales = result.modulos[2].permisos;
         }
         else {
+          UserStore.career = result.datosAcademicos[0].carrera;
+          UserStore.idStudent = result.datosAcademicos[0].matricula;
+          UserStore.grade = result.datosAcademicos[0].cuatrimestre;
           if(result.modulos[0].permisos)
             UserStore.Credenciales = result.modulos[0].permisos;
         }

@@ -54,7 +54,6 @@ export class LoginForm extends Component {
                 })
             }); 
             let result = await res.json();
-            console.log(result)
             //Almacenamos el token en el sistema local.
             localStorage.setItem('token', result.token)
             // If user is logged
@@ -66,6 +65,9 @@ export class LoginForm extends Component {
                 UserStore.name = result.nombre;
                 UserStore.lastNameP = result.apellidoPaterno;
                 UserStore.lastNameM = result.apellidoMaterno ? result.apellidoMaterno : '';
+                UserStore.curp = result.curp;
+                UserStore.rh = result.seguroSocial[0].gpoSanguineo;
+                UserStore.numSS = result.seguroSocial[0].numSos;
                 UserStore.role = result.role;
                 UserStore.photo = result.foto;
                 UserStore.email = result.contacto[0].email;
@@ -87,6 +89,9 @@ export class LoginForm extends Component {
                         UserStore.Credenciales = result.modulos[2].permisos;
                 }
                 else {
+                    UserStore.career = result.academico[0].carrera;
+                    UserStore.idStudent = result.academico[0].matricula;
+                    UserStore.grade = result.academico[0].cuatrimestre;
                     if(result.modulos[0].permisos)
                         UserStore.Credenciales = result.modulos[0].permisos;
                 }

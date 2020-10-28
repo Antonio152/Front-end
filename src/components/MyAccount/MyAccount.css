@@ -1,6 +1,6 @@
 /* Foto */
 .foto-grande{
-    width: 200px;
+    width: 150px;
     border-radius: 5px;
     border-width: 0px;
     opacity: 1;
@@ -9,7 +9,7 @@
 }
 /* Para el input de archivo */
 .cambia-cont {
-    width: 200px;
+    width: 150px;
     position: relative;
     border-radius: 5px;
     z-index:0;
@@ -50,20 +50,7 @@
 .texto-editable:hover .lapiz-icon {
     display: block;
 }
-/* Cuando el texto es demasiado largo */
-.tres-puntos{
-    max-width: 270px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-}
-/* Botón que no parece botón */
-.no-boton{
-    border: none;
-    text-align: left;
-    background-color: transparent;
-    cursor: pointer;
-}
+
 
 .inp-numero{
     width: 86px;

@@ -5,7 +5,7 @@ export class SelectField extends Component {
     render() {
         return (
             <select 
-            className="input mg_top" 
+            className={`input mg_top ${this.props.styles}`}
             value={this.props.value} 
             name={this.props.name}
             onChange={this.props.onChange}>
