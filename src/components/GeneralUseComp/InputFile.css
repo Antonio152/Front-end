@@ -1,0 +1,38 @@
+.inputfile {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
+.inputfile + label {
+  padding: 10px 15px;
+  font-size: 16px;
+  color: white;
+  background-color: rgba(49, 49, 49, 0.274);
+  display: inline-block;
+  transition: 300ms;
+}
+
+.inputfile:focus + label,
+.inputfile + label:hover {
+  transition: 300ms;
+  background-color: rgba(49, 49, 49, 0.651);
+}
+
+.inputfile + label {
+	cursor: pointer; /* "hand" cursor */
+}
+
+.inputfile:focus + label {
+	outline: none;
+}
+
+.square200px + label {
+  width: 200px;
+  height: 200px;
+  text-align: center;
+  line-height: 200px;
+}

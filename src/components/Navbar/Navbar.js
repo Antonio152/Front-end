@@ -159,11 +159,11 @@ function Navbar(props) {
             </IconContext.Provider>
             {/* Menu that appears when config button is clicked */}
             <div ref={confMenuRef} className={confMenu ? 'conf-menu active': 'conf-menu'}>
-                <Link className="link-config" to='/'>
+                <Link className="link-config" to='/dashboard/mi-cuenta' onClick={() => hideConfMenu()}>
                     <AiIcons.AiOutlineCaretRight/>
                     <span>Gestionar mi cuenta</span>
                 </Link>
-                <Link className="link-config" to='/dashboard/acerca-de'>
+                <Link className="link-config" to='/dashboard/acerca-de' onClick={() => hideConfMenu()}>
                     <AiIcons.AiOutlineCaretRight/>
                     <span>Acerca de</span>
                 </Link>

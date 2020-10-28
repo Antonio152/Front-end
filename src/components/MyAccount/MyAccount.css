@@ -1,0 +1,70 @@
+/* Foto */
+.foto-grande{
+    width: 200px;
+    border-radius: 5px;
+    border-width: 0px;
+    opacity: 1;
+    transition: .5s ease;
+    padding-right: 0;
+}
+/* Para el input de archivo */
+.cambia-cont {
+    width: 200px;
+    position: relative;
+    border-radius: 5px;
+    z-index:0;
+}
+
+.file-middle {
+    transition: .5s ease;
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%)
+}
+
+.cambia-cont:hover .file-middle {
+    opacity: 1;
+}
+/* Una línea horizontal */
+.horizontal-line{
+    width: 100%;
+    height: 2px;
+    margin: 15px 0px;
+    background: #f0f0f0;
+}
+/* Similar a los inputs, pero en span */
+.span-descriptivo{
+    margin-left: 0;
+    padding: 5px;
+    color: #555555;
+}
+/* ícono de lapiz */
+.lapiz-icon{
+    color: #b4b4b4;
+    display: none;
+}
+/* ícono aparece y desaparece */
+.texto-editable:hover .lapiz-icon {
+    display: block;
+}
+/* Cuando el texto es demasiado largo */
+.tres-puntos{
+    max-width: 270px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+/* Botón que no parece botón */
+.no-boton{
+    border: none;
+    text-align: left;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.inp-numero{
+    width: 86px;
+}

@@ -26,3 +26,8 @@
 .inputField{
     width: 100%;
 }
+
+.no-border{
+    border: none;
+    margin: 0;
+}
