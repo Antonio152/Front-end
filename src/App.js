@@ -21,6 +21,7 @@ import ConsultaCredencial from './components/ConsultaCredencial/ConsultaCredenci
 import MainComponent from './components/Main/MainComponent'
 import PaginaNoEncontrada from './components/PaginaNoEncontrada/PaginaNoEncontrada'
 import AcercaDe from './components/AcercaDe/AcercaDe'
+import MyAccount from './components/MyAccount/MyAccount'
 
 
 import {Redirect} from 'react-router-dom'
@@ -88,16 +89,24 @@ class App extends Component {
 
       // If it's logged in
       if (result && result.success) {
-        var apellidos = `${result.apellidoPaterno} ${result.apellidoMaterno ? result.apellidoMaterno : ''}`;
         UserStore.loading = false;
         UserStore.isLoggedIn = true;
         UserStore.username = result.username;
         UserStore.id = result._id;
         UserStore.name = result.nombre;
-        UserStore.lastName = apellidos;
+        UserStore.lastNameP = result.apellidoPaterno;
+        UserStore.lastNameM = result.apellidoMaterno ? result.apellidoMaterno : '';
         UserStore.role = result.role;
         UserStore.photo = result.foto;
         UserStore.email = result.contacto[0].email;
+        UserStore.tel = result.contacto[0].telefono;
+        UserStore.telEmer = result.contacto[0].telEmergencia;
+        UserStore.street = result.direccion[0].calle;
+        UserStore.streetNo = result.direccion[0].numero;
+        UserStore.location = result.direccion[0].localidad;
+        UserStore.city = result.direccion[0].ciudad;
+        UserStore.postalCode = result.direccion[0].cp;
+        UserStore.state = result.direccion[0].estado;
         //Asignación de permisos
         if(UserStore.role !== 'Alumno'){
           if(result.modulos[0].permisos)
@@ -195,6 +204,7 @@ class App extends Component {
                       // else
                       //   return(<Redirect key={perIndex} to='/notFound' />)
                     })}
+                    <Route path='/dashboard/mi-cuenta' component= {MyAccount} />
                     <Route path='/dashboard/acerca-de' component= {AcercaDe} />
                     <Route component={PaginaNoEncontrada} />
                 </Switch>
@@ -229,6 +239,7 @@ class App extends Component {
                     {/* {UserStore.Usuarios[2] === 'Consultar' ? <Route path='/usuarios/consultar' component= {ConsultaUsuarios} /> : <Redirect to='/' />} */}
                     <Route path='/' exact component= {MainComponent} />
                     {UserStore.Credenciales[0] === 'Generar formato' ? <Route path='/credenciales/generar-formato' component= {ConsultaCredencial} /> : <Redirect to='/notFound' />}
+                    <Route path='/dashboard/mi-cuenta' component= {MyAccount} />
                     <Route path='/dashboard/acerca-de' component= {AcercaDe} />
                     <Route component={PaginaNoEncontrada} />
                 </Switch>
