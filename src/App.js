@@ -155,7 +155,7 @@ class App extends Component {
               <Navbar 
                 profile_name={UserStore.name} 
                 profile_photo={UserStore.photo} 
-                profile_lastName = {UserStore.lastName}
+                profile_lastName = {`${UserStore.lastNameP} ${UserStore.lastNameM ? UserStore.lastNameM : ''}`}
                 profile_role={UserStore.role}
                 activateNavbar = {() => this.changeNavbar()}
               />
@@ -218,7 +218,7 @@ class App extends Component {
               <Navbar 
                 profile_name={UserStore.name} 
                 profile_photo={UserStore.photo} 
-                profile_lastName = {UserStore.lastName}
+                profile_lastName = {`${UserStore.lastNameP} ${UserStore.lastNameM ? UserStore.lastNameM : ''}`}
                 profile_role={UserStore.role}
                 activateNavbar = {() => this.changeNavbar()}
               />
