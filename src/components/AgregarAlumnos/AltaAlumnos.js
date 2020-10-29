@@ -11,6 +11,8 @@ import UserStore from '../Stores/UserStore'
 
 export class AltaAlumnos extends Component {
 
+    //Comentario Rodrigo
+
     //  Estado de la clase
     state = {
         usuarios : [],
