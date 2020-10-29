@@ -14,7 +14,7 @@ export class AcercaDe extends Component {
                 <div className="acercade-info">
                     <p className="txtMANDATUM">MANDATUM</p>
                     <p className="txtVERSION">VERSIÓN PREALFA 1.0</p>
-                    <p>La mejor opción para generar credenciales.</p>
+                    <p className="txtDESCRIPCION">La mejor opción para generar credenciales.</p>
                     <button className="btnDESCRIPCION">Dependencias</button>
                 </div>
                 <div className="abajo texto-derecha">

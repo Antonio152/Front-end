@@ -53,3 +53,42 @@
     text-align: center;
     background-color: #051E34;
 }
+
+@media only screen and (max-width: 640px){
+    .cuadro-fondo{
+        left:0;
+        width:100vw;
+    }
+}
+
+@media only screen and (max-width: 600px){
+    .acercade-info{
+        top: calc(40vw + 80px);
+        left: 32.16666%;
+        width: 37.5vw;
+    }
+
+    .txtMANDATUM{
+        width: 100%;
+        font-size: calc(4.5vw);
+        letter-spacing: 1.6667vw;
+    }
+
+    .txtVERSION{
+        width: 100%;
+        font-size: calc(2.75vw);
+        letter-spacing: 0.5vw;
+        margin-bottom: 3.333vw;
+    }
+
+    .txtDESCRIPCION{
+        width: 100%;
+        font-size: calc(2.75vw);
+    }
+    .btnDESCRIPCION{
+        padding: 1.166vw 2.5vw;
+        margin-top: 2.3vw;
+        font-size: 2.33333vw;
+        letter-spacing: 0.1666vw;
+    }
+}
