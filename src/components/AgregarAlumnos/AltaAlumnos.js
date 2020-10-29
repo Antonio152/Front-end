@@ -9,7 +9,7 @@ import * as BiIcons from 'react-icons/bi'
 import * as AiIcons from 'react-icons/ai'
 import UserStore from '../Stores/UserStore'
 
-export class AltaAlumnos extends Component {
+export class AltaAlumnos extends Component {// Soy Alexa
 
     //  Estado de la clase
     state = {
