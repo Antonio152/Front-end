@@ -91,7 +91,7 @@ export class ConsultaUsuarios extends Component {
         if (this.state.consulta === 'Por apellidos') {
             return(
                 <div className="fila justificado">
-                    <div className="columns">
+                    <div className="columns" style={{width:'100%'}}>
                         <InputField
                             type='text'
                             placeholder='Apellido paterno'
