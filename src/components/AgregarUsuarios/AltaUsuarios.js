@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import '../ConsultarUsuarios/ConsultaUsuarios.css'
-import imgBusqueda from './img/addStudent.jpg'
+import imgBusqueda from './img/addUser.jpg'
 import SelectField from '../GeneralUseComp/SelectField'
 import SubmitButton from '../GeneralUseComp/SubmitButton'
 import InputField from '../GeneralUseComp/InputField'
@@ -9,7 +9,7 @@ import * as BiIcons from 'react-icons/bi'
 import * as AiIcons from 'react-icons/ai'
 import UserStore from '../Stores/UserStore'
 
-export class AltaAlumnos extends Component {
+export class AltaUsuarios extends Component {
 
     //  Estado de la clase
     state = {
@@ -25,19 +25,16 @@ export class AltaAlumnos extends Component {
         aPaterno: '',
         aMaterno: '',
         curp: '',
-        sanguineo: 'Selecciona',
         con_telefono: '',
         con_email: '',
         con_telEmergencia: '',
+        rol_nombre: '',
         dir_numero: '',
         dir_calle: '',
         dir_localidad: '',
         dir_ciudad: '',
         dir_estado: '',
         dir_cp: '',
-        aca_carrera: 'Selecciona',
-        aca_matricula: '',
-        aca_cuatrimestre: 'Selecciona',
         
         // When a user clicks log in button and the API checks if user exists
         buttonDisabled: false,
@@ -82,67 +79,7 @@ export class AltaAlumnos extends Component {
             [e.target.name] : e.target.value
         });
     }
-/*
-    altaAlumnos = async () => {
-        await axios.post('http://localhost:4000/api/users', {
-            username: this.state.username,
-            password: this.state.password, 
-            //foto: this.state.foto,
-            nombre: this.state.nombre,
-            aPaterno: this.state.aPaterno,
-            aMaterno: this.state.aMaterno,
-            curp: this.state.curp,
-            sanguineo: this.state.sanguineo,
-            contacto:[{
-                telefono: this.state.con_telefono,
-                email: this.state.con_email,
-                telEmergencia: this.state.con_telEmergencia
-            }],
-            direccion:[{
-                numero: this.state.dir_numero,
-                calle: this.state.dir_calle,
-                localidad: this.state.dir_localidad,
-                ciudad: this.state.dir_ciudad,
-                estado: this.state.dir_estado,
-                cp: this.state.dir_cp
-            }],
-            academico:[{
-                carrera: this.state.aca_carrera,
-                matricula: this.state.aca_matricula,
-                cuatrimestre: this.state.aca_cuatrimestre
-            }]
-        })
-        //this.resetForm();
-        //this.renderUserAdded();
-    }
 
-    // Deja el formulario en su estado original
-    resetForm(){
-        this.setState({
-            username: '',
-            password: '', 
-            foto: '',
-            nombre: '',
-            aPaterno: '',
-            aMaterno: '',
-            curp: '',
-            sanguineo: 'Selecciona',
-            con_telefono: '',
-            con_email: '',
-            con_telEmergencia: '',
-            dir_numero: '',
-            dir_calle: '',
-            dir_localidad: '',
-            dir_ciudad: '',
-            dir_estado: '',
-            dir_cp: '',
-            aca_carrera: 'Selecciona',
-            aca_matricula: '',
-            aca_cuatrimestre: 'Selecciona',
-            buttonDisabled: false,
-        })
-    }
-*/
     componentDidMount() {
         this.getUsuarios();
         this.getModulos();
@@ -221,7 +158,7 @@ export class AltaAlumnos extends Component {
         }
         return(
             <div className="centrado">
-                <span className="text no-seleccionado">No ha agregado un alumno</span>
+                <span className="text no-seleccionado">No ha agregado un usuario</span>
             </div>
         )
     }
@@ -234,7 +171,7 @@ export class AltaAlumnos extends Component {
                     <div className="contenedor blanco full_width mh_img">
                         <img src={imgBusqueda} alt="" className="img_contenedor_principal"></img>
                         <div className="contenidoMod">
-                        <br/><br/><h1 className="resize-title-alu title">Agregar alumnos...</h1><br/>
+                        <br/><br/><h1 className="resize-title-alu title">Agregar usuarios...</h1><br/>
                         </div>
                     </div>
                     <div className="contenedor blanco mh_img datos_usuario">
@@ -250,7 +187,7 @@ export class AltaAlumnos extends Component {
                         <div className="contenidoMod">
                             <div className="fila justificado">
                                 <div className="columns">
-                                    <h1 className="title">Alumnos</h1>
+                                    <h1 className="title">Usuarios</h1>
                                     <p className="texto"><BiIcons.BiHelpCircle/>  Ingrese los datos requeridos obligatoriamente *.</p>
                                 </div>
                                 <div className="columns">
@@ -267,6 +204,34 @@ export class AltaAlumnos extends Component {
                             */}
                             <div className="fila justificado">
                                 <div className="columns ancho5 padding5">
+                                    <span className="text inputDesc">
+                                        Foto de perfil
+                                    </span>
+                                    <InputField
+                                        type='file'
+                                        placeholder="Foto"
+                                        value={ this.state.foto ? this.state.foto : ''}
+                                        onChange={ (val) => this.setInputValue('foto',val, 1000000n) }
+                                    />
+                                    <span className="text inputDesc">
+                                        Rol
+                                    </span>
+                                    <SelectField
+                                        options={{
+                                            nombre:[
+                                                'Selecciona',
+                                                'Super administrador',
+                                                'Administrador del sistema',
+                                                'Administrador de la escuela',
+                                                'Administrador',
+                                                'Consultor',
+                                                'Diseñador'
+                                            ]}}
+                                        value={this.state.rol_nombre}
+                                        name='rol_nombre'
+                                        onChange={this.setSelectValue}
+                                    />
+                                    <br></br>
                                     <h3>Datos generales</h3><br></br>
                                     <span className="text inputDesc">
                                         Nombre de usuario
@@ -322,28 +287,9 @@ export class AltaAlumnos extends Component {
                                         value={ this.state.curp ? this.state.curp : ''}
                                         onChange={ (val) => this.setInputValue('curp',val, 18) }
                                     />
-                                    <span className="text inputDesc">
-                                        Grupo sanguineo
-                                    </span>
-                                    <SelectField
-                                        options={{
-                                            nombre:[
-                                                'Selecciona',
-                                                'O-',
-                                                'O+',
-                                                'A-',
-                                                'A+',
-                                                'B-',
-                                                'B+',
-                                                'AB-',
-                                                'AB+'
-                                            ]}}
-                                        value={this.state.sanguineo}
-                                        name='sanguineo'
-                                        onChange={this.setSelectValue}
-                                    />
-                                    <br></br>
-                                    <h3>Datos de contacto</h3><br></br>
+                                </div>
+                                <div className="columns ancho5 padding5">
+                                <h3>Datos de contacto</h3><br></br>
                                     <span className="text inputDesc">
                                         Teléfono móvil
                                     </span>
@@ -371,8 +317,7 @@ export class AltaAlumnos extends Component {
                                         value={ this.state.con_telEmergencia ? this.state.con_telEmergencia : ''}
                                         onChange={ (val) => this.setInputValue('con_telEmergencia',val, 10) }
                                     />
-                                </div>
-                                <div className="columns ancho5 padding5">
+                                <br></br>
                                 <h3>Datos de domicilio</h3><br></br>
                                     <span className="text inputDesc">
                                         Calle
@@ -428,70 +373,6 @@ export class AltaAlumnos extends Component {
                                         value={ this.state.dir_cp ? this.state.dir_cp : ''}
                                         onChange={ (val) => this.setInputValue('dir_cp',val, 5) }
                                     />
-                                    <br></br>
-                                    <h3>Datos académicos</h3><br></br>
-                                    <span className="text inputDesc">
-                                        Matrícula
-                                    </span>
-                                    <InputField
-                                        type='text'
-                                        placeholder="ID"
-                                        value={ this.state.aca_matricula ? this.state.aca_matricula : ''}
-                                        onChange={ (val) => this.setInputValue('aca_matricula',val, 10) }
-                                    />
-                                    <span className="text inputDesc">
-                                        Programa educativo
-                                    </span>
-                                    <SelectField
-                                        options={{
-                                            nombre:[
-                                                'Selecciona',
-                                                'Ingeniería en Software',
-                                                'Ingeniería en Mecatrónica',
-                                                'Ingeniería en Biomédica',
-                                                'Ingeniería en Biotecnología',
-                                                'Ingeniería en Telemática',
-                                                'Ingeniería en Redes y Telecomunicaciones',
-                                                'Ingeniería Mecánica Automotríz',
-                                                'Ingeniería Sistemas y Tecnologías Industriales',
-                                                'Licenciatura en Terapia física',
-                                                'Licenciatura en Médico Cirujano'
-                                            ]}}
-                                        value={this.state.aca_carrera}
-                                        name='aca_carrera'
-                                        onChange={this.setSelectValue}
-                                    />
-                                    <span className="text inputDesc">
-                                        Cuatrimestre
-                                    </span>
-                                    <SelectField
-                                        options={{
-                                            nombre:[
-                                                'Selecciona',
-                                                '1',
-                                                '2',
-                                                '3',
-                                                '4',
-                                                '5',
-                                                '6',
-                                                '7',
-                                                '8',
-                                                '9',
-                                                '10'
-                                            ]}}
-                                        value={this.state.aca_cuatrimestre}
-                                        name='aca_cuatrimestre'
-                                        onChange={this.setSelectValue}
-                                    />
-                                    <span className="text inputDesc">
-                                        Foto de perfil
-                                    </span>
-                                    <InputField
-                                        type='file'
-                                        placeholder="Foto"
-                                        value={ this.state.foto ? this.state.foto : ''}
-                                        onChange={ (val) => this.setInputValue('foto',val, 1000000n) }
-                                    />
                                 </div>
                             </div>
 
@@ -502,4 +383,4 @@ export class AltaAlumnos extends Component {
         )
     }
 }
-export default AltaAlumnos
+export default AltaUsuarios
