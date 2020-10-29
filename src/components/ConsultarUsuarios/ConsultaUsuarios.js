@@ -306,7 +306,7 @@ export class ConsultaUsuarios extends Component {
                                         <th className="th-nombre">Nombre completo</th>
                                         <th className="rol">Rol</th>
                                         <th>Módulos con acceso</th>
-                                        <th className="activo">Activo</th>
+                                        <th className="activo" style={{borderLeft:'none'}}>Activo</th>
                                     </tr>
                                     {/* Carga los datos de los alumnos */}
                                     {/* Adjuntar en función con trycatch */

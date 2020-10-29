@@ -65,7 +65,6 @@ export class MainComponent extends Component {
                     <div className="columns col-der">
                         <div className="caja-main-der">
                             <p className="title titulo-main">Revisa nuestras funciones</p>
-                            <br/>
                             {
                                 // Agrega los modulos al div
                                 this.state.usuario.rol[0].modulos.map((modulo, modIndex) => {
