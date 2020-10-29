@@ -14,6 +14,7 @@ import SubmitButton from './components/GeneralUseComp/SubmitButton'
 import Navbar from './components/Navbar/Navbar'
 
 // Módulos
+import AltaUsuarios from './components/AgregarUsuarios/AltaUsuarios'
 import ConsultaUsuarios from './components/ConsultarUsuarios/ConsultaUsuarios'
 import AltaAlumnos from './components/AgregarAlumnos/AltaAlumnos'
 import ConsultaAlumnos from './components/ConsultarAlumnos/ConsultaAlumnos'
@@ -185,8 +186,8 @@ class App extends Component {
                       // console.log(permiso)
                       if (permiso === 'Consultar')
                         return(<Route key={perIndex} path='/dashboard/usuarios/consultar' component= {ConsultaUsuarios} />)
-                      // if (permiso === 'Crear')
-                      //   return(<Route key={perIndex} path='/usuarios/crear' component= {AltaUsuarios} />)
+                      if (permiso === 'Crear')
+                        return(<Route key={perIndex} path='/dashboard/usuarios/crear' component= {AltaUsuarios} />)
                       // else
                       //   return(<Redirect key={perIndex} to='/notFound' />)
                     })}
