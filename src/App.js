@@ -241,10 +241,10 @@ class App extends Component {
               <div className={this.state.navActivado ? 'contenido nav-activado' : 'contenido'}>
                 <Switch>
                     <Route exact path="/auth">
-                        <Redirect to='/dashboard' />
+                      <Redirect to='/dashboard' />
                     </Route>
-                    {/* {UserStore.Usuarios[2] === 'Consultar' ? <Route path='/usuarios/consultar' component= {ConsultaUsuarios} /> : <Redirect to='/' />} */}
                     <Route path='/dashboard' exact component= {MainComponent} />
+                    {/* {UserStore.Usuarios[2] === 'Consultar' ? <Route path='/usuarios/consultar' component= {ConsultaUsuarios} /> : <Redirect to='/' />} */}
                     {UserStore.Credenciales[0] === 'Generar formato' ? <Route path='/dashboard/credenciales/generar-formato' component= {ConsultaCredencial} /> : <Redirect to='/notFound' />}
                     <Route path='/dashboard/mi-cuenta' component= {MyAccount} />
                     <Route path='/dashboard/acerca-de' component= {AcercaDe} />

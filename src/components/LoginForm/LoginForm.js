@@ -89,9 +89,9 @@ export class LoginForm extends Component {
                         UserStore.Credenciales = result.modulos[2].permisos;
                 }
                 else {
-                    UserStore.career = result.academico[0].carrera;
-                    UserStore.idStudent = result.academico[0].matricula;
-                    UserStore.grade = result.academico[0].cuatrimestre;
+                    UserStore.career = result.datosAcademicos[0].carrera;
+                    UserStore.idStudent = result.datosAcademicos[0].matricula;
+                    UserStore.grade = result.datosAcademicos[0].cuatrimestre;
                     if(result.modulos[0].permisos)
                         UserStore.Credenciales = result.modulos[0].permisos;
                 }
@@ -100,6 +100,8 @@ export class LoginForm extends Component {
             else if (result && result.success === false) {
                 this.resetForm();
                 alert(result.msg); // Error from API
+                UserStore.loading = false;
+                UserStore.isLoggedIn = false;
             }
         } catch (error) {
             console.log(error)
