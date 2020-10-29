@@ -13,7 +13,7 @@ export class PaginaNoEncontrada extends Component {
                 <p>Parece que estás perdido. La ruta que ingresaste no es correcta o quizá no tienes los permisos de acceso para dicho módulo.</p>
                 <div className="buttons-con">
                     <div className="action-link-wrap">
-                    <Link to='/' className="link-button">Ir a la página principal</Link>
+                    <Link to='/dashboard' className="link-button">Ir a la página principal</Link>
                     </div>
                 </div>
                 </div>
