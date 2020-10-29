@@ -369,7 +369,7 @@ export class ConsultaAlumnos extends Component {
                                         <th className="matricula">Matricula</th>
                                         <th>Carrera</th>
                                         <th className="rol">Cuatrimestre</th>
-                                        <th className="activo">Activo</th>
+                                        <th className="activo" style={{borderLeft:'none'}}>Activo</th>
                                     </tr>
                                     {/* Carga los datos de los alumnos */}
                                     {
