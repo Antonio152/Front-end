@@ -9,6 +9,7 @@ import * as BiIcons from 'react-icons/bi'
 import * as AiIcons from 'react-icons/ai'
 import UserStore from '../Stores/UserStore'
 import Loader from '../GeneralUseComp/Loader'
+import Checkbox from '../GeneralUseComp/Checkbox'
 
 export class ConsultaAlumnos extends Component {
 
@@ -16,6 +17,7 @@ export class ConsultaAlumnos extends Component {
     state = {
         usuarios : [],
         userQry : [],
+        usersForCredential: [],
         userSelected:[],
         consulta: 'Todos',
         nombre: '',
@@ -40,15 +42,58 @@ export class ConsultaAlumnos extends Component {
         let result = await res.json();
         if (result && res.status === 200){
             let usuarios = [];
+            let usuarios_id = [];
             result
                 .filter(usuario => usuario.rol[0].nombre === 'Alumno')
-                .forEach(usuario => usuarios.push(usuario))
+                .forEach(usuario => {
+                    usuarios.push(usuario);
+                    usuarios_id.push(usuario._id)
+                })
             this.setState({
                 usuarios: usuarios,
-                userQry: usuarios
+                userQry: usuarios,
+                usersForCredential: usuarios_id
             })
         }
     }
+    // Obtiene el archivo PDF en base 64
+    getCredenciales = async (datos, formato) => {
+        var arrDatos = [];
+        this.state.userQry.forEach(usuario => {
+            datos.forEach(index => {
+                if (usuario._id === index) arrDatos.push(usuario);
+            })
+        });
+        // if (!datos.length) arrDatos.push(datos)
+        // else arrDatos = datos;
+        const res = await axios.post('http://localhost:4000/cards',{
+            usuarios: arrDatos,
+            formato: formato
+        });
+        this.generarArchivo(res.data.pdf, arrDatos.length === 1 ? `Credencial ${arrDatos[0].nombre} ${arrDatos[0].aPaterno}` : 'Credenciales');
+    }
+    //Convierte el archivo de base 64 a uno descargable
+    generarArchivo = (content, fileName) => {
+        // Decodifica base 64 y remueve el espacio para compatibilidad con  IE
+        var binary = atob(content.replace(/\s/g, ''));
+        var len = binary.length;
+        // Buffer de datos y u
+        var buffer = new ArrayBuffer(len);
+        // array de enteros sin signo de 8 bits
+        var view = new Uint8Array(buffer);
+        // Decodifica caracter a caracter
+        for (var i = 0; i < len; i++) {
+            view[i] = binary.charCodeAt(i);
+        }
+        // Blob de datos
+        const blob = new Blob([view], { type: "application/pdf" });
+        // Crea link de descarga automático
+        const link = document.createElement("a");
+        link.href = window.URL.createObjectURL(blob);
+        link.download = fileName;
+        link.click();
+      };
+
     // Obtiene los modulos del servidor
     getModulos = async () => {
         const res = await axios.get(`http://localhost:4000/api/users/${UserStore.id}`);
@@ -84,7 +129,7 @@ export class ConsultaAlumnos extends Component {
                         value={this.state.nombre}
                         name='nombre'
                         onChange={ (val) => this.setInputValue('nombre',val, 100) }/>
-                    <SubmitButton 
+                    <SubmitButton
                         styles=' btn-blanco no_margin no_padding width-auto size18 input-size'
                         icon={<BiIcons.BiSearch/>}
                         onclick={() => this.busquedaParam() }
@@ -107,7 +152,7 @@ export class ConsultaAlumnos extends Component {
                         value={this.state.aMaterno}
                         name='aMaterno'
                         onChange={ (val) => this.setInputValue('aMaterno',val, 50) }/>
-                    <SubmitButton 
+                    <SubmitButton
                         styles=' btn-blanco no_margin no_padding width-auto size18 input-size'
                         icon={<BiIcons.BiSearch/>}
                         onclick={() => this.busquedaParam() }
@@ -124,13 +169,13 @@ export class ConsultaAlumnos extends Component {
                         value={this.state.matricula}
                         name='matricula'
                         onChange={ (val) => this.setInputValue('matricula',val, 50) }/>
-                    <SubmitButton 
+                    <SubmitButton
                         styles=' btn-blanco no_margin no_padding width-auto size18 input-size'
                         icon={<BiIcons.BiSearch/>}
                         onclick={() => this.busquedaParam() }
                         />
                 </div>
-            )            
+            )
         }
         if (this.state.consulta === 'Por carrera'){
             return(
@@ -152,13 +197,13 @@ export class ConsultaAlumnos extends Component {
                         value={this.state.carrera}
                         name='carrera'
                         onChange={this.setSelectValue}/>
-                    <SubmitButton 
+                    <SubmitButton
                         styles=' btn-blanco no_margin no_padding width-auto size18 input-size-select'
                         icon={<BiIcons.BiSearch/>}
                         onclick={() => this.busquedaParam() }
                         />
                 </div>
-            )            
+            )
         }
         if (this.state.consulta === 'Por estado'){
             return(
@@ -169,7 +214,7 @@ export class ConsultaAlumnos extends Component {
                         value={this.state.estado}
                         name='estado'
                         onChange={this.setSelectValue}/>
-                    <SubmitButton 
+                    <SubmitButton
                         styles=' btn-blanco no_margin no_padding width-auto size18 input-size-select'
                         icon={<BiIcons.BiSearch/>}
                         onclick={() => this.busquedaParam() }
@@ -179,44 +224,79 @@ export class ConsultaAlumnos extends Component {
         }
     }
 
+    selectUserForCard = (usuario, borrar) => {
+        // Recorre todos los usuarios que se van a imprimir
+        if(borrar === 'false')
+            this.state.usersForCredential.push(usuario._id)
+        for (let index = 0; index < this.state.usersForCredential.length; index++)
+            // Revisa si es el usuario seleccionado y si se elimina o no
+            if(usuario._id === this.state.usersForCredential[index] && borrar === 'true')
+                this.state.usersForCredential.splice(index, 1)
+        console.log(this.state.userQry)
+    }
     // Busca todos
-    busqueda = () => this.setState({userQry:this.state.usuarios});
+    busqueda = () => {
+        let usuarios_id = [];
+        this.state.usuarios.forEach(usuario => {
+            usuarios_id.push(usuario._id)
+        });
+        this.setState({
+            userQry:this.state.usuarios,
+            usersForCredential: usuarios_id
+        });
+    }
 
     // Realiza el filtro de alumnos
     busquedaParam(){
         var usuarioSeleccionado =[]
+        var usuarioSeleccionado_id =[]
         if (this.state.consulta === 'Por nombre')
                 this.state.usuarios.forEach(usuario => {
-                    if (usuario.nombre.includes(this.state.nombre))
-                        usuarioSeleccionado.push(usuario); 
+                    if (usuario.nombre.includes(this.state.nombre)){
+                        usuarioSeleccionado.push(usuario);
+                        usuarioSeleccionado_id.push(usuario.id)
+                    }
                 });
         if (this.state.consulta === 'Por apellidos')
                 this.state.usuarios.forEach(usuario => {
-                    if (`${usuario.aPaterno} ${usuario.aMaterno}` === `${this.state.aPaterno} ${this.state.aMaterno}`)
+                    if (`${usuario.aPaterno} ${usuario.aMaterno}` === `${this.state.aPaterno} ${this.state.aMaterno}`){
                         usuarioSeleccionado.push(usuario);
-                    else if (usuario.aPaterno === this.state.aPaterno)
+                        usuarioSeleccionado_id.push(usuario.id)
+                    }
+                    else if (usuario.aPaterno === this.state.aPaterno){
                         usuarioSeleccionado.push(usuario);
-                    else if(usuario.aMaterno === this.state.aMaterno)
+                        usuarioSeleccionado_id.push(usuario.id)
+                    }
+                    else if(usuario.aMaterno === this.state.aMaterno){
                         usuarioSeleccionado.push(usuario);
+                        usuarioSeleccionado_id.push(usuario.id)
+                    }
                 });
         if (this.state.consulta === 'Por matrícula')
                 this.state.usuarios.forEach(usuario => {
-                    if (usuario.academico[0].matricula === this.state.matricula)
+                    if (usuario.academico[0].matricula === this.state.matricula){
                         usuarioSeleccionado.push(usuario);
-                });        
+                        usuarioSeleccionado_id.push(usuario.id)
+                    }
+                });
         if (this.state.consulta === 'Por carrera')
                 this.state.usuarios.forEach(usuario => {
-                    if (usuario.academico[0].carrera === this.state.carrera)
+                    if (usuario.academico[0].carrera === this.state.carrera){
                         usuarioSeleccionado.push(usuario);
+                        usuarioSeleccionado_id.push(usuario.id)
+                    }
                 });
         if (this.state.consulta === 'Por estado')
                 this.state.usuarios.forEach(usuario => {
-                    if (`${usuario.published ? 'Activo' : 'Inactivo'}` === this.state.estado)
+                    if (`${usuario.published ? 'Activo' : 'Inactivo'}` === this.state.estado){
                         usuarioSeleccionado.push(usuario);
+                        usuarioSeleccionado_id.push(usuario.id)
+                    }
                 });
-        
+
         this.setState({
-            userQry:usuarioSeleccionado, 
+            userQry:usuarioSeleccionado,
+            usersForCredential: usuarioSeleccionado_id,
             userSelected:'',
             nombre: '',
             aPaterno: '',
@@ -233,6 +313,8 @@ export class ConsultaAlumnos extends Component {
     // Renderiza los datos del usuario seleccionado
     renderUserSelected () {
         if (this.state.userSelected.nombre) {
+            var arrIds = [];
+            arrIds.push(this.state.userSelected._id);
             return(
                 <div className="column">
                     <div className="fila">
@@ -241,19 +323,20 @@ export class ConsultaAlumnos extends Component {
                                 <img className="foto_usuario" alt="" src={`data:image/jpg;base64,${this.state.userSelected.foto}`}/>
                             </div>
                             <div className="botones">
-                                <SubmitButton 
-                                    icon={<BiIcons.BiTrash/>} 
-                                    styles="fullWidth no_padding no_margin boton consulta btn-blanco" 
+                                <SubmitButton
+                                    icon={<BiIcons.BiTrash/>}
+                                    styles="fullWidth no_padding no_margin boton consulta btn-blanco"
                                     text="Eliminar"
                                     disabled={this.state.permisos.includes('Eliminar') ? false : true}/>
-                                <SubmitButton 
-                                    icon={<BiIcons.BiPencil/>} 
-                                    styles="fullWidth no_padding no_margin boton btn-blanco" 
+                                <SubmitButton
+                                    icon={<BiIcons.BiPencil/>}
+                                    styles="fullWidth no_padding no_margin boton btn-blanco"
                                     text="Editar   "
                                     disabled={this.state.permisos.includes('Modificar') ? false : true}/>
-                                <SubmitButton 
-                                    icon={<AiIcons.AiOutlineIdcard/>} 
-                                    styles="fullWidth no_padding no_margin boton btn-blanco padding-top7" 
+                                <SubmitButton
+                                    icon={<AiIcons.AiOutlineIdcard/>}
+                                    styles="fullWidth no_padding no_margin boton btn-blanco padding-top7"
+                                    onclick={() => this.getCredenciales(arrIds, 'UPPCredencial1')}
                                     text="Credencial"/>
                             </div>
                         </div>
@@ -297,7 +380,7 @@ export class ConsultaAlumnos extends Component {
                             </div>
                         </div>
                     </div>
-                    
+
                 </div>
             )
         }
@@ -311,6 +394,7 @@ export class ConsultaAlumnos extends Component {
 
     // Renderizado del módulo
     render() {
+        var isChecked = true;
         return (
             <div className="modulo max-1357px">
                 <div className="resize-columna justificado ">
@@ -325,9 +409,9 @@ export class ConsultaAlumnos extends Component {
                                 value={this.state.consulta}
                                 name='consulta'
                                 onChange={this.setSelectValue}/>
-                            {this.state.consulta === 'Todos' ? 
+                            {this.state.consulta === 'Todos' ?
                             <div className="right">
-                                <SubmitButton 
+                                <SubmitButton
                                     styles=' btn-blanco no_margin no_padding width-auto size18 padding-10'
                                     icon={<BiIcons.BiSearch/>}
                                     text='Buscar'
@@ -346,50 +430,73 @@ export class ConsultaAlumnos extends Component {
                     </div>
                 </div>
 
-                <div className="fila">
+                <div className="fila" style={{maxHeight:'calc(100vh - 380px)' , minHeight:'401px'}}>
                     <div className="contenedor blanco full_width relleno">
                         <div className="contenidoMod">
                             <div className="fila justificado">
                                 <div className="columns">
                                     <h1 className="title">Alumnos</h1>
-                                    <p className="texto"><BiIcons.BiHelpCircle/>  Para conocer más detalles del alumno, haga click sobre él. De ser necesario,</p><p> seleccione el botón a la derecha para generar las credenciales de todos los alumnos de la tabla.</p>
+                                    <div className="desc-modulo">
+
+                                    <p className="texto"><BiIcons.BiHelpCircle/>  Para conocer más detalles del alumno, haga click sobre él. De ser necesario,</p><p className="texto" style={{marginTop:0}}> seleccione el botón a la derecha para generar las credenciales de todos los alumnos de la tabla.</p>
+                                    </div>
                                 </div>
                                 <div className="columns">
                                     <SubmitButton
                                     styles='large-text'
-                                    text='Generar credenciales'/>
+                                    text='Generar credenciales'
+                                    onclick={() => this.getCredenciales(this.state.usersForCredential, 'UPPCredencial1')}
+                                    />
                                 </div>
                             </div>
-                            
-                            { this.state.userQry.length === 0 ? <><br/><br/><span className="texto_mediano"> Alumnos no encontrados </span></> : 
+
+                            { this.state.userQry.length === 0 ? <><br/><br/><span className="texto_mediano"> Alumnos no encontrados </span></> :
+                            <div>
                             <table className="tabla">
                                 <tbody>
                                     <tr>
-                                        <th>Nombre completo</th>
+                                        <th style={{minWidth:'25px'}}/>
+                                        <th className="adjustable_td">Nombre completo</th>
                                         <th className="matricula">Matricula</th>
-                                        <th>Carrera</th>
+                                        <th className="adjustable_td">Carrera</th>
                                         <th className="rol">Cuatrimestre</th>
-                                        <th className="activo" style={{borderLeft:'none'}}>Activo</th>
+                                        <th className="activo-tabla" style={{borderLeft:'none'}}>Activo</th>
                                     </tr>
+                                </tbody>
+                            </table>
+                            <div className="datos-tabla">
+
+                            <table className="tabla" style={{marginTop:0}}>
+                                <tbody>
+
                                     {/* Carga los datos de los alumnos */}
                                     {
                                     this.state.userQry.length > 0 ?
-                                    this.state.usuarios.map((usuario, usIndex) => {
+                                    this.state.userQry.map((usuario, usIndex) => {
                                         return(
                                             <tr key = {usIndex} onClick={() => this.setState({userSelected:usuario})}>
+                                                <td style={{minWidth:'25px', padding: '15px 0px'}}>
+                                                    <Checkbox
+                                                    key = {usIndex}
+                                                    onClick={(e) => {
+                                                        this.selectUserForCard(usuario, e.target.value)
+                                                    }}/>
+                                                </td>
                                                 <td className="adjustable_td">{`${usuario.nombre} ${usuario.aPaterno} ${usuario.aMaterno} `}</td>
-                                                <td>{usuario.academico[0].matricula}</td>
+                                                <td className="matricula">{usuario.academico[0].matricula}</td>
                                                 <td className="adjustable_td">{usuario.academico[0].carrera}</td>
-                                                <td>{usuario.academico[0].cuatrimestre}</td>
-                                                <td>{usuario.published ? 'Sí' : 'No'}</td>
+                                                <td className="rol">{usuario.academico[0].cuatrimestre}</td>
+                                                <td className="activo-tabla" style={{borderLeft:'none'}}> {usuario.published ? 'Sí' : 'No'}</td>
                                             </tr>
                                         )
                                     }):
                                     <div className="centrado">
                                         <Loader/>
-                                    </div>} 
+                                    </div>}
                                 </tbody>
                             </table>
+                            </div>
+                            </div>
                             }
                         </div>
                     </div>
