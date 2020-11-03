@@ -5,7 +5,6 @@ import * as AiIcons from 'react-icons/ai';
 
 import UserStore from '../Stores/UserStore'
 
-import InputFile from '../GeneralUseComp/InputFile'
 import InputField from '../GeneralUseComp/InputField'
 import SubmitButton from '../GeneralUseComp/SubmitButton'
 import BtnSeccion from './BtnSeccion'
@@ -150,8 +149,8 @@ export class MyAccount extends Component {
             }).then((results) => {
                 const img = results[0]
                 const base64str = img.data
-                const imgExt = img.ext
-                const file = Compress.convertBase64ToFile(base64str, imgExt)
+                // const imgExt = img.ext
+                // const file = Compress.convertBase64ToFile(base64str, imgExt)
                 this.setState({
                     foto: base64str
                 })
@@ -222,7 +221,7 @@ export class MyAccount extends Component {
                                     this.setState({
                                         foto: this.state.fotoAnt
                                     })
-                                    alert('La relación de aspecto debe ser 1:1')
+                                    alert('La relación de aspecto debe ser cuadrada')
                                 }}
                             }/>
                             <div className="file-middle">

@@ -188,8 +188,8 @@ class App extends Component {
                         return(<Route key={perIndex} path='/dashboard/usuarios/consultar' component= {ConsultaUsuarios} />)
                       if (permiso === 'Crear')
                         return(<Route key={perIndex} path='/dashboard/usuarios/crear' component= {AltaUsuarios} />)
-                      // else
-                      //   return(<Redirect key={perIndex} to='/notFound' />)
+                      else
+                        return('')
                     })}
 
                     {/* Para los usuarios con acceso a los datos de los alumnos  */}
@@ -199,8 +199,8 @@ class App extends Component {
                         return(<Route key={perIndex} path='/dashboard/alumnos/consultar' component= {ConsultaAlumnos} />)
                       if (permiso === 'Crear')
                         return(<Route key={perIndex} path='/dashboard/alumnos/crear' component= {AltaAlumnos} />)
-                      // else
-                      //   return(<Redirect key={perIndex} to='/notFound' />)
+                      else
+                        return('')
                     })}
 
                     {/* Para los usuarios con acceso a la modificación de credenciales  */}
@@ -209,7 +209,7 @@ class App extends Component {
                       // if (permiso === 'Modificar formato')
                       //   return(<Route key={perIndex} path='/credenciales/modificar-formato' component= {ModificarCredencial} />)
                       // else
-                      //   return(<Redirect key={perIndex} to='/notFound' />)
+                      return('')
                     })}
                     <Route path='/dashboard/mi-cuenta' component= {MyAccount} />
                     <Route path='/dashboard/acerca-de' component= {AcercaDe} />

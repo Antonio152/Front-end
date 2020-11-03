@@ -386,7 +386,6 @@ export class ConsultaAlumnos extends Component {
 
     // Renderizado del módulo
     render() {
-        var isChecked = true;
         return (
             <div className="modulo max-1357px">
                 <div className="resize-columna justificado ">
