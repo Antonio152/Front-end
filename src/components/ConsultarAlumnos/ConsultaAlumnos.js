@@ -232,7 +232,7 @@ export class ConsultaAlumnos extends Component {
             // Revisa si es el usuario seleccionado y si se elimina o no
             if(usuario._id === this.state.usersForCredential[index] && borrar === 'true')
                 this.state.usersForCredential.splice(index, 1)
-        console.log(this.state.userQry)
+        // console.log(this.state.userQry)
     }
     // Busca todos
     busqueda = () => {
@@ -252,48 +252,40 @@ export class ConsultaAlumnos extends Component {
         var usuarioSeleccionado_id =[]
         if (this.state.consulta === 'Por nombre')
                 this.state.usuarios.forEach(usuario => {
-                    if (usuario.nombre.includes(this.state.nombre)){
+                    if (usuario.nombre.includes(this.state.nombre))
                         usuarioSeleccionado.push(usuario);
-                        usuarioSeleccionado_id.push(usuario.id)
-                    }
                 });
         if (this.state.consulta === 'Por apellidos')
                 this.state.usuarios.forEach(usuario => {
-                    if (`${usuario.aPaterno} ${usuario.aMaterno}` === `${this.state.aPaterno} ${this.state.aMaterno}`){
+                    if (`${usuario.aPaterno} ${usuario.aMaterno}` === `${this.state.aPaterno} ${this.state.aMaterno}`)
                         usuarioSeleccionado.push(usuario);
-                        usuarioSeleccionado_id.push(usuario.id)
-                    }
-                    else if (usuario.aPaterno === this.state.aPaterno){
+                    
+                    else if (usuario.aPaterno === this.state.aPaterno)
                         usuarioSeleccionado.push(usuario);
-                        usuarioSeleccionado_id.push(usuario.id)
-                    }
-                    else if(usuario.aMaterno === this.state.aMaterno){
+                    
+                    else if(usuario.aMaterno === this.state.aMaterno)
                         usuarioSeleccionado.push(usuario);
-                        usuarioSeleccionado_id.push(usuario.id)
-                    }
                 });
         if (this.state.consulta === 'Por matrícula')
                 this.state.usuarios.forEach(usuario => {
-                    if (usuario.academico[0].matricula === this.state.matricula){
+                    if (usuario.academico[0].matricula === this.state.matricula)
                         usuarioSeleccionado.push(usuario);
-                        usuarioSeleccionado_id.push(usuario.id)
-                    }
                 });
         if (this.state.consulta === 'Por carrera')
                 this.state.usuarios.forEach(usuario => {
-                    if (usuario.academico[0].carrera === this.state.carrera){
+                    if (usuario.academico[0].carrera === this.state.carrera)
                         usuarioSeleccionado.push(usuario);
-                        usuarioSeleccionado_id.push(usuario.id)
-                    }
                 });
         if (this.state.consulta === 'Por estado')
                 this.state.usuarios.forEach(usuario => {
-                    if (`${usuario.published ? 'Activo' : 'Inactivo'}` === this.state.estado){
+                    if (`${usuario.published ? 'Activo' : 'Inactivo'}` === this.state.estado)
                         usuarioSeleccionado.push(usuario);
-                        usuarioSeleccionado_id.push(usuario.id)
-                    }
                 });
-
+        usuarioSeleccionado.forEach(usuario =>{
+            usuarioSeleccionado_id.push(usuario._id)
+        });
+        console.log(usuarioSeleccionado)
+        console.log(usuarioSeleccionado_id)
         this.setState({
             userQry:usuarioSeleccionado,
             usersForCredential: usuarioSeleccionado_id,
@@ -304,7 +296,7 @@ export class ConsultaAlumnos extends Component {
         });
     }
 
-
+    // Cuando el componenente es renderizado
     componentDidMount() {
         this.getUsuarios();
         this.getModulos();
