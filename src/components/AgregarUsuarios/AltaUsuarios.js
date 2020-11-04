@@ -119,39 +119,6 @@ export class AltaUsuarios extends Component {
                     {this.inputTextEditable('Teléfono Emer.',this.state.con_telEmergencia, 'text', 'con_telEmergencia', 10)}
                 </div>
             )
-        if (this.state.zona === 'academico')
-        return(
-            <div>
-
-                {this.inputTextEditable('Matrícula',this.state.aca_matricula, 'text', 'aca_matricula', 10)}
-
-                {this.inputSelectEditable(
-                    'CARRERA',
-                    'aca_carrera',
-                    this.state.aca_carrera,
-                    {nombre:['Ingeniería en Software',
-                    'Ingeniería en Mecatrónica',
-                    'Ingeniería en Biomédica',
-                    'Ingeniería en Biotecnología',
-                    'Ingeniería en Telemática',
-                    'Ingeniería en Redes y Telecomunicaciones',
-                    'Ingeniería Mecánica Automotríz',
-                    'Ingeniería Sistemas y Tecnologías Industriales',
-                    'Licenciatura en Terapia física',
-                    'Licenciatura en Médico Cirujano']}
-                )}
-                
-                <div className="inp-numero">
-                    {this.inputSelectEditable(
-                        'Cuatrimestre',
-                        'aca_cuatrimestre',
-                        this.state.aca_cuatrimestre,
-                        {nombre:[ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
-                    )}
-                </div>
-                
-            </div>
-        )
     }
     // Estado cambia con los select
     setSelectValue = (e) => {
@@ -292,15 +259,6 @@ export class AltaUsuarios extends Component {
                             descripcion='Calle, número, localidad, ciudad, estado, C.P.'
                             onclick={ () => this.setState({zona:'direccion'}) }
                         />
-                        
-                        {UserStore.role === 'Alumno' ?
-                        <BtnSeccion
-                            activo={this.state.zona === 'academico' ? true : false}
-                            nombre='Académico'
-                            descripcion='Matrícula, carrera, cuatrimestre'
-                            onclick={ () => this.setState({zona:'academico'}) }
-                        />
-                        : <></>}
                         
                         <BtnSeccion
                             activo={this.state.zona === 'contacto' ? true : false}
