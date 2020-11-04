@@ -243,7 +243,7 @@ export class MyAccount extends Component {
                                     this.setState({
                                         foto: this.state.fotoAnt
                                     })
-                                    alert('La relación de aspecto debe ser cuadrada')
+                                    //alert('La relación de aspecto debe ser cuadrada')
                                 }}
                             }/>
                             <div className="file-middle">
@@ -255,7 +255,7 @@ export class MyAccount extends Component {
                                     onChange = {(e) => this.resizeImageFn(e.target.files)}
                                     accept="image/*"
                                     />
-                                <label htmlFor="file"><AiIcons.AiOutlineCloudUpload/> Subir</label>
+                                <label htmlFor="file"><AiIcons.AiOutlineCloudUpload/>Subir</label>
                             </div>
                             
                         </div>
@@ -264,7 +264,7 @@ export class MyAccount extends Component {
                         <BtnSeccion
                             activo={this.state.zona === 'personales' ? true : false}
                             nombre='Datos personales'
-                            descripcion='Nombre, apellidos, contraseña, curp, núm. sos, grupo sanguíneo'
+                            descripcion='Nombre, apellidos, contraseña, curp, grupo sanguíneo'
                             onclick={ () =>  this.setState({zona:'personales'}) }
                         />
 
@@ -287,14 +287,14 @@ export class MyAccount extends Component {
                         <BtnSeccion
                             activo={this.state.zona === 'contacto' ? true : false}
                             nombre='Contacto'
-                            descripcion='Teléfono, correo electrónico, teléfono de emergencia'
+                            descripcion='Correo electrónico, teléfono, teléfono de emergencia'
                             onclick={ () => this.setState({zona:'contacto'}) }
                         />
 
                         <BtnSeccion
                             activo={this.state.zona === 'cuenta' ? true : false}
                             nombre='Cuenta'
-                            descripcion='Teléfono, correo electrónico, teléfono de emergencia'
+                            descripcion='Correo electrónico, nombre de usuario, contraseña'
                             onclick={ () => this.setState({zona:'cuenta'}) }
                         />
 
