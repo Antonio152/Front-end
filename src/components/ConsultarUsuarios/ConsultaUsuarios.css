@@ -247,6 +247,9 @@
     display: flex;
     flex-direction: row;
 }
+.resize-title{
+    font-size: 1.8em;
+}
 
 @media only screen and (max-width: 1538px){
     .img_contenedor_principal{

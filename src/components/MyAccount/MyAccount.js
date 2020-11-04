@@ -120,6 +120,28 @@ export class MyAccount extends Component {
                 {this.inputTextEditable('Nueva contraseña', this.state.password, 'password','password', 32)}
             </div>
         )
+        if (this.state.zona === 'academico')
+        return(
+            <div>
+                <div className="columns">
+                    <span className="etiqueta" style={{marginLeft:'0'}}>CARRERA</span>
+                    <span className="span-descriptivo" style={{color:'#b4b4b4'}}>{UserStore.career}</span>
+                </div>
+                <div className="columns">
+                    <span className="etiqueta" style={{marginLeft:'0'}}>MATRÍCULA</span>
+                    <span className="span-descriptivo" style={{color:'#b4b4b4'}}>{UserStore.idStudent}</span>
+                </div>
+                
+                <div className="inp-numero">
+                    {this.inputSelectEditable(
+                        'Cuatrimestre',
+                        'aca_cuatrimestre',
+                        this.state.aca_cuatrimestre,
+                        {nombre:[ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]}
+                        )}
+                </div>
+            </div>
+        )
     }
     // Estado cambia con los select
     setSelectValue = (e) => {
@@ -252,7 +274,15 @@ export class MyAccount extends Component {
                             descripcion='Calle, número, localidad, ciudad, estado, C.P.'
                             onclick={ () => this.setState({zona:'direccion'}) }
                         />
-
+                        
+                        {UserStore.role === 'Alumno' ?
+                        <BtnSeccion
+                            activo={this.state.zona === 'academico' ? true : false}
+                            nombre='Académico'
+                            descripcion='Carrera, cuatrimestre, matrícula'
+                            onclick={ () => this.setState({zona:'academico'}) }
+                        />
+                        : <></>}
                         
                         <BtnSeccion
                             activo={this.state.zona === 'contacto' ? true : false}
@@ -267,15 +297,6 @@ export class MyAccount extends Component {
                             descripcion='Teléfono, correo electrónico, teléfono de emergencia'
                             onclick={ () => this.setState({zona:'cuenta'}) }
                         />
-
-                        {UserStore.role === 'Alumno' ?
-                        <BtnSeccion
-                            activo={this.state.zona === 'academico' ? true : false}
-                            nombre='Académico'
-                            descripcion='Carrera, cuatrimestre, matrícula'
-                            onclick={ () => this.setState({zona:'academico'}) }
-                        />
-                        : <></>}
 
                         <div style={{textAlign:'center', marginTop:'10px'}}>
                             <SubmitButton

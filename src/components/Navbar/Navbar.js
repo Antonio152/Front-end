@@ -40,8 +40,8 @@ function Navbar(props) {
     const [modules, setModules] = useState([]);
 
     // Appear and disappear sidebar and menu behavior
-    const [sidebar, setSidebar] = useState(true)
-    const [menuBars, setMenuBars] = useState(true)
+    const [sidebar, setSidebar] = useState(window.innerWidth > 1365 ? true: false)
+    const [menuBars, setMenuBars] = useState(window.innerWidth > 1365 ? true: false)
     const [confMenu, setConfMenu] = useState(false)
     // Toggles the state of the navbar
     const showSideBar = () => {
