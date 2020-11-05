@@ -1,16 +1,15 @@
 import React, { Component } from 'react'
 
-import * as HiIcons from 'react-icons/hi';
 import * as AiIcons from 'react-icons/ai';
-import * as BiIcons from 'react-icons/bi'
-
-import UserStore from '../Stores/UserStore'
+import * as BiIcons from 'react-icons/bi';
+import * as RiIcons from 'react-icons/ri';
 
 import InputField from '../GeneralUseComp/InputField'
 import SubmitButton from '../GeneralUseComp/SubmitButton'
 import BtnSeccion from '../MyAccount/BtnSeccion'
 
 import '../MyAccount/MyAccount.css'
+import '../GeneralUseComp/InputFile.css'
 import SelectField from '../GeneralUseComp/SelectField';
 
 const Compress = require('compress.js')
@@ -163,7 +162,7 @@ export class AltaUsuarios extends Component {
             <div className="columns texto-editable">
                 <div className="fila">
                     <span className="etiqueta" style={{marginLeft:'0'}}>{titulo.toUpperCase()}</span>
-                    <HiIcons.HiOutlinePencil className="lapiz-icon"/>
+                    <RiIcons.RiAddLine className="lapiz-icon"/>
                 </div>
                 
                 <InputField
@@ -184,7 +183,7 @@ export class AltaUsuarios extends Component {
             <div className="columns texto-editable">
                 <div className="fila">
                     <span className="etiqueta" style={{marginLeft:'0'}}>{tipo.toUpperCase()}</span>
-                    <HiIcons.HiOutlinePencil className="lapiz-icon"/>
+                    <RiIcons.RiAddLine className="lapiz-icon"/>
                 </div>
                 
                 <SelectField
@@ -223,7 +222,7 @@ export class AltaUsuarios extends Component {
                                     //alert('La relación de aspecto debe ser cuadrada')
                                 }}
                             }/>
-                            <br></br><br></br>
+                            <br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br>
                             <div className="file-middle">
                                 <input 
                                     type="file" 
