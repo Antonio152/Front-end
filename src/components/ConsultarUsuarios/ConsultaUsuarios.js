@@ -1,13 +1,19 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import './ConsultaUsuarios.css'
+// Íconos e imágenes
 import imgBusqueda from './img/busqueda.jpg'
-import SelectField from '../GeneralUseComp/SelectField'
-import InputField from '../GeneralUseComp/InputField'
-import SubmitButton from '../GeneralUseComp/SubmitButton'
 import * as BiIcons from 'react-icons/bi'
-import UserStore from '../Stores/UserStore'
+// Componentes de uso general
+import SelectField from '../GeneralUseComp/SelectField'
+import SubmitButton from '../GeneralUseComp/SubmitButton'
 import Loader from '../GeneralUseComp/Loader'
+// Stores
+import UserStore from '../Stores/UserStore'
+// Sub módulos
+import Busqueda from '../ComplementosConsultas/Busqueda'
+import UserSelected from '../ComplementosConsultas/UserSelected'
+// Estilos
+import './ConsultaUsuarios.css'
 
 export class ConsultaUsuarios extends Component {
     // Estado de la clase
@@ -70,92 +76,77 @@ export class ConsultaUsuarios extends Component {
     }
 
     // Renderiza opciones de búsqueda
+    // Para inputFields se utiliza la estructura: clasificación, placeholder, value, name y onChange
+    // Para selects se utiliza la estructura: clasificación, options(con name dentro), value, name y onChange(evento)
     renderBusqueda(){
-        if (this.state.consulta === 'Por nombre'){
+        if (this.state.consulta === 'Por nombre')
+        return(
+            <Busqueda
+                inputs={{inputs: [{
+                        classification: 'inputField',
+                        placeholder: 'Nombre(s)',
+                        value: this.state.nombre,
+                        name: 'nombre',
+                        onChange: (val) => {this.setInputValue('nombre',val, 100)} }
+                ]}}
+                onClick={() => this.busquedaParam()} />
+        )
+    
+        if (this.state.consulta === 'Por apellidos') 
             return(
-                <div className="fila justificado">
-                    <InputField
-                        type='text'
-                        placeholder='Nombre(s)'
-                        value={this.state.nombre}
-                        name='nombre'
-                        onChange={ (val) => this.setInputValue('nombre',val, 100) }/>
-                    <SubmitButton 
-                        styles=' btn-blanco no_margin no_padding width-auto size18 input-size'
-                        icon={<BiIcons.BiSearch/>}
-                        onclick={() => this.busquedaParam() }
-                        />
-                </div>
+                <Busqueda
+                    inputs={{inputs: [
+                        {   classification: 'inputField',
+                            placeholder: 'Apellido paterno',
+                            value: this.state.aPaterno,
+                            name: 'aPaterno',
+                            onChange: (val) => {this.setInputValue('aPaterno',val, 50)}},
+                        {   classification: 'inputField',
+                            placeholder: 'Apellido Materno',
+                            value: this.state.aMaterno,
+                            name: 'aMaterno',
+                            onChange: (val) => {this.setInputValue('aMaterno',val, 50)} 
+                        }]}}
+                    onClick={() => this.busquedaParam()} />
             )
-        }
-        if (this.state.consulta === 'Por apellidos') {
+
+        if (this.state.consulta === 'Por rol')
             return(
-                <div className="fila justificado">
-                    <div className="columns" style={{width:'100%'}}>
-                        <InputField
-                            type='text'
-                            placeholder='Apellido paterno'
-                            value={this.state.aPaterno}
-                            name='aPaterno'
-                            onChange={ (val) => this.setInputValue('aPaterno',val, 50) }/>
-                        <InputField
-                            type='text'
-                            placeholder='Apellido Materno'
-                            value={this.state.aMaterno}
-                            name='aMaterno'
-                            onChange={ (val) => this.setInputValue('aMaterno',val, 50) }/>
-                    </div>
-                    
-                    <SubmitButton 
-                        styles=' btn-blanco no_margin no_padding width-auto size18 input-size'
-                        icon={<BiIcons.BiSearch/>}
-                        onclick={() => this.busquedaParam() }
-                        />
-                </div>
+                <Busqueda
+                    inputs={{inputs: [{
+                            classification: 'select',
+                            options: {nombre: ['Super administrador', 'Administrador', 'Consultor']},
+                            value: this.state.rol,
+                            name: 'rol',
+                            onChange: (e) => {this.setSelectValue(e)} }
+                    ]}}
+                    onClick={() => this.busquedaParam()} />
             )
-        }
-        if (this.state.consulta === 'Por rol'){
+
+        if (this.state.consulta === 'Por estado')
             return(
-                <div className="fila justificado">
-                    <SelectField
-                        options={{
-                            nombre:['Super administrador', 'Administrador', 'Consultor']}}
-                        value={this.state.rol}
-                        name='rol'
-                        onChange={this.setSelectValue}/>
-                    <SubmitButton 
-                        styles=' btn-blanco no_margin no_padding width-auto size18 input-size-select'
-                        icon={<BiIcons.BiSearch/>}
-                        onclick={() => this.busquedaParam() }
-                        />
-                </div>
-            )            
-        }
-        if (this.state.consulta === 'Por estado'){
-            return(
-                <div className="fila justificado">
-                    <SelectField
-                        options={{
-                            nombre:['Activo', 'Inactivo']}}
-                        value={this.state.estado}
-                        name='estado'
-                        onChange={this.setSelectValue}/>
-                    <SubmitButton 
-                        styles=' btn-blanco no_margin no_padding width-auto size18 input-size-select'
-                        icon={<BiIcons.BiSearch/>}
-                        onclick={() => this.busquedaParam() }
-                        />
-                </div>
-                )
-        }
+                <Busqueda
+                    inputs={{inputs: [{
+                            classification: 'select',
+                            options: {nombre: ['Activo', 'Inactivo']},
+                            value: this.state.estado,
+                            name: 'estado',
+                            onChange: (e) => {this.setSelectValue(e)} }
+                    ]}}
+                    onClick={() => this.busquedaParam()} />
+            )
     }
 
     // Busca todos
+    // Actualización de estado para mostrar en tabla y en lista de credenciales
     busqueda = () => this.setState({userQry:this.state.usuarios});
 
     // Realiza el filtro de usuarios
     busquedaParam(){
         var usuarioSeleccionado =[]
+        // Condicional múltiple de búsquedas
+        // Para cada búsqueda, inlcuye en el arreglo usuarioSeleccionado el usuario que cumple
+        // con el parámetro de búsqueda
         if (this.state.consulta === 'Por nombre')
                 this.state.usuarios.forEach(usuario => {
                     if (usuario.nombre.includes(this.state.nombre))
@@ -180,7 +171,7 @@ export class ConsultaUsuarios extends Component {
                     if (`${usuario.published ? 'Activo' : 'Inactivo'}` === this.state.estado)
                         usuarioSeleccionado.push(usuario);
                 });
-        
+        // Actualización de estado
         this.setState({
             userQry:usuarioSeleccionado, 
             userSelected:'',
@@ -189,7 +180,7 @@ export class ConsultaUsuarios extends Component {
             aMaterno: ''
         });
     }
-
+    // Cuando del componente termine de cargar
     componentDidMount() {
         this.getUsuarios();
         this.getModulos();
@@ -199,60 +190,28 @@ export class ConsultaUsuarios extends Component {
     renderUserSelected () {
         if (this.state.userSelected.nombre) {
             return(
-                <div className="column">
-                    <div className="fila">
-                        <div className="columns justificado_vert">
-                            <div className="cont_foto">
-                                <img className="foto_usuario" alt="" src={`data:image/jpg;base64,${this.state.userSelected.foto}`}/>
-                            </div>
-                            <div className="botones">
-                                <SubmitButton 
-                                    icon={<BiIcons.BiTrash/>} 
-                                    styles={'fullWidth no_padding no_margin boton consulta btn-blanco'}
-                                    text="Eliminar"
-                                    disabled={this.state.permisos.includes('Eliminar') ? false : true}/>
-                                <SubmitButton 
-                                    icon={<BiIcons.BiPencil/>} 
-                                    styles="fullWidth no_padding no_margin boton btn-blanco" 
-                                    text="Editar   "
-                                    disabled={this.state.permisos.includes('Modificar') ? false : true}/>
-                            </div>
-                        </div>
-                        <div className="columns">
-                            <span className="azul">{`${this.state.userSelected.rol[0].nombre}`}</span>
-                            <div className="nombres">
-                                <span className="texto_mediano">{`${this.state.userSelected.nombre} `}</span>
-                                <span className="texto_mediano no_margen">{`${this.state.userSelected.aPaterno} ${this.state.userSelected.aMaterno}`}</span>
-                            </div>
-                            <div className="columns">
-                                <span className="etiqueta">{`CURP`}</span>
-                                <span>{`${this.state.userSelected.curp}`}</span>
-                                <div className="fila">
-                                    <div className="columns">
-                                        <span className="etiqueta">{`EMAIL`}</span>
-                                        <span>{`${this.state.userSelected.contacto[0].email}`}</span>
-                                    </div>
-                                    <div className="columns">
-                                        <span className="etiqueta">{`TEL / TEL. SOS`}</span>
-                                        <span>{`${this.state.userSelected.contacto[0].telefono} | ${this.state.userSelected.contacto[0].telEmergencia}`}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="columns">
-                                <span className="etiqueta">DIRECCION</span>
-                                <p className="direccion">
-                                    <span>{`${this.state.userSelected.direccion[0].calle} ${this.state.userSelected.direccion[0].numero}, ${this.state.userSelected.direccion[0].localidad}, ${this.state.userSelected.direccion[0].ciudad}, ${this.state.userSelected.direccion[0].estado}. C.P.  ${this.state.userSelected.direccion[0].cp}`}</span>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                </div>
+                <UserSelected
+                usuario={this.state.userSelected}
+                datos={{filas: [
+                    { seccion:[
+                        {etiqueta: 'curp', dato: this.state.userSelected.curp},
+                    ]},
+                    { seccion:[
+                        {etiqueta: 'email', dato: this.state.userSelected.contacto[0].email},
+                        {etiqueta: 'tel / tel. Emergencia', dato: `${this.state.userSelected.contacto[0].telefono} | ${this.state.userSelected.contacto[0].telEmergencia}`}
+                    ]},
+                    { seccion:[
+                        {etiqueta: 'dirección', dato: `${this.state.userSelected.direccion[0].calle} ${this.state.userSelected.direccion[0].numero}, ${this.state.userSelected.direccion[0].localidad}, ${this.state.userSelected.direccion[0].ciudad}, ${this.state.userSelected.direccion[0].estado}. C.P.  ${this.state.userSelected.direccion[0].cp}`}
+                    ]}
+                ]}}
+                botones={['Eliminar', 'Editar']}
+                permisos={this.state.permisos}
+                />
             )
         }
         return(
             <div className="centrado">
-                <span className="text no-seleccionado">No ha seleccionado un usuario</span>
+                <span className="text no-seleccionado">No ha seleccionado un alumno</span>
             </div>
         )
     }

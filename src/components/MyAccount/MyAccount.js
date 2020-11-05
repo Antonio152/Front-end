@@ -10,6 +10,7 @@ import SubmitButton from '../GeneralUseComp/SubmitButton'
 import BtnSeccion from './BtnSeccion'
 
 import './MyAccount.css'
+import '../GeneralUseComp/InputFile.css'
 import SelectField from '../GeneralUseComp/SelectField';
 
 const Compress = require('compress.js')

@@ -1,25 +1,31 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import '../ConsultarUsuarios/ConsultaUsuarios.css'
+// Íconos e imágenes
 import imgBusqueda from './img/busqueda.jpg'
+import * as BiIcons from 'react-icons/bi'
+// Componentes de uso general
 import SelectField from '../GeneralUseComp/SelectField'
 import SubmitButton from '../GeneralUseComp/SubmitButton'
-import InputField from '../GeneralUseComp/InputField'
-import * as BiIcons from 'react-icons/bi'
-import * as AiIcons from 'react-icons/ai'
-import UserStore from '../Stores/UserStore'
 import Loader from '../GeneralUseComp/Loader'
 import Checkbox from '../GeneralUseComp/Checkbox'
+// Stores
+import UserStore from '../Stores/UserStore'
+// Sub módulos
+import Busqueda from '../ComplementosConsultas/Busqueda'
+import UserSelected from '../ComplementosConsultas/UserSelected'
+// css
+import '../ConsultarUsuarios/ConsultaUsuarios.css'
 
 export class ConsultaAlumnos extends Component {
 
     // Estado de la case
     state = {
-        usuarios : [],
-        userQry : [],
-        usersForCredential: [],
-        userSelected:[],
-        consulta: 'Todos',
+        usuarios : [], // Ususarios de la petición al servidor
+        userQry : [], // Ususarios consultados
+        usersForCredential: [], // IDs de usuarios para credencial
+        userSelected:[], // Usuario que se ha seleccionado
+        consulta: 'Todos', // Filtro de consulta
+        // campos de los filtros de consulta
         nombre: '',
         aPaterno: '',
         aMaterno: '',
@@ -56,6 +62,14 @@ export class ConsultaAlumnos extends Component {
             })
         }
     }
+
+    // Obtiene los modulos del servidor
+    getModulos = async () => {
+        const res = await axios.get(`http://localhost:4000/api/users/${UserStore.id}`);
+        if (res.status === 200)
+            this.setState({permisos: res.data.rol[0].modulos[1].permisos});
+    }
+
     // Obtiene el archivo PDF en base 64
     getCredenciales = async (datos, formato) => {
         var arrDatos = [];
@@ -72,6 +86,7 @@ export class ConsultaAlumnos extends Component {
         });
         this.generarArchivo(res.data.pdf, arrDatos.length === 1 ? `Credencial ${arrDatos[0].nombre} ${arrDatos[0].aPaterno}` : 'Credenciales');
     }
+
     //Convierte el archivo de base 64 a uno descargable
     generarArchivo = (content, fileName) => {
         // Decodifica base 64 y remueve el espacio para compatibilidad con  IE
@@ -94,12 +109,6 @@ export class ConsultaAlumnos extends Component {
         link.click();
       };
 
-    // Obtiene los modulos del servidor
-    getModulos = async () => {
-        const res = await axios.get(`http://localhost:4000/api/users/${UserStore.id}`);
-        if (res.status === 200)
-            this.setState({permisos: res.data.rol[0].modulos[1].permisos});
-    }
 
     // Estado cambia con inputs
     setInputValue = (property, val, maxLenght) => {
@@ -119,127 +128,95 @@ export class ConsultaAlumnos extends Component {
     }
 
     // Renderiza opciones de búsqueda
+    // Para inputFields se utiliza la estructura: clasificación, placeholder, value, name y onChange
+    // Para selects se utiliza la estructura: clasificación, options(con name dentro), value, name y onChange(evento)
     renderBusqueda(){
-        if (this.state.consulta === 'Por nombre'){
+        if (this.state.consulta === 'Por nombre')
             return(
-                <div className="fila justificado">
-                    <InputField
-                        type='text'
-                        placeholder='Nombre(s)'
-                        value={this.state.nombre}
-                        name='nombre'
-                        onChange={ (val) => this.setInputValue('nombre',val, 100) }/>
-                    <SubmitButton
-                        styles=' btn-blanco no_margin no_padding width-auto size18 input-size'
-                        icon={<BiIcons.BiSearch/>}
-                        onclick={() => this.busquedaParam() }
-                        />
-                </div>
+                <Busqueda
+                    inputs={{inputs: [{
+                            classification: 'inputField',
+                            placeholder: 'Nombre(s)',
+                            value: this.state.nombre,
+                            name: 'nombre',
+                            onChange: (val) => {this.setInputValue('nombre',val, 100)} }
+                    ]}}
+                    onClick={() => this.busquedaParam()} />
             )
-        }
-        if (this.state.consulta === 'Por apellidos') {
+        
+        if (this.state.consulta === 'Por apellidos') 
             return(
-                <div className="fila justificado">
-                    <InputField
-                        type='text'
-                        placeholder='Apellido paterno'
-                        value={this.state.aPaterno}
-                        name='aPaterno'
-                        onChange={ (val) => this.setInputValue('aPaterno',val, 50) }/>
-                    <InputField
-                        type='text'
-                        placeholder='Apellido Materno'
-                        value={this.state.aMaterno}
-                        name='aMaterno'
-                        onChange={ (val) => this.setInputValue('aMaterno',val, 50) }/>
-                    <SubmitButton
-                        styles=' btn-blanco no_margin no_padding width-auto size18 input-size'
-                        icon={<BiIcons.BiSearch/>}
-                        onclick={() => this.busquedaParam() }
-                        />
-                </div>
+                <Busqueda
+                    inputs={{inputs: [
+                        {   classification: 'inputField',
+                            placeholder: 'Apellido paterno',
+                            value: this.state.aPaterno,
+                            name: 'aPaterno',
+                            onChange: (val) => {this.setInputValue('aPaterno',val, 50)}},
+                        {   classification: 'inputField',
+                            placeholder: 'Apellido Materno',
+                            value: this.state.aMaterno,
+                            name: 'aMaterno',
+                            onChange: (val) => {this.setInputValue('aMaterno',val, 50)} 
+                        }]}}
+                    onClick={() => this.busquedaParam()} />
             )
-        }
-        if (this.state.consulta === 'Por matrícula'){
+            
+        if (this.state.consulta === 'Por matrícula')
             return(
-                <div className="fila justificado">
-                    <InputField
-                        type='text'
-                        placeholder='Matrícula'
-                        value={this.state.matricula}
-                        name='matricula'
-                        onChange={ (val) => this.setInputValue('matricula',val, 50) }/>
-                    <SubmitButton
-                        styles=' btn-blanco no_margin no_padding width-auto size18 input-size'
-                        icon={<BiIcons.BiSearch/>}
-                        onclick={() => this.busquedaParam() }
-                        />
-                </div>
+                <Busqueda
+                    inputs={{inputs: [{
+                            classification: 'inputField',
+                            placeholder: 'Matrícula',
+                            value: this.state.matricula,
+                            name: 'matricula',
+                            onChange: (val) => {this.setInputValue('matricula',val, 50)} }
+                    ]}}
+                    onClick={() => this.busquedaParam()} />
             )
-        }
-        if (this.state.consulta === 'Por carrera'){
+        
+        if (this.state.consulta === 'Por carrera')
             return(
-                <div className="fila justificado">
-                    <SelectField
-                        options={{
-                            nombre:[
-                                'Ingeniería en Software',
-                                'Ingeniería en Mecatrónica',
-                                'Ingeniería en Biomédica',
-                                'Ingeniería en Biotecnología',
-                                'Ingeniería en Telemática',
-                                'Ingeniería en Redes y Telecomunicaciones',
-                                'Ingeniería Mecánica Automotríz',
-                                'Ingeniería Sistemas y Tecnologías Industriales',
-                                'Licenciatura en Terapia física',
-                                'Licenciatura en Médico Cirujano'
-                            ]}}
-                        value={this.state.carrera}
-                        name='carrera'
-                        onChange={this.setSelectValue}/>
-                    <SubmitButton
-                        styles=' btn-blanco no_margin no_padding width-auto size18 input-size-select'
-                        icon={<BiIcons.BiSearch/>}
-                        onclick={() => this.busquedaParam() }
-                        />
-                </div>
+                <Busqueda
+                    inputs={{inputs: [{
+                            classification: 'select',
+                            options: {nombre: ['Ingeniería en Software', 'Ingeniería en Mecatrónica', 'Ingeniería en Biomédica', 'Ingeniería en Biotecnología', 'Ingeniería en Telemática', 'Ingeniería en Redes y Telecomunicaciones', 'Ingeniería Mecánica Automotríz', 'Ingeniería Sistemas y Tecnologías Industriales', 'Licenciatura en Terapia física','Licenciatura en Médico Cirujano']},
+                            value: this.state.carrera,
+                            name: 'carrera',
+                            onChange: (e) => {this.setSelectValue(e)} }
+                    ]}}
+                    onClick={() => this.busquedaParam()} />
             )
-        }
-        if (this.state.consulta === 'Por estado'){
+
+        if (this.state.consulta === 'Por estado')
             return(
-                <div className="fila justificado">
-                    <SelectField
-                        options={{
-                            nombre:['Activo', 'Inactivo']}}
-                        value={this.state.estado}
-                        name='estado'
-                        onChange={this.setSelectValue}/>
-                    <SubmitButton
-                        styles=' btn-blanco no_margin no_padding width-auto size18 input-size-select'
-                        icon={<BiIcons.BiSearch/>}
-                        onclick={() => this.busquedaParam() }
-                        />
-                </div>
-                )
-        }
+                <Busqueda
+                    inputs={{inputs: [{
+                            classification: 'select',
+                            options: {nombre: ['Activo', 'Inactivo']},
+                            value: this.state.estado,
+                            name: 'estado',
+                            onChange: (e) => {this.setSelectValue(e)} }
+                    ]}}
+                    onClick={() => this.busquedaParam()} />
+            )
     }
 
+    // Recorre todos los usuarios que se van a imprimir
     selectUserForCard = (usuario, borrar) => {
-        // Recorre todos los usuarios que se van a imprimir
         if(borrar === 'false')
             this.state.usersForCredential.push(usuario._id)
         for (let index = 0; index < this.state.usersForCredential.length; index++)
             // Revisa si es el usuario seleccionado y si se elimina o no
             if(usuario._id === this.state.usersForCredential[index] && borrar === 'true')
                 this.state.usersForCredential.splice(index, 1)
-        // console.log(this.state.userQry)
     }
     // Busca todos
     busqueda = () => {
+        // Sólo obtiene los ID para la seleccion de credenciales
         let usuarios_id = [];
-        this.state.usuarios.forEach(usuario => {
-            usuarios_id.push(usuario._id)
-        });
+        this.state.usuarios.forEach(usuario =>  usuarios_id.push(usuario._id));
+        // Actualización de estado para mostrar en tabla y en lista de credenciales
         this.setState({
             userQry:this.state.usuarios,
             usersForCredential: usuarios_id
@@ -250,12 +227,18 @@ export class ConsultaAlumnos extends Component {
     busquedaParam(){
         var usuarioSeleccionado =[]
         var usuarioSeleccionado_id =[]
-        if (this.state.consulta === 'Por nombre')
+        // Condicional múltiple de búsquedas
+        // Para cada búsqueda, inlcuye en el arreglo usuarioSeleccionado el usuario que cumple
+        // con el parámetro de búsqueda
+        switch (this.state.consulta) {
+            case 'Por nombre':
                 this.state.usuarios.forEach(usuario => {
                     if (usuario.nombre.includes(this.state.nombre))
                         usuarioSeleccionado.push(usuario);
                 });
-        if (this.state.consulta === 'Por apellidos')
+                break;
+
+            case 'Por apellidos':
                 this.state.usuarios.forEach(usuario => {
                     if (`${usuario.aPaterno} ${usuario.aMaterno}` === `${this.state.aPaterno} ${this.state.aMaterno}`)
                         usuarioSeleccionado.push(usuario);
@@ -266,26 +249,36 @@ export class ConsultaAlumnos extends Component {
                     else if(usuario.aMaterno === this.state.aMaterno)
                         usuarioSeleccionado.push(usuario);
                 });
-        if (this.state.consulta === 'Por matrícula')
+                break;
+                
+            case 'Por matrícula':
                 this.state.usuarios.forEach(usuario => {
                     if (usuario.academico[0].matricula === this.state.matricula)
                         usuarioSeleccionado.push(usuario);
                 });
-        if (this.state.consulta === 'Por carrera')
+                break;
+                
+            case 'Por carrera':
                 this.state.usuarios.forEach(usuario => {
                     if (usuario.academico[0].carrera === this.state.carrera)
                         usuarioSeleccionado.push(usuario);
                 });
-        if (this.state.consulta === 'Por estado')
+                break;
+                
+            case 'Por estado':
                 this.state.usuarios.forEach(usuario => {
                     if (`${usuario.published ? 'Activo' : 'Inactivo'}` === this.state.estado)
                         usuarioSeleccionado.push(usuario);
                 });
-        usuarioSeleccionado.forEach(usuario =>{
-            usuarioSeleccionado_id.push(usuario._id)
-        });
-        console.log(usuarioSeleccionado)
-        console.log(usuarioSeleccionado_id)
+                break;
+        
+            default:
+                break;
+        }
+        // inserta en el arreglo todos los ID de los usuarios consultados
+        usuarioSeleccionado.forEach(usuario => usuarioSeleccionado_id.push(usuario._id));
+        // Actualizaicón de estado
+        // Con esto, se actualiza la lista de usuarios mostrados y seleccionados para generar credenciales
         this.setState({
             userQry:usuarioSeleccionado,
             usersForCredential: usuarioSeleccionado_id,
@@ -308,72 +301,26 @@ export class ConsultaAlumnos extends Component {
             var arrIds = [];
             arrIds.push(this.state.userSelected._id);
             return(
-                <div className="column">
-                    <div className="fila">
-                        <div className="columns justificado_vert">
-                            <div className="cont_foto">
-                                <img className="foto_usuario" alt="" src={`data:image/jpg;base64,${this.state.userSelected.foto}`}/>
-                            </div>
-                            <div className="botones">
-                                <SubmitButton
-                                    icon={<BiIcons.BiTrash/>}
-                                    styles="fullWidth no_padding no_margin boton consulta btn-blanco"
-                                    text="Eliminar"
-                                    disabled={this.state.permisos.includes('Eliminar') ? false : true}/>
-                                <SubmitButton
-                                    icon={<BiIcons.BiPencil/>}
-                                    styles="fullWidth no_padding no_margin boton btn-blanco"
-                                    text="Editar   "
-                                    disabled={this.state.permisos.includes('Modificar') ? false : true}/>
-                                <SubmitButton
-                                    icon={<AiIcons.AiOutlineIdcard/>}
-                                    styles="fullWidth no_padding no_margin boton btn-blanco padding-top7"
-                                    onclick={() => this.getCredenciales(arrIds, 'UPPCredencial1')}
-                                    text="Credencial"/>
-                            </div>
-                        </div>
-                        <div className="columns">
-                            <span className="azul">{`${this.state.userSelected.rol[0].nombre}`}</span>
-                            <div className="nombres">
-                                <span className="texto_mediano">{`${this.state.userSelected.nombre} `}</span>
-                                <span className="texto_mediano no_margen">{`${this.state.userSelected.aPaterno} ${this.state.userSelected.aMaterno}`}</span>
-                            </div>
-                            <div className="columns">
-                                <div className="fila">
-                                    <div className="columns">
-                                        <span className="etiqueta">{`MATRÍCULA`}</span>
-                                        <span>{`${this.state.userSelected.academico[0].matricula}`}</span>
-                                    </div>
-                                    <div className="columns">
-                                        <span className="etiqueta">{`CURP`}</span>
-                                        <span>{`${this.state.userSelected.curp}`}</span>
-                                    </div>
-                                    <div className="columns">
-                                        <span className="etiqueta">{`GPO. SANGUÍNEO`}</span>
-                                        <span>{`${this.state.userSelected.sanguineo}`}</span>
-                                    </div>
-                                </div>
-                                <div className="fila">
-                                    <div className="columns">
-                                        <span className="etiqueta">{`EMAIL`}</span>
-                                        <span>{`${this.state.userSelected.contacto[0].email}`}</span>
-                                    </div>
-                                    <div className="columns">
-                                        <span className="etiqueta">{`TEL / TEL. SOS`}</span>
-                                        <span>{`${this.state.userSelected.contacto[0].telefono} | ${this.state.userSelected.contacto[0].telEmergencia}`}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="columns">
-                                <span className="etiqueta">DIRECCION</span>
-                                <p className="direccion">
-                                    <span>{`${this.state.userSelected.direccion[0].calle} ${this.state.userSelected.direccion[0].numero}, ${this.state.userSelected.direccion[0].localidad}, ${this.state.userSelected.direccion[0].ciudad}, ${this.state.userSelected.direccion[0].estado}. C.P.  ${this.state.userSelected.direccion[0].cp}`}</span>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
+                <UserSelected
+                usuario={this.state.userSelected}
+                datos={{filas: [
+                    { seccion:[
+                        {etiqueta: 'matrícula', dato: this.state.userSelected.academico[0].matricula},
+                        {etiqueta: 'curp', dato: this.state.userSelected.curp},
+                        {etiqueta: 'gpo. sanguíneo', dato: this.state.userSelected.sanguineo},
+                    ]},
+                    { seccion:[
+                        {etiqueta: 'email', dato: this.state.userSelected.contacto[0].email},
+                        {etiqueta: 'tel / tel. Emergencia', dato: `${this.state.userSelected.contacto[0].telefono} | ${this.state.userSelected.contacto[0].telEmergencia}`}
+                    ]},
+                    { seccion:[
+                        {etiqueta: 'dirección', dato: `${this.state.userSelected.direccion[0].calle} ${this.state.userSelected.direccion[0].numero}, ${this.state.userSelected.direccion[0].localidad}, ${this.state.userSelected.direccion[0].ciudad}, ${this.state.userSelected.direccion[0].estado}. C.P.  ${this.state.userSelected.direccion[0].cp}`}
+                    ]}
+                ]}}
+                botones={['Eliminar', 'Editar', 'Credencial']}
+                permisos={this.state.permisos}
+                cardClick={() => this.getCredenciales(arrIds, 'UPPCredencial1')}
+                />
             )
         }
         return(

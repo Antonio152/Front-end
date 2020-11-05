@@ -3,7 +3,7 @@
 import React, {Component} from 'react';
 import { observer } from 'mobx-react'
 import './App.css';
-import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, Link, Redirect } from 'react-router-dom';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import * as BiIcons from 'react-icons/bi';
 
@@ -25,13 +25,12 @@ import AcercaDe from './components/AcercaDe/AcercaDe'
 import MyAccount from './components/MyAccount/MyAccount'
 
 
-import {Redirect} from 'react-router-dom'
 import Loader from './components/GeneralUseComp/Loader';
 
 class App extends Component {
 
   state = {
-    navActivado: true,
+    navActivado: window.innerWidth > 1365 ? true: false,
   }
 
   // For logging out
@@ -68,10 +67,7 @@ class App extends Component {
     }
   }
 
-  changeNavbar() {
-    this.setState({navActivado: !this.state.navActivado})
-    console.log(this.state.navActivado)
-  }
+  changeNavbar = () => this.setState({navActivado: !this.state.navActivado})
   
   // When component loads
   async componentDidMount () {
@@ -175,6 +171,7 @@ class App extends Component {
                   minText= {true}
                   onclick = {() => {this.doLogout()}}/>
               </Link>
+
               <div className={this.state.navActivado ? 'contenido nav-activado' : 'contenido'}>
                 <Switch>
                     <Route exact path="/auth">
