@@ -1,78 +1,124 @@
 import React, { Component } from 'react'
-import axios from 'axios'
-import '../ConsultarUsuarios/ConsultaUsuarios.css'
-import imgBusqueda from './img/addUser.jpg'
-import SelectField from '../GeneralUseComp/SelectField'
-import SubmitButton from '../GeneralUseComp/SubmitButton'
+
+import * as AiIcons from 'react-icons/ai';
+import * as BiIcons from 'react-icons/bi';
+import * as RiIcons from 'react-icons/ri';
+
 import InputField from '../GeneralUseComp/InputField'
-import * as BiIcons from 'react-icons/bi'
-import * as AiIcons from 'react-icons/ai'
-import UserStore from '../Stores/UserStore'
+import SubmitButton from '../GeneralUseComp/SubmitButton'
+import BtnSeccion from '../MyAccount/BtnSeccion'
+
+import '../MyAccount/MyAccount.css'
+import '../GeneralUseComp/InputFile.css'
+import SelectField from '../GeneralUseComp/SelectField';
+
+const Compress = require('compress.js')
 
 export class AltaUsuarios extends Component {
-
-    //  Estado de la clase
+    imgRef = React.createRef() 
     state = {
-        usuarios : [],
-        userQry : [],
-        userAdded:[],
-        permisos: [],
+        zona: 'personales',
         // for the input field data
         username: '',
         password: '', 
+        fotoAnt: '',
         foto: '',
+        rol: '',
         nombre: '',
         aPaterno: '',
         aMaterno: '',
         curp: '',
+        sanguineo: '',
         con_telefono: '',
         con_email: '',
         con_telEmergencia: '',
-        rol_nombre: '',
         dir_numero: '',
         dir_calle: '',
         dir_localidad: '',
         dir_ciudad: '',
         dir_estado: '',
         dir_cp: '',
-        
-        // When a user clicks log in button and the API checks if user exists
-        buttonDisabled: false,
+        aca_carrera: '',
+        aca_matricula: '',
+        aca_cuatrimestre: '',
     }
+    // Renderiza los inputs que podrán ser cambiados
+    renderDatos = () => {
 
-    // Obtiene los usuarios del servidor
-    getUsuarios = async () => {
-        const res = await axios.get('http://localhost:4000/api/users');
-        this.setState({
-            usuarios: res.data,
-            userQry: res.data
-        });
+        if (this.state.zona === 'cuenta')
+        return(
+            <div>
+
+                {this.inputSelectEditable(
+                    'ROL',
+                    'rol',
+                    this.state.rol,
+                    {nombre:[ 'Super Administrador', 'Administrador', 'Administrador del sistema', 'Administrador de la escuela', 'Consultor', 'Diseñador', 'Alumno']}
+                )}
+
+                {this.inputTextEditable('Nombre de usuario', this.state.username, 'text', 'nombre', 12)}
+                
+                {this.inputTextEditable('Contraseña', this.state.password, 'password','password', 32)}
+            </div>
+        )
+
+        if (this.state.zona === 'personales')
+            return(
+                <div>
+                    
+                    {this.inputTextEditable('Nombre(s)', this.state.nombre, 'text', 'nombre', 100)}
+
+                    {this.inputTextEditable('Apellido paterno',this.state.aPaterno, 'text', 'aPaterno', 50)}
+
+                    {this.inputTextEditable('Apellido materno',this.state.aMaterno, 'text', 'aMaterno', 50)}
+                    
+                    <div className="fila">
+                        {this.inputTextEditable('CURP',this.state.curp, 'text', 'curp', 18)}
+                        <div className="inp-numero">
+                            {this.inputSelectEditable(
+                                'RH',
+                                'sanguineo',
+                                this.state.sanguineo,
+                                {nombre:[ 'O-', 'O+', 'A-', 'A+', 'B-', 'B+', 'AB-', 'AB+']}
+                            )}
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+            )
+
+        if (this.state.zona === 'direccion')
+            return(
+                <div>
+                    <div className="fila">
+                        {this.inputTextEditable('Calle',this.state.dir_calle, 'text', 'dir_calle', 50)}
+                        <div className="inp-numero">
+                            {this.inputTextEditable('Numero',this.state.dir_numero, 'text', 'dir_numero', 10)}
+                        </div>
+                    </div>
+                    <div className="fila">
+                        {this.inputTextEditable('Localidad',this.state.dir_localidad, 'text', 'dir_localidad', 100)}
+                        <div className="inp-numero">
+                            {this.inputTextEditable('C.P.',this.state.dir_cp, 'text', 'dir_cp', 10)}
+                        </div>
+                    </div>
+                    {this.inputTextEditable('Ciudad',this.state.dir_ciudad, 'text', 'dir_ciudad', 100)}
+
+                    {this.inputTextEditable('Estado',this.state.dir_estado, 'text', 'dir_estado', 50)}
+                </div>
+            )
+        if (this.state.zona === 'contacto')
+            return(
+                <div>
+                    {this.inputTextEditable('Correo electrónico',this.state.con_email, 'text', 'con_email', 100)}
+                    
+                    {this.inputTextEditable('Teléfono',this.state.con_telefono, 'text', 'con_telefono', 10)}
+
+                    {this.inputTextEditable('Teléfono Emer.',this.state.con_telEmergencia, 'text', 'con_telEmergencia', 10)}
+                </div>
+            )
     }
-
-    // Obtiene los modulos del servidor
-    getModulos = async () => {
-        const res = await axios.get(`http://localhost:4000/api/users/${UserStore.id}`);
-        this.setState({permisos: res.data.rol[0].modulos[1].permisos});
-    }
-
-    setInputValue(property, val, maxLenght) {
-        if (property === 'username' || 
-            property === 'curp' || 
-            property === 'con_telefono' || 
-            property === 'con_telEmergencia' || 
-            property === 'con_email' ||
-            property === 'dir_cp' ||
-            property === 'aca_matricula') 
-        {
-            val = val.trim(); // We don't want spaces
-        }
-        if (val.length > maxLenght)  // Max lenght
-            return;
-        this.setState({
-            [property]: val
-        });
-    }
-
     // Estado cambia con los select
     setSelectValue = (e) => {
         this.setState({
@@ -80,302 +126,160 @@ export class AltaUsuarios extends Component {
         });
     }
 
-    componentDidMount() {
-        this.getUsuarios();
-        this.getModulos();
+    // Estado cambia con inputs
+    setInputValue = (property, val, maxLenght) => {
+        if (val.length > maxLenght)  //Max lenght
+            return;
+        this.setState({
+            [property]: val // property = username or password
+        });
     }
 
-    // Renderiza los datos del usuario agregado
-    renderUserAdded () {
-        if (this.state.userAdded.nombre) {
-            return(
-                <div className="column">
-                    <div className="fila">
-                        <div className="columns justificado_vert">
-                            <div className="cont_foto">
-                                <img className="foto_usuario" alt="" src={`data:image/jpg;base64,${this.state.userAdded.foto}`}/>
-                            </div>
-                            <div className="botones">
-                                <SubmitButton 
-                                    icon={<BiIcons.BiTrash/>} 
-                                    styles="fullWidth no_padding no_margin boton consulta btn-blanco" 
-                                    text="Eliminar"
-                                    disabled={this.state.permisos.includes('Eliminar') ? false : true}/>
-                                <SubmitButton 
-                                    icon={<BiIcons.BiPencil/>} 
-                                    styles="fullWidth no_padding no_margin boton btn-blanco" 
-                                    text="Editar   "
-                                    disabled={this.state.permisos.includes('Modificar') ? false : true}/>
-                                <SubmitButton 
-                                    icon={<AiIcons.AiOutlineIdcard/>} 
-                                    styles="fullWidth no_padding no_margin boton btn-blanco padding-top7" 
-                                    text="Credencial"/>
-                            </div>
-                        </div>
-                        <div className="columns">
-                            <span className="azul">{`${this.state.userAdded.rol[0].nombre}`}</span>
-                            <div className="nombres">
-                                <span className="texto_mediano">{`${this.state.userAdded.nombre} `}</span>
-                                <span className="texto_mediano no_margen">{`${this.state.userAdded.aPaterno} ${this.state.userAdded.aMaterno}`}</span>
-                            </div>
-                            <div className="columns">
-                                <div className="fila">
-                                    <div className="columns">
-                                        <span className="etiqueta">{`MATRÍCULA`}</span>
-                                        <span>{`${this.state.userAdded.academico[0].matricula}`}</span>
-                                    </div>
-                                    <div className="columns">
-                                        <span className="etiqueta">{`CURP`}</span>
-                                        <span>{`${this.state.userAdded.curp}`}</span>
-                                    </div>
-                                    <div className="columns">
-                                        <span className="etiqueta">{`GPO. SANGUÍNEO`}</span>
-                                        <span>{`${this.state.userAdded.sanguineo}`}</span>
-                                    </div>
-                                </div>
-                                <div className="fila">
-                                    <div className="columns">
-                                        <span className="etiqueta">{`EMAIL`}</span>
-                                        <span>{`${this.state.userAdded.contacto[0].email}`}</span>
-                                    </div>
-                                    <div className="columns">
-                                        <span className="etiqueta">{`TEL / TEL. SOS`}</span>
-                                        <span>{`${this.state.userAdded.contacto[0].telefono} | ${this.state.userAdded.contacto[0].telEmergencia}`}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="columns">
-                                <span className="etiqueta">DIRECCION</span>
-                                <p className="direccion">
-                                    <span>{`${this.state.userAdded.direccion[0].calle} ${this.state.userAdded.direccion[0].numero}, ${this.state.userAdded.direccion[0].localidad}, ${this.state.userAdded.direccion[0].ciudad}, ${this.state.userAdded.direccion[0].estado}. C.P.  ${this.state.userAdded.direccion[0].cp}`}</span>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                </div>
-            )
-        }
+    resizeImageFn = (archivos) => {
+        Array.from(archivos).forEach(archivo => {
+            const compress = new Compress();
+            compress.compress([archivo], {
+            size: 0.04, // the max size in MB, defaults to 2MB
+            quality: 0.90, // the quality of the image, max is 1,
+            maxWidth: 200, // the max width of the output image, defaults to 1920px
+            maxHeight: 200, // the max height of the output image, defaults to 1920px
+            resize: true // defaults to true, set false if you do not want to resize the image width and height
+            }).then((results) => {
+                const img = results[0]
+                const base64str = img.data
+                // const imgExt = img.ext
+                // const file = Compress.convertBase64ToFile(base64str, imgExt)
+                this.setState({
+                    foto: base64str
+                })
+            })
+        })
+    }
+
+    // Un campo que puede ser editable al pasar el cursor sobre él
+    inputTextEditable = (titulo, dato, tipo, estado, longitud) => {
         return(
-            <div className="centrado">
-                <span className="text no-seleccionado">No ha agregado un usuario</span>
+            <div className="columns texto-editable">
+                <div className="fila">
+                    <span className="etiqueta" style={{marginLeft:'0'}}>{titulo.toUpperCase()}</span>
+                    <RiIcons.RiAddLine className="lapiz-icon"/>
+                </div>
+                
+                <InputField
+                    type={tipo}
+                    value={dato}
+                    noBorder={true}
+                    onChange={(val) => this.setInputValue(estado,val,longitud)}
+                    placeholder={titulo}
+                />
+            </div>
+            
+        )
+    }
+    
+    // Un campo que puede ser editable al pasar el cursor sobre él
+    inputSelectEditable = (tipo, nombre, valor, opciones) => {
+        return(
+            <div className="columns texto-editable">
+                <div className="fila">
+                    <span className="etiqueta" style={{marginLeft:'0'}}>{tipo.toUpperCase()}</span>
+                    <RiIcons.RiAddLine className="lapiz-icon"/>
+                </div>
+                
+                <SelectField
+                    options={opciones}
+                    value={valor}
+                    name={nombre}
+                    onChange={this.setSelectValue}
+                    styles='no-border'
+                />
             </div>
         )
     }
 
-    // Renderizado del módulo
     render() {
         return (
-            <div className="modulo max-1357px">
-                <div className="resize-columna justificado ">
-                    <div className="contenedor blanco full_width mh_img">
-                        <img src={imgBusqueda} alt="" className="img_contenedor_principal"></img>
-                        <div className="contenidoMod">
-                        <br/><br/><h1 className="resize-title-alu title">Agregar usuarios...</h1><br/>
+            <div className="main_fila main">
+                <div className="columns col-iz">
+                    <div className="caja-main-iz" style={{height:'auto'}}>
+                        <span className="etiqueta" style={{marginLeft:'0', marginBottom:'10px'}}>FOTO DE PERFIL</span>
+                        <div className="fila cambia-cont cont_foto_usuario ">
+                            <img 
+                            ref={this.imgRef} 
+                            className="foto-grande" 
+                            alt="" 
+                            src={`data:image;base64,${this.state.foto}`}
+                            onLoad={()=> {
+                                // Verifica que la foto sea cuadrada
+                                if (this.imgRef.current.clientHeight===this.imgRef.current.clientWidth)
+                                    this.setState({
+                                        fotoAnt : this.state.foto
+                                    })
+                                else{
+                                    this.setState({
+                                        foto: this.state.fotoAnt
+                                    })
+                                    //alert('La relación de aspecto debe ser cuadrada')
+                                }}
+                            }/>
+                            <br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br>
+                            <div className="file-middle">
+                                <input 
+                                    type="file" 
+                                    name="file" 
+                                    id="file" 
+                                    className={`inputfile square150px`} 
+                                    onChange = {(e) => this.resizeImageFn(e.target.files)}
+                                    accept="image/*"
+                                    />
+                                <label htmlFor="file"><AiIcons.AiOutlineCloudUpload/>Subir</label>
+                            </div>
+                            
                         </div>
-                    </div>
-                    <div className="contenedor blanco mh_img datos_usuario">
-                        <div className="contenidoMod ">
-                            {/* Renderiza los datos del alumno agregado */}
-                            {this.renderUserAdded()}
+                        <div className="horizontal-line"/>
+                        
+                        <BtnSeccion
+                            activo={this.state.zona === 'cuenta' ? true : false}
+                            nombre='Cuenta'
+                            descripcion='Rol, nombre de usuario, contraseña'
+                            onclick={ () => this.setState({zona:'cuenta'}) }
+                        />
+
+                        <BtnSeccion
+                            activo={this.state.zona === 'personales' ? true : false}
+                            nombre='Datos personales'
+                            descripcion='Nombre, apellidos, contraseña, curp, grupo sanguíneo'
+                            onclick={ () =>  this.setState({zona:'personales'}) }
+                        />
+
+                        <BtnSeccion
+                            activo={this.state.zona === 'direccion' ? true : false}
+                            nombre='Dirección'
+                            descripcion='Calle, número, localidad, ciudad, estado, C.P.'
+                            onclick={ () => this.setState({zona:'direccion'}) }
+                        />
+                        
+                        <BtnSeccion
+                            activo={this.state.zona === 'contacto' ? true : false}
+                            nombre='Contacto'
+                            descripcion='Correo electrónico, teléfono, teléfono de emergencia'
+                            onclick={ () => this.setState({zona:'contacto'}) }
+                        />
+
+                        <div style={{textAlign:'center', marginTop:'10px'}}>
+                            <SubmitButton
+                            text="Agregar usuario"
+                            icon={<BiIcons.BiUserPlus/>}
+                            styles="no_margin"
+                            />
                         </div>
+                        
                     </div>
                 </div>
-
-                <div className="fila">
-                    <div className="contenedor blanco full_width relleno">
-                        <div className="contenidoMod">
-                            <div className="fila justificado">
-                                <div className="columns">
-                                    <h1 className="title">Usuarios</h1>
-                                    <p className="texto"><BiIcons.BiHelpCircle/>  Ingrese los datos requeridos obligatoriamente *.</p>
-                                </div>
-                                <div className="columns">
-                                    <SubmitButton
-                                        styles='btn width-auto size18 input-size-select'
-                                        text='Agregar'
-                                        icon={<BiIcons.BiUserPlus/>}
-                                    />
-                                </div>
-                            </div>
-
-                            {/* Formulario para alta de alumno
-                                ?Preguntar: caracteres maximos
-                            */}
-                            <div className="fila justificado">
-                                <div className="columns ancho5 padding5">
-                                    <span className="text inputDesc">
-                                        Foto de perfil
-                                    </span>
-                                    <InputField
-                                        type='file'
-                                        placeholder="Foto"
-                                        value={ this.state.foto ? this.state.foto : ''}
-                                        onChange={ (val) => this.setInputValue('foto',val, 1000000n) }
-                                    />
-                                    <span className="text inputDesc">
-                                        Rol
-                                    </span>
-                                    <SelectField
-                                        options={{
-                                            nombre:[
-                                                'Selecciona',
-                                                'Super administrador',
-                                                'Administrador del sistema',
-                                                'Administrador de la escuela',
-                                                'Administrador',
-                                                'Consultor',
-                                                'Diseñador'
-                                            ]}}
-                                        value={this.state.rol_nombre}
-                                        name='rol_nombre'
-                                        onChange={this.setSelectValue}
-                                    />
-                                    <br></br>
-                                    <h3>Datos generales</h3><br></br>
-                                    <span className="text inputDesc">
-                                        Nombre de usuario
-                                    </span>
-                                    <InputField
-                                        type='text'
-                                        placeholder="Usuario"
-                                        value={ this.state.username ? this.state.username : ''}
-                                        onChange={ (val) => this.setInputValue('username',val, 12) }
-                                    />
-                                    <span className="text inputDesc">
-                                        Contraseña
-                                    </span>
-                                    <InputField
-                                        type='password'
-                                        placeholder="Contraseña"
-                                        value={ this.state.password ? this.state.password : ''}
-                                        onChange={ (val) => this.setInputValue('password',val, 32) }
-                                    />
-                                    <span className="text inputDesc">
-                                        Nombre/s
-                                    </span>
-                                    <InputField
-                                        type='text'
-                                        placeholder="Nombre/s"
-                                        value={ this.state.nombre ? this.state.nombre : ''}
-                                        onChange={ (val) => this.setInputValue('nombre',val, 100) }
-                                    />
-                                    <span className="text inputDesc">
-                                        Apellido paterno
-                                    </span>
-                                    <InputField
-                                        type='text'
-                                        placeholder="Apellido paterno"
-                                        value={ this.state.aPaterno ? this.state.aPaterno : ''}
-                                        onChange={ (val) => this.setInputValue('aPaterno',val, 100) }
-                                    />
-                                    <span className="text inputDesc">
-                                        Apellido materno
-                                    </span>
-                                    <InputField
-                                        type='text'
-                                        placeholder="Apellido materno"
-                                        value={ this.state.aMaterno ? this.state.aMaterno : ''}
-                                        onChange={ (val) => this.setInputValue('aMaterno',val, 100) }
-                                    />
-                                    <span className="text inputDesc">
-                                        CURP
-                                    </span>
-                                    <InputField
-                                        type='text'
-                                        placeholder="CURP"
-                                        value={ this.state.curp ? this.state.curp : ''}
-                                        onChange={ (val) => this.setInputValue('curp',val, 18) }
-                                    />
-                                </div>
-                                <div className="columns ancho5 padding5">
-                                <h3>Datos de contacto</h3><br></br>
-                                    <span className="text inputDesc">
-                                        Teléfono móvil
-                                    </span>
-                                    <InputField
-                                        type='text'
-                                        placeholder="Teléfono móvil"
-                                        value={ this.state.con_telefono ? this.state.con_telefono : ''}
-                                        onChange={ (val) => this.setInputValue('con_telefono',val, 10) }
-                                    />
-                                    <span className="text inputDesc">
-                                        Correo electrónico
-                                    </span>
-                                    <InputField
-                                        type='text'
-                                        placeholder="Email"
-                                        value={ this.state.con_email ? this.state.con_email : ''}
-                                        onChange={ (val) => this.setInputValue('con_email',val, 100) }
-                                    />
-                                    <span className="text inputDesc">
-                                        Teléfono de emergencia
-                                    </span>
-                                    <InputField
-                                        type='text'
-                                        placeholder="Teléfono"
-                                        value={ this.state.con_telEmergencia ? this.state.con_telEmergencia : ''}
-                                        onChange={ (val) => this.setInputValue('con_telEmergencia',val, 10) }
-                                    />
-                                <br></br>
-                                <h3>Datos de domicilio</h3><br></br>
-                                    <span className="text inputDesc">
-                                        Calle
-                                    </span>
-                                    <InputField
-                                        type='text'
-                                        placeholder="Calle"
-                                        value={ this.state.dir_calle ? this.state.dir_calle : ''}
-                                        onChange={ (val) => this.setInputValue('dir_calle',val, 50) }
-                                    />
-                                    <span className="text inputDesc">
-                                        Número
-                                    </span>
-                                    <InputField
-                                        type='text'
-                                        placeholder="#"
-                                        value={ this.state.dir_numero ? this.state.dir_numero : ''}
-                                        onChange={ (val) => this.setInputValue('dir_numero',val, 6) }
-                                    />
-                                    <span className="text inputDesc">
-                                        Colonia
-                                    </span>
-                                    <InputField
-                                        type='text'
-                                        placeholder="Colonia"
-                                        value={ this.state.dir_localidad ? this.state.dir_localidad : ''}
-                                        onChange={ (val) => this.setInputValue('dir_localidad',val, 50) }
-                                    />
-                                    <span className="text inputDesc">
-                                        Ciudad
-                                    </span>
-                                    <InputField
-                                        type='text'
-                                        placeholder="Ciudad"
-                                        value={ this.state.dir_ciudad ? this.state.dir_ciudad : ''}
-                                        onChange={ (val) => this.setInputValue('dir_ciudad',val, 50) }
-                                    />
-                                    <span className="text inputDesc">
-                                        Estado
-                                    </span>
-                                    <InputField
-                                        type='text'
-                                        placeholder="Estado"
-                                        value={ this.state.dir_estado ? this.state.dir_estado : ''}
-                                        onChange={ (val) => this.setInputValue('dir_estado',val, 50) }
-                                    />
-                                    <span className="text inputDesc">
-                                        Código postal
-                                    </span>
-                                    <InputField
-                                        type='text'
-                                        placeholder="CP"
-                                        value={ this.state.dir_cp ? this.state.dir_cp : ''}
-                                        onChange={ (val) => this.setInputValue('dir_cp',val, 5) }
-                                    />
-                                </div>
-                            </div>
-
+                <div className="columns col-iz">
+                    <div className="caja-main-iz" style={{height:'auto'}}>
+                        <div className="columns">
+                            {this.renderDatos()}
                         </div>
                     </div>
                 </div>
@@ -383,4 +287,5 @@ export class AltaUsuarios extends Component {
         )
     }
 }
+
 export default AltaUsuarios
