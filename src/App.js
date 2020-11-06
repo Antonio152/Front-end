@@ -19,6 +19,7 @@ import ConsultaUsuarios from './components/ConsultarUsuarios/ConsultaUsuarios'
 import AltaAlumnos from './components/AgregarAlumnos/AltaAlumnos'
 import ConsultaAlumnos from './components/ConsultarAlumnos/ConsultaAlumnos'
 import ConsultaCredencial from './components/ConsultaCredencial/ConsultaCredencial'
+import ModificarCredencial from './components/FormatoCredenciales/ModificarCredencial'
 import MainComponent from './components/Main/MainComponent'
 import PaginaNoEncontrada from './components/PaginaNoEncontrada/PaginaNoEncontrada'
 import AcercaDe from './components/AcercaDe/AcercaDe'
@@ -203,9 +204,9 @@ class App extends Component {
                     {/* Para los usuarios con acceso a la modificación de credenciales  */}
                     {UserStore.Credenciales.map((permiso, perIndex) => {
                       // console.log(permiso)
-                      // if (permiso === 'Modificar formato')
-                      //   return(<Route key={perIndex} path='/credenciales/modificar-formato' component= {ModificarCredencial} />)
-                      // else
+                      if (permiso === 'Modificar formato')
+                        return(<Route key={perIndex} path='/dashboard/credenciales/modificar-formato' component= {ModificarCredencial} />)
+                      else
                       return('')
                     })}
                     <Route path='/dashboard/mi-cuenta' component= {MyAccount} />
