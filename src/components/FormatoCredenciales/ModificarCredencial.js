@@ -44,15 +44,6 @@ export class ModificarCredencial extends Component {
         });
     }
 
-    // Estado cambia con inputs
-    setInputValue = (property, val, maxLenght) => {
-        if (val.length > maxLenght)  //Max lenght
-            return;
-        this.setState({
-            [property]: val // property = username or password
-        });
-    }
-
     resizeImageFn = (archivos) => {
         Array.from(archivos).forEach(archivo => {
             const compress = new Compress();
@@ -72,47 +63,6 @@ export class ModificarCredencial extends Component {
                 })
             })
         })
-    }
-
-    // Un campo que puede ser editable al pasar el cursor sobre él
-    inputTextEditable = (titulo, dato, tipo, estado, longitud) => {
-        return(
-            <div className="columns texto-editable">
-                <div className="fila">
-                    <span className="etiqueta" style={{marginLeft:'0'}}>{titulo.toUpperCase()}</span>
-                    <RiIcons.RiAddLine className="lapiz-icon"/>
-                </div>
-                
-                <InputField
-                    type={tipo}
-                    value={dato}
-                    noBorder={true}
-                    onChange={(val) => this.setInputValue(estado,val,longitud)}
-                    placeholder={titulo}
-                />
-            </div>
-            
-        )
-    }
-    
-    // Un campo que puede ser editable al pasar el cursor sobre él
-    inputSelectEditable = (tipo, nombre, valor, opciones) => {
-        return(
-            <div className="columns texto-editable">
-                <div className="fila">
-                    <span className="etiqueta" style={{marginLeft:'0'}}>{tipo.toUpperCase()}</span>
-                    <RiIcons.RiAddLine className="lapiz-icon"/>
-                </div>
-                
-                <SelectField
-                    options={opciones}
-                    value={valor}
-                    name={nombre}
-                    onChange={this.setSelectValue}
-                    styles='no-border'
-                />
-            </div>
-        )
     }
 
     render() {
