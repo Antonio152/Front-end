@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import axios from 'axios'
+import { BrowserRouter as Router, Route, Switch, Link, Redirect } from 'react-router-dom';
 
 import * as AiIcons from 'react-icons/ai';
 import * as BiIcons from 'react-icons/bi';
@@ -13,11 +15,14 @@ import '../GeneralUseComp/InputFile.css'
 import SelectField from '../GeneralUseComp/SelectField';
 
 const Compress = require('compress.js')
+const bcrypt = require('bcryptjs')
 
 export class AltaUsuarios extends Component {
     imgRef = React.createRef() 
+    
     state = {
-        zona: 'personales',
+        zona: 'cuenta',
+        editar: false,
         // for the input field data
         username: '',
         password: '', 
@@ -40,8 +45,53 @@ export class AltaUsuarios extends Component {
         dir_cp: '',
         aca_carrera: '',
         aca_matricula: '',
-        aca_cuatrimestre: '',
+        aca_cuatrimestre: ''
     }
+
+    componentDidMount = async () => {
+        // Carga los datos del usuario buscado
+        if (this.props.match.params.id){
+            await axios.get(`http://localhost:4000/api/users/${this.props.match.params.id}`)
+                .then(res => {
+                    const usuario = res.data;
+                    this.setState({
+                        editar: true,
+                        username: usuario.username,
+                        fotoAnt: usuario.foto,
+                        foto: usuario.foto,
+                        rol: usuario.rol[0].nombre,
+                        nombre: usuario.nombre,
+                        aPaterno: usuario.aPaterno,
+                        aMaterno: usuario.aMaterno,
+                        curp: usuario.curp,
+                        sanguineo: usuario.sanguineo,
+                        con_telefono: usuario.contacto[0].telefono,
+                        con_email: usuario.contacto[0].email,
+                        con_telEmergencia: usuario.contacto[0].telEmergencia,
+                        dir_numero: usuario.direccion[0].numero,
+                        dir_calle: usuario.direccion[0].calle,
+                        dir_localidad: usuario.direccion[0].localidad,
+                        dir_ciudad: usuario.direccion[0].ciudad,
+                        dir_estado: usuario.direccion[0].estado,
+                        dir_cp: usuario.direccion[0].cp
+                    });
+                    if (usuario.rol[0].nombre === 'Alumno') {
+                        this.setState({
+                            aca_carrera: usuario.academico[0].carrera,
+                            aca_matricula: usuario.academico[0].matricula,
+                            aca_cuatrimestre: usuario.academico[0].cuatrimestre
+                        });
+                    }
+                })
+                .catch(() => {
+                    alert(`El usuario con el id ${this.props.match.params.id} no existe.\nSerá redirigido a la página anterior...`);
+                    window.history.go(-1);  // Regresa una ventana hacia atrás
+                });
+            
+        }
+
+    }
+
     // Renderiza los inputs que podrán ser cambiados
     renderDatos = () => {
 
@@ -268,7 +318,7 @@ export class AltaUsuarios extends Component {
 
                         <div style={{textAlign:'center', marginTop:'10px'}}>
                             <SubmitButton
-                            text="Agregar usuario"
+                            text={this.state.editar ? 'Guardar cambios' : 'Agregar usuario'}
                             icon={<BiIcons.BiUserPlus/>}
                             styles="no_margin"
                             />

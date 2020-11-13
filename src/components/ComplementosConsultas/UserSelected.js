@@ -1,12 +1,17 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
+
 import SubmitButton from '../GeneralUseComp/SubmitButton'
+
 import * as BiIcons from 'react-icons/bi'
 import * as AiIcons from 'react-icons/ai'
+
 import '../ConsultarUsuarios/ConsultaUsuarios.css'
 
 export class UserSelected extends Component {
     render() {
         var ancho;
+        console.log(this.props.usuario)
         return(
             <div className="column">
                 <div className="fila">
@@ -24,11 +29,12 @@ export class UserSelected extends Component {
                                 disabled={this.props.permisos.includes('Eliminar') ? false : true}/>
                             : ''}
                             {this.props.botones.includes('Editar') ? 
-                            <SubmitButton
-                                icon={<BiIcons.BiPencil/>}
-                                styles="fullWidth no_padding no_margin boton btn-blanco"
-                                text="Editar   "
-                                disabled={this.props.permisos.includes('Modificar') ? false : true}/>
+                            <Link 
+                                className="no-decor-link fullWidth no_padding no_margin boton btn-blanco"
+                                to={`editar/${this.props.usuario._id}`}>
+                                <BiIcons.BiPencil/>
+                                <span>Editar</span>   
+                            </Link>
                             : ''}
                             {this.props.botones.includes('Credencial') ? 
                             <SubmitButton

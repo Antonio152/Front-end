@@ -186,6 +186,8 @@ class App extends Component {
                         return(<Route key={perIndex} path='/dashboard/usuarios/consultar' component= {ConsultaUsuarios} />)
                       if (permiso === 'Crear')
                         return(<Route key={perIndex} path='/dashboard/usuarios/crear' component= {AltaUsuarios} />)
+                      if (permiso === 'Modificar')
+                        return(<Route key={perIndex} path='/dashboard/usuarios/editar/:id' component= {AltaUsuarios} />)
                       else
                         return('')
                     })}
@@ -197,6 +199,8 @@ class App extends Component {
                         return(<Route key={perIndex} path='/dashboard/alumnos/consultar' component= {ConsultaAlumnos} />)
                       if (permiso === 'Crear')
                         return(<Route key={perIndex} path='/dashboard/alumnos/crear' component= {AltaAlumnos} />)
+                      if (permiso === 'Modificar')
+                        return(<Route key={perIndex} path='/dashboard/alumnos/editar/:id' component= {AltaAlumnos} />)
                       else
                         return('')
                     })}

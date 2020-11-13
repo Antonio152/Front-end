@@ -26,6 +26,9 @@
 .mh_img {
     max-height: 256px;
 }
+.no-decor-link , .no-decor-link:visited, .no-decor-link:active, .no-decor-link:hover {
+    text-decoration: none;
+}
 
 .blanco {
     background-color: white;
