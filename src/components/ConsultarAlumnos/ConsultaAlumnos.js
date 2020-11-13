@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 // Íconos e imágenes
-import imgBusqueda from './img/busqueda.jpg'
+import imgBusqueda from '../ConsultarUsuarios/img/busqueda.jpg'
 import * as BiIcons from 'react-icons/bi'
 // Componentes de uso general
 import SelectField from '../GeneralUseComp/SelectField'
