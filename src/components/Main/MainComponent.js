@@ -1,14 +1,17 @@
 import React, { Component } from 'react'
 import axios from 'axios'
+import { observer } from 'mobx-react'
+// Íconos
 import * as AiIcons from 'react-icons/ai';
 import * as FaIcons from 'react-icons/fa';
+// Componentes
 import ContenedoresMain from './ContenedoresMain'
+import Loader from '../GeneralUseComp/Loader'
+// Estilos
 import './MainComponent.css'
+// Stores
 import UserStore from '../Stores/UserStore'
 
-import Loader from '../GeneralUseComp/Loader'
-
-import { observer } from 'mobx-react'
 // Primer componente mostrado al iniciar sesión
 export class MainComponent extends Component {
     // Estado de laclase
@@ -88,7 +91,7 @@ export class MainComponent extends Component {
                                                         desc: 
                                                         `${permiso === 'Crear' ? `Dar de alta ${modulo.nombre.toLowerCase()}.` : permiso === 'Consultar' ?
                                                         `Ver, editar y eliminar ${modulo.nombre.toLowerCase()}.` : permiso === 'Modificar formato' ? 'Modificar el formato predeterminado de las credenciales.' : 'Consultar la credencial que me fue proporcionada por mi institución.'}`,
-                                                        path: `/${modulo.nombre.toLowerCase()}/${permiso.toLowerCase().replace(' ','-')}`
+                                                        path: `/dashboard/${modulo.nombre.toLowerCase()}/${permiso.toLowerCase().replace(' ','-')}`
                                                     })
                                                 })}
                                             {/* Renderiza los contenedores con permiso */}

@@ -26,6 +26,7 @@ export class UserStore {
             telEmer: '',
             career: '',
             idStudent: '',
+            aca_estatus: true,
             grade: '',
             Usuarios:[],
             Alumnos: [],

@@ -92,6 +92,7 @@ export class LoginForm extends Component {
                     UserStore.career = result.datosAcademicos[0].carrera;
                     UserStore.idStudent = result.datosAcademicos[0].matricula;
                     UserStore.grade = result.datosAcademicos[0].cuatrimestre;
+                    UserStore.aca_estatus = result.datosAcademicos[0].estatus;
                     if(result.modulos[0].permisos)
                         UserStore.Credenciales = result.modulos[0].permisos;
                 }

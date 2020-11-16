@@ -54,6 +54,7 @@ export class AltaUsuarios extends Component {
         aca_carrera: this.props.miUsuario && UserStore.role === 'Alumno' ? UserStore.career : 'Ingeniería en Software',
         aca_matricula: this.props.miUsuario && UserStore.role === 'Alumno' ? UserStore.idStudent : '',
         aca_cuatrimestre: this.props.miUsuario && UserStore.role === 'Alumno' ? UserStore.grade : '1',
+        aca_estatus: this.props.miUsuario && UserStore.aca_estatus === 'Alumno' ? UserStore.aca_estatus : true,
         // Modulos con acceso
         rol: this.props.miUsuario ? UserStore.role : window.location.href.includes('alumnos') ? 'Alumno' : 'Super Administrador',
         permisos_usuarios: this.props.miUsuario ? UserStore.Usuarios :  window.location.href.includes('alumnos') ? ['','','',''] : ['Crear', 'Modificar', 'Consultar', 'Eliminar'],
@@ -84,7 +85,6 @@ export class AltaUsuarios extends Component {
 
     // Cuando carga el componente
     componentDidMount = async () => {
-        console.log(UserStore.Usuarios)
         // Carga los datos del usuario buscado
         if (this.props.match.params.id !== undefined){
             // Estado listo para llenar con datos buscados
@@ -131,9 +131,11 @@ export class AltaUsuarios extends Component {
                         this.setState({
                             aca_carrera: usuario.academico[0].carrera,
                             aca_matricula: usuario.academico[0].matricula,
-                            aca_cuatrimestre: usuario.academico[0].cuatrimestre
+                            aca_cuatrimestre: usuario.academico[0].cuatrimestre,
+                            aca_estatus: usuario.academico[0].estatus
                         });
                     }
+                    console.log(usuario.academico[0].estatus)
                     
                 })
                 .catch((error) => {
@@ -208,6 +210,8 @@ export class AltaUsuarios extends Component {
                     matricula: this.state.aca_matricula,
                     carrera: this.state.aca_carrera,
                     cuatrimestre: this.state.aca_cuatrimestre,
+                    // registro:   this.state.aca_registro,
+                    estatus: this.state.aca_estatus
                 }],
                 published: true
             };
@@ -520,14 +524,28 @@ export class AltaUsuarios extends Component {
                             {nombre:[ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
                         )}
                     </div>
-                    
+
+                    <div className="inp-numero">
+                        {this.inputSelectEditable(
+                            'Estado',
+                            'aca_estatus',
+                            this.state.aca_estatus,
+                            {nombre:[ true, false]}
+                        )}
+                    </div>
                 </div>
             )
     }
     // Estado cambia con los select
     setSelectValue = (e) => {
+        var asignacion = e.target.value;
+        if (asignacion === 'Activo')
+            asignacion = true
+        if (asignacion === 'Inactivo')
+            asignacion = false;
+        console.log(asignacion)
         this.setState({
-            [e.target.name] : e.target.value
+            [e.target.name] : asignacion
         },() => this.cambiarRoles());
     }
 

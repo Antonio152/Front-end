@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import axios from 'axios'
+import { Modal } from 'react-responsive-modal';
 // Íconos e imágenes
 import imgBusqueda from '../ConsultarUsuarios/img/busqueda.jpg'
 import * as BiIcons from 'react-icons/bi'
+import * as GrIcons from 'react-icons/gr'
 // Componentes de uso general
 import SelectField from '../GeneralUseComp/SelectField'
 import SubmitButton from '../GeneralUseComp/SubmitButton'
@@ -15,11 +17,13 @@ import Busqueda from '../ComplementosConsultas/Busqueda'
 import UserSelected from '../ComplementosConsultas/UserSelected'
 // css
 import '../ConsultarUsuarios/ConsultaUsuarios.css'
+import "react-responsive-modal/styles.css"
 
 export class ConsultaAlumnos extends Component {
 
     // Estado de la case
     state = {
+        modalEliminar:false,
         usuarios : [], // Ususarios de la petición al servidor
         userQry : [], // Ususarios consultados
         usersForCredential: [], // IDs de usuarios para credencial
@@ -267,7 +271,7 @@ export class ConsultaAlumnos extends Component {
                 
             case 'Por estado':
                 this.state.usuarios.forEach(usuario => {
-                    if (`${usuario.published ? 'Activo' : 'Inactivo'}` === this.state.estado)
+                    if (`${usuario.academico[0].estatus ? 'Activo' : 'Inactivo'}` === this.state.estado)
                         usuarioSeleccionado.push(usuario);
                 });
                 break;
@@ -319,6 +323,7 @@ export class ConsultaAlumnos extends Component {
                 ]}}
                 botones={['Eliminar', 'Editar', 'Credencial']}
                 permisos={this.state.permisos}
+                eliminarClick={() => this.setState({modalEliminar:true})}
                 cardClick={() => this.getCredenciales(arrIds, 'UPPCredencial1')}
                 />
             )
@@ -330,11 +335,102 @@ export class ConsultaAlumnos extends Component {
         )
     }
 
+    modalEliminar = () => {
+        return(
+            <div>
+                <Modal open={this.state.modalEliminar} onClose={() => this.setState({ modalEliminar:false })}>
+                    <div style={{color:'#555555'}}>
+                            {/* Botón de cancelación */}
+                            <h1 className="title">
+                                <GrIcons.GrCircleInformation/>
+                                <span>Sobre la eliminación</span>
+                            </h1><br/>
+                            <p>Una <b>baja lógica</b> es la desactivación del usuario sin que se pierdan</p>
+                            <p> sus datos almacenados en el sistema.</p>
+                            <p>Por otro lado, una <b>baja física</b> es la eliminación definitiva de un </p>
+                            <p>usuario dentro del sistema; es decir, sus datos serán borrados</p><p> del sistema.</p><br/>
+                            <p>¿Qué clase de eliminación desea efectuar?</p><br/>
+                        <div className="fila justificado" style={{textAlign:'center', marginTop:'10px'}}>
+                            <SubmitButton
+                                text="Baja lógica"
+                                onclick={() => this.bajaLogica() }
+                                styles="no_margin"
+                            />
+                            
+                            {/* Botón para salvar los cambios */}
+                            <SubmitButton
+                                text="Baja física"
+                                onclick={() => {
+                                    if (window.confirm('Los datos serán eliminados de forma permanente, ¿Está seguro?'))
+                                        this.bajaFisica()
+                                    else
+                                        this.setState({ modalEliminar:false });
+                                } }
+                                styles="no_margin"
+                            />
+                        </div>
+                    </div>
+                </Modal>
+            </div>
+        )
+    }
+    // Realiza la actualización de estado entre la baja lógica y la física
+    bajaLogica = async() =>{
+        const newUsuario = {
+            academico: [{ 
+                matricula: this.state.userSelected.academico[0].matricula,
+                carrera: this.state.userSelected.academico[0].carrera,
+                cuatrimestre: this.state.userSelected.academico[0].cuatrimestre,
+                estatus: false 
+            }],
+        };
 
+        await axios.put(`http://localhost:4000/api/users/${this.state.userSelected._id}`,newUsuario)
+            .then(res => {
+                if (res.status === 200){
+                    alert('Usuario modificado exitosamente.');
+                    this.actualizarTabla();
+                    this.setState({ modalEliminar:false });
+                }
+                else if(res.status !== 500)
+                    alert('Ha ocurrido un error. Inténtelo nuevamente.');
+                else
+                    alert('Ha ocurrido un error con la conexión al servidor.');
+            })
+            .catch(error => console.log(error.response));
+
+        
+    }
+    // Eliminación total del usuario
+    bajaFisica = async() =>{
+        await axios.delete(`http://localhost:4000/api/users/${this.state.userSelected._id}`)
+            .then(res => {
+                if (res.status === 200){
+                    alert('Usuario eliminado con éxito.');
+                    this.actualizarTabla();
+                    this.setState({ modalEliminar:false ,userSelected:[] });
+                }
+                else if(res.status !== 500)
+                    alert('Ha ocurrido un error. Inténtelo nuevamente.');
+                else
+                    alert('Ha ocurrido un error con la conexión al servidor.');
+            })
+            .catch(error => console.log(error.response));
+    }
+
+    actualizarTabla = () => {
+        this.setState({
+            usuarios : [], // Ususarios de la petición al servidor
+            userQry : [], // Ususarios consultados
+            usersForCredential: [], // IDs de usuarios para credencial
+        })
+        this.getUsuarios()
+    }
     // Renderizado del módulo
     render() {
         return (
             <div className="modulo max-1357px">
+                {this.modalEliminar()}
                 <div className="resize-columna justificado ">
                     <div className="contenedor blanco full_width mh_img">
                         <img src={imgBusqueda} alt="" className="img_contenedor_principal"></img>
@@ -424,7 +520,7 @@ export class ConsultaAlumnos extends Component {
                                                 <td className="matricula">{usuario.academico[0].matricula}</td>
                                                 <td className="adjustable_td">{usuario.academico[0].carrera}</td>
                                                 <td className="rol">{usuario.academico[0].cuatrimestre}</td>
-                                                <td className="activo-tabla" style={{borderLeft:'none'}}> {usuario.published ? 'Sí' : 'No'}</td>
+                                                <td className="activo-tabla" style={{borderLeft:'none'}}> {usuario.academico[0].estatus ? 'Sí' : 'No'}</td>
                                             </tr>
                                         )
                                     }):

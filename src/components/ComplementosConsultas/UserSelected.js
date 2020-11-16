@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 
 import SubmitButton from '../GeneralUseComp/SubmitButton'
+import OpenModal from '../Modals/OpenModal'
 
 import * as BiIcons from 'react-icons/bi'
 import * as AiIcons from 'react-icons/ai'
@@ -9,9 +10,9 @@ import * as AiIcons from 'react-icons/ai'
 import '../ConsultarUsuarios/ConsultaUsuarios.css'
 
 export class UserSelected extends Component {
+
     render() {
         var ancho;
-        
         return(
             <div className="column">
                 <div className="fila">
@@ -26,6 +27,7 @@ export class UserSelected extends Component {
                                 icon={<BiIcons.BiTrash/>}
                                 styles="fullWidth no_padding no_margin boton consulta btn-blanco"
                                 text="Eliminar"
+                                onclick={() => this.props.eliminarClick()}
                                 disabled={this.props.permisos.includes('Eliminar') ? false : true}/>
                             : ''}
                             {this.props.botones.includes('Editar') ? 
