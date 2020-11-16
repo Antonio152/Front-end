@@ -14,6 +14,7 @@ import Loader from '../GeneralUseComp/Loader'
 import OpenModal from '../Modals/OpenModal'
 // Datos
 import foto from './foto.json'
+import UserStore from '../Stores/UserStore'
 // Hojas de estilo
 import '../MyAccount/MyAccount.css'
 import '../GeneralUseComp/InputFile.css'
@@ -21,43 +22,45 @@ import '../GeneralUseComp/InputFile.css'
 const Compress = require('compress.js')
 var bcrypt = require('bcryptjs')
 
+// prop "miUsuario" hace referencia a que es el usuario logueado el que edita su perfil
+
 export class AltaUsuarios extends Component {
     imgRef = React.createRef();
 
     state = {
         zona: 'cuenta', // zona de edición del usuario
-        editar: false,  // si se está editando o agregando un nuevo usuario
+        editar: this.props.miUsuario ? true : false,  // si se está editando o agregando un nuevo usuario
         alumnos: window.location.href.includes('alumnos'), // si el usuario editado es un alumno
         // Datos que serán llenados por el usuario o por la API
-        username: '',
+        username: this.props.miUsuario ? UserStore.username : '',
         password: '', 
         passwordRepeat: '',
-        fotoAnt: '',
-        foto: foto.base64,
-        nombre: '',
-        aPaterno: '',
-        aMaterno: '',
-        curp: '',
-        sanguineo: '',
-        con_telefono: '',
-        con_email: '',
-        con_telEmergencia: '',
-        dir_numero: '',
-        dir_calle: '',
-        dir_localidad: '',
-        dir_ciudad: '',
-        dir_estado: '',
-        dir_cp: '',
-        aca_carrera: 'Ingeniería en Software',
-        aca_matricula: '',
-        aca_cuatrimestre: '1',
+        fotoAnt: this.props.miUsuario ? UserStore.photo : foto.base64,
+        foto: this.props.miUsuario ? UserStore.photo : foto.base64,
+        nombre: this.props.miUsuario ? UserStore.name : '',
+        aPaterno: this.props.miUsuario ? UserStore.lastNameP : '',
+        aMaterno: this.props.miUsuario ? UserStore.lastNameM : '',
+        curp: this.props.miUsuario ? UserStore.curp : '',
+        sanguineo: this.props.miUsuario ? UserStore.rh : '',
+        con_telefono: this.props.miUsuario ? UserStore.tel : '',
+        con_email: this.props.miUsuario ? UserStore.email : '',
+        con_telEmergencia: this.props.miUsuario ? UserStore.telEmer : '',
+        dir_numero: this.props.miUsuario ? UserStore.streetNo : '',
+        dir_calle: this.props.miUsuario ? UserStore.street : '',
+        dir_localidad: this.props.miUsuario ? UserStore.location : '',
+        dir_ciudad: this.props.miUsuario ? UserStore.city : '',
+        dir_estado: this.props.miUsuario ? UserStore.state : '',
+        dir_cp: this.props.miUsuario ? UserStore.postalCode : '',
+        aca_carrera: this.props.miUsuario && UserStore.role === 'Alumno' ? UserStore.career : 'Ingeniería en Software',
+        aca_matricula: this.props.miUsuario && UserStore.role === 'Alumno' ? UserStore.idStudent : '',
+        aca_cuatrimestre: this.props.miUsuario && UserStore.role === 'Alumno' ? UserStore.grade : '1',
         // Modulos con acceso
-        rol: window.location.href.includes('alumnos') ? 'Alumno' : 'Super Administrador',
-        permisos_usuarios: window.location.href.includes('alumnos') ? ['','','',''] : ['Crear', 'Modificar', 'Consultar', 'Eliminar'],
-        permisos_alumnos: window.location.href.includes('alumnos') ? ['','','',''] : ['Crear', 'Modificar', 'Consultar', 'Eliminar'],
-        permisos_usuarios_ant: window.location.href.includes('alumnos') ? ['','','',''] : ['Crear', 'Modificar', 'Consultar', 'Eliminar'],
-        permisos_alumnos_ant: window.location.href.includes('alumnos') ? ['','','',''] : ['Crear', 'Modificar', 'Consultar', 'Eliminar'],
-        permisos_credenciales: window.location.href.includes('alumnos') ? ['Generar formato'] : ['Modificar formato'],
+        rol: this.props.miUsuario ? UserStore.role : window.location.href.includes('alumnos') ? 'Alumno' : 'Super Administrador',
+        permisos_usuarios: this.props.miUsuario ? UserStore.Usuarios :  window.location.href.includes('alumnos') ? ['','','',''] : ['Crear', 'Modificar', 'Consultar', 'Eliminar'],
+        permisos_alumnos: this.props.miUsuario ? UserStore.Alumnos :  window.location.href.includes('alumnos') ? ['','','',''] : ['Crear', 'Modificar', 'Consultar', 'Eliminar'],
+        permisos_usuarios_ant: this.props.miUsuario ? UserStore.Usuarios :  window.location.href.includes('alumnos') ? ['','','',''] : ['Crear', 'Modificar', 'Consultar', 'Eliminar'],
+        permisos_alumnos_ant: this.props.miUsuario ? UserStore.Alumnos :  window.location.href.includes('alumnos') ? ['','','',''] : ['Crear', 'Modificar', 'Consultar', 'Eliminar'],
+        permisos_credenciales: this.props.miUsuario ? UserStore.Credenciales :  window.location.href.includes('alumnos') ? ['Generar formato'] : ['Modificar formato'],
         // Para la actualización de roles
         // se utiliza un alternativo para que REACT identifique el cambio
         cambioRol: true,
@@ -69,7 +72,7 @@ export class AltaUsuarios extends Component {
 
         // alerta: {msg:'',tipo:'', accion: () => {}}
     }
-    
+
     // Vacía los permisos del usuario
     permisosVacios = () => this.setState({
         permisos_usuarios:['','','',''],
@@ -81,6 +84,7 @@ export class AltaUsuarios extends Component {
 
     // Cuando carga el componente
     componentDidMount = async () => {
+        console.log(UserStore.Usuarios)
         // Carga los datos del usuario buscado
         if (this.props.match.params.id !== undefined){
             // Estado listo para llenar con datos buscados
@@ -214,13 +218,13 @@ export class AltaUsuarios extends Component {
         
         // Para editar o modificar el usuario
         if (this.state.editar)
-            await axios.put(`http://localhost:4000/api/users/${this.props.match.params.id}`,newUsuario)
+            await axios.put(`http://localhost:4000/api/users/${this.props.miUsuario ? UserStore.id : this.props.match.params.id}`,newUsuario)
                 .then(res => {
                     if (res.status === 200){
                         // Si es que se modifica ya sea el usuario o sólo su contraseña
                         if (!this.state.isPswChanged){
                             alert('Usuario modificado exitosamente.\nRedirigiendo al apartado de consultas...');
-                            window.location = `/dashboard/${this.state.alumnos ? 'alumnos' : 'usuarios'}/consultar`
+                            window.location = this.props.miUsuario ? '/dashboard' : `/dashboard/${this.state.alumnos ? 'alumnos' : 'usuarios'}/consultar`
                         }
                         else{
                             alert('La contraseña ha sido modificada.');
@@ -410,7 +414,13 @@ export class AltaUsuarios extends Component {
         if (this.state.zona === 'cuenta')
             return(
                 <div>
-                    {this.inputSelectEditable(
+                    {this.props.miUsuario ? 
+                    <div className="columns">
+                        <span className="etiqueta" style={{marginLeft:'0'}}>ROL</span>
+                        <span className="span-descriptivo" style={{color:'#b4b4b4'}}>{this.state.rol}</span>
+                    </div>
+                    :
+                    this.inputSelectEditable(
                         'ROL',
                         'rol',
                         this.state.rol,

@@ -186,9 +186,9 @@ class App extends Component {
                         return(<Route key={perIndex} path='/dashboard/usuarios/consultar' component= {ConsultaUsuarios} />)
                       if (permiso === 'Crear')
                         // La razón de escribir el componente como función flecha anónima es debido a que de esa forma, es posible actualizar el componente completo al cambiar la ruta
-                        return(<Route key={perIndex} path='/dashboard/usuarios/crear' component= {(props) => (<AltaUsuarios timestamp = {new Date().toString()} {...props}/>)} />)
+                        return(<Route key={perIndex} path='/dashboard/usuarios/crear' component= {(props) => (<AltaUsuarios timestamp = {new Date().toString()} miUsuario={false} {...props}/>)} />)
                       if (permiso === 'Modificar')
-                        return(<Route key={perIndex} path='/dashboard/usuarios/editar/:id' component= {AltaUsuarios} />)
+                        return(<Route key={perIndex} path='/dashboard/usuarios/editar/:id' component= {(props) => (<AltaUsuarios timestamp = {new Date().toString()} miUsuario={false} {...props}/>)} />)
                       else
                         return('')
                     })}
@@ -200,9 +200,9 @@ class App extends Component {
                         return(<Route key={perIndex} path='/dashboard/alumnos/consultar' component= {ConsultaAlumnos} />)
                       if (permiso === 'Crear')
                         // La razón de escribir el componente como función flecha anónima es debido a que de esa forma, es posible actualizar el componente completo al cambiar la ruta
-                        return(<Route key={perIndex} path='/dashboard/alumnos/crear' component= {(props) => (<AltaUsuarios timestamp = {new Date().toString()} {...props}/>)} />)
+                        return(<Route key={perIndex} path='/dashboard/alumnos/crear' component= {(props) => (<AltaUsuarios timestamp = {new Date().toString()} miUsuario={false} {...props}/>)} />)
                       if (permiso === 'Modificar')
-                        return(<Route key={perIndex} path='/dashboard/alumnos/editar/:id' component= {AltaUsuarios} />)
+                        return(<Route key={perIndex} path='/dashboard/alumnos/editar/:id' component= {(props) => (<AltaUsuarios timestamp = {new Date().toString()} miUsuario={false} {...props}/>)} />)
                       else
                         return('')
                     })}
@@ -215,7 +215,8 @@ class App extends Component {
                       else
                       return('')
                     })}
-                    <Route path='/dashboard/mi-cuenta' component= {MyAccount} />
+                    {/* <Route path='/dashboard/mi-cuenta' component= {MyAccount} /> */}
+                    <Route path='/dashboard/mi-cuenta' component= {(props) => (<AltaUsuarios timestamp = {new Date().toString() } miUsuario={true} {...props}/>)} />
                     <Route path='/dashboard/acerca-de' component= {AcercaDe} />
                     <Route component={PaginaNoEncontrada} />
                 </Switch>
