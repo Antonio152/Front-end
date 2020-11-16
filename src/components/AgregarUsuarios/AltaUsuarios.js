@@ -1,34 +1,39 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import { BrowserRouter as Router, Route, Switch, Link, Redirect } from 'react-router-dom';
-
-import * as AiIcons from 'react-icons/ai';
-import * as BiIcons from 'react-icons/bi';
-import * as RiIcons from 'react-icons/ri';
-
+// Íconos del módulo
+import * as AiIcons from 'react-icons/ai'
+import * as BiIcons from 'react-icons/bi'
+import * as RiIcons from 'react-icons/ri'
+ // Componentes
 import InputField from '../GeneralUseComp/InputField'
 import SubmitButton from '../GeneralUseComp/SubmitButton'
 import BtnSeccion from '../MyAccount/BtnSeccion'
-
+import Checkbox from '../GeneralUseComp/Checkbox'
+import SelectField from '../GeneralUseComp/SelectField'
+import Loader from '../GeneralUseComp/Loader'
+import OpenModal from '../Modals/OpenModal'
+// Datos
+import foto from './foto.json'
+// Hojas de estilo
 import '../MyAccount/MyAccount.css'
 import '../GeneralUseComp/InputFile.css'
-import SelectField from '../GeneralUseComp/SelectField';
-
+// Complementos
 const Compress = require('compress.js')
-const bcrypt = require('bcryptjs')
+var bcrypt = require('bcryptjs')
 
 export class AltaUsuarios extends Component {
-    imgRef = React.createRef() 
-    
+    imgRef = React.createRef();
+
     state = {
-        zona: 'cuenta',
-        editar: false,
-        // for the input field data
+        zona: 'cuenta', // zona de edición del usuario
+        editar: false,  // si se está editando o agregando un nuevo usuario
+        alumnos: window.location.href.includes('alumnos'), // si el usuario editado es un alumno
+        // Datos que serán llenados por el usuario o por la API
         username: '',
         password: '', 
+        passwordRepeat: '',
         fotoAnt: '',
-        foto: '',
-        rol: '',
+        foto: foto.base64,
         nombre: '',
         aPaterno: '',
         aMaterno: '',
@@ -43,17 +48,52 @@ export class AltaUsuarios extends Component {
         dir_ciudad: '',
         dir_estado: '',
         dir_cp: '',
-        aca_carrera: '',
+        aca_carrera: 'Ingeniería en Software',
         aca_matricula: '',
-        aca_cuatrimestre: ''
-    }
+        aca_cuatrimestre: '1',
+        // Modulos con acceso
+        rol: window.location.href.includes('alumnos') ? 'Alumno' : 'Super Administrador',
+        permisos_usuarios: window.location.href.includes('alumnos') ? ['','','',''] : ['Crear', 'Modificar', 'Consultar', 'Eliminar'],
+        permisos_alumnos: window.location.href.includes('alumnos') ? ['','','',''] : ['Crear', 'Modificar', 'Consultar', 'Eliminar'],
+        permisos_usuarios_ant: window.location.href.includes('alumnos') ? ['','','',''] : ['Crear', 'Modificar', 'Consultar', 'Eliminar'],
+        permisos_alumnos_ant: window.location.href.includes('alumnos') ? ['','','',''] : ['Crear', 'Modificar', 'Consultar', 'Eliminar'],
+        permisos_credenciales: window.location.href.includes('alumnos') ? ['Generar formato'] : ['Modificar formato'],
+        // Para la actualización de roles
+        // se utiliza un alternativo para que REACT identifique el cambio
+        cambioRol: true,
+        cambioRolAlt:false,
+        // Si se encuentran cargando los datos
+        isLoading: false,
+        // Si lo que desea hacer es cambiar su contraseña
+        isPswChanged: false
 
+        // alerta: {msg:'',tipo:'', accion: () => {}}
+    }
+    
+    // Vacía los permisos del usuario
+    permisosVacios = () => this.setState({
+        permisos_usuarios:['','','',''],
+        permisos_alumnos:['','','',''],
+        permisos_usuarios_ant:['','','',''],
+        permisos_alumnos_ant:['','','',''],
+        permisos_credenciales:['']
+    });
+
+    // Cuando carga el componente
     componentDidMount = async () => {
         // Carga los datos del usuario buscado
-        if (this.props.match.params.id){
+        if (this.props.match.params.id !== undefined){
+            // Estado listo para llenar con datos buscados
+            this.setState({isLoading:true});
+            this.permisosVacios();
+            // Petición 
             await axios.get(`http://localhost:4000/api/users/${this.props.match.params.id}`)
                 .then(res => {
+                    // Usuario obtenido por el servidor
                     const usuario = res.data;
+                    // Arreglo asignado a usuarios que no tengan ninguna clase de permiso sobre un módulo
+                    const perVacio = ['','','','']
+                    // Actualización de estado
                     this.setState({
                         editar: true,
                         username: usuario.username,
@@ -73,8 +113,16 @@ export class AltaUsuarios extends Component {
                         dir_localidad: usuario.direccion[0].localidad,
                         dir_ciudad: usuario.direccion[0].ciudad,
                         dir_estado: usuario.direccion[0].estado,
-                        dir_cp: usuario.direccion[0].cp
+                        dir_cp: usuario.direccion[0].cp,
+                        ...(usuario.rol[0].nombre !== 'Alumno' && {permisos_usuarios:usuario.rol[0].modulos[0].permisos !== undefined ? usuario.rol[0].modulos[0].permisos : perVacio}),
+                        ...(usuario.rol[0].nombre !== 'Alumno' && {
+                        permisos_alumnos:usuario.rol[0].modulos[1].permisos !== undefined ? usuario.rol[0].modulos[1].permisos : perVacio}),
+                        permisos_credenciales:usuario.rol[0].modulos[2].permisos !== undefined ? usuario.rol[0].modulos[2].permisos : perVacio,
+                        ...(usuario.rol[0].nombre !== 'Alumno' && {permisos_usuarios_ant: usuario.rol[0].modulos[0].permisos !== undefined ? usuario.rol[0].modulos[0].permisos : perVacio}),
+                        ...(usuario.rol[0].nombre !== 'Alumno' && {permisos_alumnos_ant: usuario.rol[0].modulos[1].permisos !== undefined ? usuario.rol[0].modulos[1].permisos : perVacio}),
+                        isLoading: false
                     });
+                    // En caso de que el usuario modificado sea un alumno
                     if (usuario.rol[0].nombre === 'Alumno') {
                         this.setState({
                             aca_carrera: usuario.academico[0].carrera,
@@ -82,40 +130,307 @@ export class AltaUsuarios extends Component {
                             aca_cuatrimestre: usuario.academico[0].cuatrimestre
                         });
                     }
+                    
                 })
-                .catch(() => {
+                .catch((error) => {
+                    console.log(error)
                     alert(`El usuario con el id ${this.props.match.params.id} no existe.\nSerá redirigido a la página anterior...`);
                     window.history.go(-1);  // Regresa una ventana hacia atrás
                 });
             
         }
+        // else {
+        //     this.setState({
+        //         permisos_usuarios:['Crear', 'Modificar', 'Consultar', 'Eliminar'],
+        //         permisos_alumnos:['Crear', 'Modificar', 'Consultar', 'Eliminar'],
+        //         permisos_usuarios_ant:['Crear', 'Modificar', 'Consultar', 'Eliminar'],
+        //         permisos_alumnos_ant:['Crear', 'Modificar', 'Consultar', 'Eliminar'],
+        //         permisos_credenciales:['Modificar formato'],
+        //     });
+        //     this.renderPermisos()
+        // }
 
     }
+    // Agrega los módulos a los cuales tiene acceso el usuario buscado
+    verificaModulos = () => {
+        var modulos = [];
+        modulos.push({
+            nombre: 'Usuarios',
+            permisos: this.state.permisos_usuarios.filter(permiso => permiso !== '')
+        })
+        modulos.push({
+            nombre: 'Alumnos',
+            permisos: this.state.permisos_alumnos.filter(permiso => permiso !== '')
+        })
+        modulos.push({
+            nombre: 'Credenciales',
+            permisos: this.state.permisos_credenciales.filter(permiso => permiso !== '')
+        })
+        return modulos;
+    }
+    // Para guardar cambios
+    guardarUsuario = async () => {
+        const modulos = this.verificaModulos();
+        var newUsuario = {};
+        // La contraseña se debe de actualizar por separado
+        if (!this.state.isPswChanged)
+            newUsuario = {
+                ...(!this.state.editar && {username: this.state.username}),
+                ...(!this.state.editar && {password: this.state.password}),
+                foto: this.state.foto,
+                nombre: this.state.nombre,
+                aPaterno: this.state.aPaterno,
+                aMaterno: this.state.aMaterno,
+                curp: this.state.curp,
+                sanguineo: this.state.sanguineo,
+                rol: [{
+                    nombre: this.state.rol,
+                    modulos: modulos
+                }],
+                contacto: [{
+                    telefono: this.state.con_telefono,
+                    email:this.state.con_email,
+                    telEmergencia: this.state.con_telEmergencia
+                }],
+                direccion: [{
+                    numero: this.state.dir_numero,
+                    calle: this.state.dir_calle,
+                    localidad: this.state.dir_localidad,
+                    ciudad: this.state.dir_ciudad,
+                    estado: this.state.dir_estado,
+                    cp: this.state.dir_cp
+                }],
+                academico: [{
+                    matricula: this.state.aca_matricula,
+                    carrera: this.state.aca_carrera,
+                    cuatrimestre: this.state.aca_cuatrimestre,
+                }],
+                published: true
+            };
+        else
+            newUsuario = {
+                password: bcrypt.hashSync(this.state.password,9)
+            };
+        
+        // Para editar o modificar el usuario
+        if (this.state.editar)
+            await axios.put(`http://localhost:4000/api/users/${this.props.match.params.id}`,newUsuario)
+                .then(res => {
+                    if (res.status === 200){
+                        // Si es que se modifica ya sea el usuario o sólo su contraseña
+                        if (!this.state.isPswChanged){
+                            alert('Usuario modificado exitosamente.\nRedirigiendo al apartado de consultas...');
+                            window.location = `/dashboard/${this.state.alumnos ? 'alumnos' : 'usuarios'}/consultar`
+                        }
+                        else{
+                            alert('La contraseña ha sido modificada.');
+                            this.setState({isPswChanged:false, password: '',  passwordRepeat: ''});
+                        }
+                    }
+                    else if(res.status !== 500)
+                        alert('Ha ocurrido un error. Inténtelo nuevamente.');
+                    else
+                        alert('Ha ocurrido un error con la conexión al servidor.');
+                })
+                .catch(error => console.log(error.response));
+        else
+            // En caso de que se deseé agregar un nuevo usuario
+            await axios.post('http://localhost:4000/api/users', newUsuario)
+                .then(res => {
+                    if (res.status === 200){
+                        alert('Usuario registrado exitosamente.\nRedirigiendo al apartado de consultas...');
+                        // Regresa a la ventana de consultas
+                        window.location = `/dashboard/${this.state.alumnos ? 'alumnos' : 'usuarios'}/consultar`;
+                    }
+                    else if(res.status !== 500)
+                        alert('Ha ocurrido un error. Inténtelo nuevamente.');
+                    else
+                        alert('Ha ocurrido un error con la conexión al servidor.');
+                })
+                .catch(error => console.log(error.response));
+    }
 
-    // Renderiza los inputs que podrán ser cambiados
-    renderDatos = () => {
+    // cerrarModal = () => this.refs.alerta.close();
+    // Al cambiar los roles del select
+    // Realiza el cambio de permisos del usuario
+    cambiarRoles = () => {
+        // Permisos predefinidos
+        const permisos = ['Crear', 'Modificar', 'Consultar', 'Eliminar'];
 
-        if (this.state.zona === 'cuenta')
-        return(
+        {this.setState({
+            permisos_usuarios_ant: this.state.permisos_usuarios,
+            permisos_alumnos_ant: this.state.permisos_alumnos,
+            cambioRol: !this.state.cambioRol,
+            cambioRolAlt: !this.state.cambioRolAlt
+        })}
+
+        if (this.state.rol === 'Super Administrador'){
+            this.setState({
+                permisos_usuarios: permisos,
+                permisos_alumnos: permisos,
+                permisos_credenciales: ['Modificar formato'],
+            });
+            return;
+        }
+        if (this.state.rol === 'Administrador del sistema'){
+            this.setState({
+                permisos_usuarios: permisos,
+                permisos_alumnos: ['','','',''],
+                permisos_credenciales: ['Modificar formato'],
+            });
+            return;
+        }
+        if (this.state.rol === 'Administrador de la escuela'){{
+            this.setState({
+                permisos_usuarios: ['','','',''],
+                permisos_alumnos: permisos,
+                permisos_credenciales: ['Modificar formato'],
+            });
+            return;
+        }
+        }
+        if (this.state.rol === 'Consultor'){
+            this.setState({
+                permisos_usuarios: ['','','Consultar',''],
+                permisos_alumnos: ['','','Consultar',''],
+                permisos_credenciales: [''],
+            });
+            return;
+        }
+        if (this.state.rol === 'Consultor del sistema'){
+            this.setState({
+                permisos_usuarios: ['','','Consultar',''],
+                permisos_alumnos: ['','','',''],
+                permisos_credenciales: [''],
+            });
+            return;
+        }
+        if (this.state.rol === 'Consultor de la escuela'){
+            this.setState({
+                permisos_usuarios: ['','','',''],
+                permisos_alumnos: ['','','Consultar',''],
+                permisos_credenciales: [''],
+            });
+            return;
+        }
+        if (this.state.rol === 'Diseñador'){
+            this.setState({
+                permisos_usuarios: ['','','',''],
+                permisos_alumnos: ['','','',''],
+                permisos_credenciales: ['Modificar formato'],
+            });
+            return;
+        }
+        if (this.state.rol === 'Alumno'){
+            this.setState({
+                permisos_usuarios: ['','','',''],
+                permisos_alumnos: ['','','',''],
+                permisos_credenciales: ['Generar formato'],
+            });
+            return;
+        }
+    }
+    // Permite la apertura del modal de cambio de contraseña
+    apartadoPassword = () => {
+        // En caso de que se deseé o no cambiar la contraseña
+        if (!this.state.isPswChanged)
+            return(
+                <div style={{textAlign:'center', marginTop:'10px'}}>
+                    <SubmitButton
+                        text="Cambiar contraseña"
+                        icon={<BiIcons.BiLock/>}
+                        onclick={() => {
+                            // Al hacer click, desencadena la apertura del modal
+                            this.setState({ isPswChanged:true });
+                        }}
+                        styles="no_margin"
+                    />
+                </div>
+            )
+        return (
             <div>
-
-                {this.inputSelectEditable(
-                    'ROL',
-                    'rol',
-                    this.state.rol,
-                    {nombre:[ 'Super Administrador', 'Administrador', 'Administrador del sistema', 'Administrador de la escuela', 'Consultor', 'Diseñador', 'Alumno']}
-                )}
-
-                {this.inputTextEditable('Nombre de usuario', this.state.username, 'text', 'nombre', 12)}
-                
-                {this.inputTextEditable('Contraseña', this.state.password, 'password','password', 32)}
+                <OpenModal
+                    // Cuando se cierra el modal
+                    onClose = {() => {
+                        this.setState({
+                            password: '', 
+                            passwordRepeat: '',
+                            isPswChanged:false
+                        });
+                        return;
+                    }}
+                    contenido={
+                        <>
+                        {/* Inputs de contraseña */}
+                        {this.inputTextEditable('Nueva contraseña', this.state.password, 'password','password', 32)}
+                        {this.inputTextEditable('Repita contraseña', this.state.passwordRepeat, 'password','passwordRepeat', 32)}
+                        <div className="fila" style={{textAlign:'center', marginTop:'10px'}}>
+                            {/* Botón de cancelación */}
+                            <SubmitButton
+                                text="Cancelar"
+                                onclick={() => {
+                                    this.setState({
+                                        password: '', 
+                                        passwordRepeat: '',
+                                        isPswChanged:false
+                                    });
+                                    return;
+                                }}
+                                styles="no_margin blanco btn-blanco"
+                            />
+                            {/* Botón para salvar los cambios */}
+                            <SubmitButton
+                                text="Guardar"
+                                onclick={() => {
+                                    // Realiza la validación de contraseñas
+                                    if (this.state.password !== this.state.passwordRepeat)
+                                    {
+                                        this.setState({
+                                            password: '', 
+                                            passwordRepeat: ''});
+                                        alert('Las contraseñas no coinciden');
+                                        return;
+                                    }
+                                    // Si todo es correcto, guarda la contraseña
+                                    this.state.password.length > 0 ? this.guardarUsuario() : alert('La contraseña no puede ser vacía');
+                                    this.apartadoPassword();
+                                }}
+                                styles="no_margin"
+                            />
+                        </div>
+                        </>
+                    }
+                />
             </div>
-        )
+        );
+    }
+
+    // Renderiza los inputs en base a la sección en la que se encuentre
+    renderDatos = () => {
+        if (this.state.zona === 'cuenta')
+            return(
+                <div>
+                    {this.inputSelectEditable(
+                        'ROL',
+                        'rol',
+                        this.state.rol,
+                        {nombre:[ 'Super Administrador', 'Administrador del sistema', 'Administrador de la escuela', 'Consultor', 'Consultor del sistema', 'Consultor de la escuela', 'Diseñador', 'Alumno']}
+                    )}
+                    {/* En caso de que se deseé editar un usuario */}
+                    {this.state.editar ? 
+                    <div className="columns">
+                        <span className="etiqueta" style={{marginLeft:'0'}}>NOMBRE DE USUARIO</span>
+                        <span className="span-descriptivo" style={{color:'#b4b4b4'}}>{this.state.username}</span>
+                    </div> :
+                    this.inputTextEditable('Nombre de usuario', this.state.username, 'text', 'username', 12)
+                    }
+                    {this.state.editar ? this.apartadoPassword() : this.inputTextEditable('Contraseña', this.state.password, 'password','password', 32) }
+                </div>
+            )
 
         if (this.state.zona === 'personales')
             return(
                 <div>
-                    
                     {this.inputTextEditable('Nombre(s)', this.state.nombre, 'text', 'nombre', 100)}
 
                     {this.inputTextEditable('Apellido paterno',this.state.aPaterno, 'text', 'aPaterno', 50)}
@@ -133,8 +448,6 @@ export class AltaUsuarios extends Component {
                             )}
                         </div>
                     </div>
-                    
-                    
                 </div>
             )
 
@@ -168,12 +481,44 @@ export class AltaUsuarios extends Component {
                     {this.inputTextEditable('Teléfono Emer.',this.state.con_telEmergencia, 'text', 'con_telEmergencia', 10)}
                 </div>
             )
+        if (this.state.zona === 'academico')
+            return(
+                <div>
+                    {this.inputTextEditable('Matrícula',this.state.aca_matricula, 'text', 'aca_matricula', 10)}
+
+                    {this.inputSelectEditable(
+                        'CARRERA',
+                        'aca_carrera',
+                        this.state.aca_carrera,
+                        {nombre:['Ingeniería en Software',
+                        'Ingeniería en Mecatrónica',
+                        'Ingeniería en Biomédica',
+                        'Ingeniería en Biotecnología',
+                        'Ingeniería en Telemática',
+                        'Ingeniería en Redes y Telecomunicaciones',
+                        'Ingeniería Mecánica Automotríz',
+                        'Ingeniería Sistemas y Tecnologías Industriales',
+                        'Licenciatura en Terapia física',
+                        'Licenciatura en Médico Cirujano']}
+                    )}
+                    
+                    <div className="inp-numero">
+                        {this.inputSelectEditable(
+                            'Cuatrimestre',
+                            'aca_cuatrimestre',
+                            this.state.aca_cuatrimestre,
+                            {nombre:[ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
+                        )}
+                    </div>
+                    
+                </div>
+            )
     }
     // Estado cambia con los select
     setSelectValue = (e) => {
         this.setState({
             [e.target.name] : e.target.value
-        });
+        },() => this.cambiarRoles());
     }
 
     // Estado cambia con inputs
@@ -247,7 +592,87 @@ export class AltaUsuarios extends Component {
         )
     }
 
+    // Al hacer click sobre uno de los checkboxes
+    handleCheckbox = (e, index, permiso, modulo) => {
+        if (modulo === 'Usuarios')
+            e.target.checked ? this.state.permisos_usuarios.splice(index,1,permiso) : this.state.permisos_usuarios.splice(index,1,'');
+        else if (modulo === 'Alumnos')
+            e.target.checked ? this.state.permisos_alumnos.splice(index,1,permiso) : this.state.permisos_alumnos.splice(index,1,'');
+        else
+            e.target.checked ? this.state.permisos_credenciales.splice(index,1,permiso) : this.state.permisos_credenciales.splice(index,1,'');
+    }
+    // Renderiza los checkboxes con permisos a los cuales tiene acceso el usuario
+    renderPermisos = () => {
+        var nombreMod ='';
+        // Variable de módulos predefinidos
+        const modulos = [
+            { nombre:'Usuarios', permisos: ['Crear', 'Modificar', 'Consultar', 'Eliminar'] },
+            { nombre:'Alumnos', permisos: ['Crear', 'Modificar', 'Consultar', 'Eliminar'] }
+        ];
+        return(
+        <div className="columns">
+            <div className="fila">
+                {
+                //Recorre todos los módulos del arreglo definido anteriormente
+                modulos.map((modulo,modIndex) => {
+                    return(
+                    <div className="fila" key={modIndex}> 
+                    <div className="columns">
+                        <span className="etiqueta" style={{marginLeft:'0'}}>{modulo.nombre.toUpperCase()}</span>
+                        {/* Recorre cada uno de los permisos del módulo */}
+                        {modulo.permisos.map((permiso, perIndex) => {
+                            nombreMod = modulo.nombre === 'Usuarios' ? this.state.permisos_usuarios : this.state.permisos_alumnos;
+                            // En caso de que el permiso se encuentre en el arreglo de permisos del módulo, lo marca como seleccionado, sino, únicamente lo renderiza.
+                            return(
+                            <div className="fila" style={{color:'#555555'}} key={perIndex}>
+                                <span>
+                                <Checkbox 
+                                disabled={true}
+                                set={nombreMod.includes(permiso)}
+                                onClick={(e) => this.handleCheckbox(e,perIndex,{permiso},modulo.nombre)} /> 
+                                </span>
+                                <span>{permiso}</span>
+                            </div>   
+                            )
+                        })}
+                    </div>
+                    {modIndex === 0 ? <div className="linea-permisos"/> : ''}
+                    </div>
+                )})
+                }
+            </div>
+            <span className="etiqueta" style={{marginLeft:'0'}}>CREDENCIALES</span>
+            <div className="columns">
+                <div className="fila" style={{color:'#555555'}}>
+                    {/* Checkbox de las credenciales */}
+                    {/* Para cada checkbox, revisa si incluye el permiso asignado a cada checkbox */}
+                    <span>
+                        <Checkbox 
+                            disabled={true}
+                            set={this.state.permisos_credenciales.includes('Modificar formato')}
+                            onClick={(e) => this.handleCheckbox(e,0,'Modificar formato','Credenciales')} />
+                    </span>
+                    <span>Modificar formato</span>
+                </div>
+                <div className="fila" style={{color:'#555555'}}>
+                    <span>
+                        <Checkbox 
+                            disabled={true}
+                            set={this.state.permisos_credenciales.includes('Generar formato')}
+                            onClick={(e) => this.handleCheckbox(e,0,'Generar formato','Credenciales')} />
+                    </span>
+                    <span>Generar formato</span>
+                </div>
+            </div>
+            
+        </div>
+        )
+    }
+
     render() {
+        if(this.state.isLoading)
+            return(<Loader/>)
+        else
         return (
             <div className="main_fila main">
                 <div className="columns col-iz">
@@ -260,8 +685,8 @@ export class AltaUsuarios extends Component {
                             alt="" 
                             src={`data:image;base64,${this.state.foto}`}
                             onLoad={()=> {
-                                // Verifica que la foto sea cuadrada
-                                if (this.imgRef.current.clientHeight===this.imgRef.current.clientWidth)
+                                // Verifica que la foto sea cuadrada al 95%
+                                if (this.imgRef.current.clientHeight >= this.imgRef.current.clientWidth * 0.95 || this.imgRef.current.clientHeight <= this.imgRef.current.clientWidth * 1.05)
                                     this.setState({
                                         fotoAnt : this.state.foto
                                     })
@@ -269,10 +694,9 @@ export class AltaUsuarios extends Component {
                                     this.setState({
                                         foto: this.state.fotoAnt
                                     })
-                                    //alert('La relación de aspecto debe ser cuadrada')
+                                    alert('La relación de aspecto debe ser cuadrada')
                                 }}
                             }/>
-                            <br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br>
                             <div className="file-middle">
                                 <input 
                                     type="file" 
@@ -309,6 +733,15 @@ export class AltaUsuarios extends Component {
                             onclick={ () => this.setState({zona:'direccion'}) }
                         />
                         
+                        {window.location.href.includes('alumnos') ?
+                        <BtnSeccion
+                            activo={this.state.zona === 'academico' ? true : false}
+                            nombre='Académico'
+                            descripcion='Carrera, cuatrimestre, matrícula'
+                            onclick={ () => this.setState({zona:'academico'}) }
+                        />
+                        : <></>}
+
                         <BtnSeccion
                             activo={this.state.zona === 'contacto' ? true : false}
                             nombre='Contacto'
@@ -320,19 +753,39 @@ export class AltaUsuarios extends Component {
                             <SubmitButton
                             text={this.state.editar ? 'Guardar cambios' : 'Agregar usuario'}
                             icon={<BiIcons.BiUserPlus/>}
+                            onclick={() => {this.guardarUsuario();}}
                             styles="no_margin"
                             />
                         </div>
                         
                     </div>
                 </div>
-                <div className="columns col-iz">
-                    <div className="caja-main-iz" style={{height:'auto'}}>
-                        <div className="columns">
-                            {this.renderDatos()}
+                <div className="columns">
+                    <div className="columns col-iz">
+                        <div className="caja-main-iz" style={{height:'auto'}}>
+                            <div className="columns">
+                                {this.renderDatos()}
+                            </div>
                         </div>
                     </div>
+                    {this.state.zona === 'cuenta' /*&& this.state.permisos_usuarios.length !== 0*/ ? 
+                    <div className="columns col-iz">
+                        <div className="caja-main-iz" style={{height:'auto'}}>
+                            <div className="columns">
+                                <span className="etiqueta" style={{marginLeft:'0'}}>PERMISOS DEL ROL</span>
+                                <div className="fila">
+
+                                    {this.state.cambioRol === true ? this.renderPermisos()  : ''}
+                                    {this.state.cambioRolAlt === true ? this.renderPermisos()  : ''}
+
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div> : ''}
+
                 </div>
+
             </div>
         )
     }

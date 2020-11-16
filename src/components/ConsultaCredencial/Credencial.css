@@ -184,3 +184,10 @@ p.nombre-inst{
     height: 100%;
     width: 2px;
 }
+
+.linea-permisos{
+    background: #b4b4b4;
+    height: calc(100% - 30px);
+    width: 1.5px;
+    margin: 30px 10px 0px 10px;
+}

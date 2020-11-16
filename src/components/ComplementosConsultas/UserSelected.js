@@ -11,7 +11,7 @@ import '../ConsultarUsuarios/ConsultaUsuarios.css'
 export class UserSelected extends Component {
     render() {
         var ancho;
-        console.log(this.props.usuario)
+        
         return(
             <div className="column">
                 <div className="fila">

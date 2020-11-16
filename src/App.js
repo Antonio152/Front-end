@@ -181,11 +181,12 @@ class App extends Component {
                     <Route path='/dashboard' exact component= {MainComponent} />
                     {/* Para los usuarios con acceso a los datos de los usuarios */}
                     {UserStore.Usuarios.map((permiso, perIndex) => {
-                      // console.log(permiso)
+                      
                       if (permiso === 'Consultar')
                         return(<Route key={perIndex} path='/dashboard/usuarios/consultar' component= {ConsultaUsuarios} />)
                       if (permiso === 'Crear')
-                        return(<Route key={perIndex} path='/dashboard/usuarios/crear' component= {AltaUsuarios} />)
+                        // La razón de escribir el componente como función flecha anónima es debido a que de esa forma, es posible actualizar el componente completo al cambiar la ruta
+                        return(<Route key={perIndex} path='/dashboard/usuarios/crear' component= {(props) => (<AltaUsuarios timestamp = {new Date().toString()} {...props}/>)} />)
                       if (permiso === 'Modificar')
                         return(<Route key={perIndex} path='/dashboard/usuarios/editar/:id' component= {AltaUsuarios} />)
                       else
@@ -194,20 +195,21 @@ class App extends Component {
 
                     {/* Para los usuarios con acceso a los datos de los alumnos  */}
                     {UserStore.Alumnos.map((permiso, perIndex) => {
-                      // console.log(permiso)
+                      
                       if (permiso === 'Consultar')
                         return(<Route key={perIndex} path='/dashboard/alumnos/consultar' component= {ConsultaAlumnos} />)
                       if (permiso === 'Crear')
-                        return(<Route key={perIndex} path='/dashboard/alumnos/crear' component= {AltaAlumnos} />)
+                        // La razón de escribir el componente como función flecha anónima es debido a que de esa forma, es posible actualizar el componente completo al cambiar la ruta
+                        return(<Route key={perIndex} path='/dashboard/alumnos/crear' component= {(props) => (<AltaUsuarios timestamp = {new Date().toString()} {...props}/>)} />)
                       if (permiso === 'Modificar')
-                        return(<Route key={perIndex} path='/dashboard/alumnos/editar/:id' component= {AltaAlumnos} />)
+                        return(<Route key={perIndex} path='/dashboard/alumnos/editar/:id' component= {AltaUsuarios} />)
                       else
                         return('')
                     })}
 
                     {/* Para los usuarios con acceso a la modificación de credenciales  */}
                     {UserStore.Credenciales.map((permiso, perIndex) => {
-                      // console.log(permiso)
+                      
                       if (permiso === 'Modificar formato')
                         return(<Route key={perIndex} path='/dashboard/credenciales/modificar-formato' component= {ModificarCredencial} />)
                       else

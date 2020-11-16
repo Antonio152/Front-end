@@ -270,7 +270,7 @@ export class ConsultaUsuarios extends Component {
                                     {/* Carga los datos de los alumnos */}
                                     {/* Adjuntar en función con trycatch */
                                     this.state.userQry.length > 0 ?
-                                    this.state.userQry.map((usuario, usIndex) => {
+                                    this.state.userQry.filter(usuario => usuario._id !== UserStore.id).map((usuario, usIndex) => {
                                         return(
                                         <tr key = {usIndex} onClick={() => this.setState({userSelected:usuario})}>
                                             <td>{`${usuario.nombre} ${usuario.aPaterno} ${usuario.aMaterno} `}</td>

@@ -11,7 +11,23 @@ export class Checkbox extends Component {
         })
     }
 
-    
+    setTrue = () => {
+        this.setState({
+            isChecked: true
+        })
+    }
+
+    setFalse = () => {
+        this.setState({
+            isChecked: false
+        })
+    }
+
+    componentDidMount = () => {
+        if (this.props.set) this.setTrue();
+        else this.setFalse();
+        // this.props.set ? this.setTrue : this.setFalse;
+    }
 
     render() {
         return (
@@ -20,6 +36,7 @@ export class Checkbox extends Component {
                 value={this.state.isChecked}
                 onChange={this.handleCheck} 
                 checked={this.state.isChecked}
+                disabled={this.props.disabled}
                 onClick = {(e) => this.props.onClick(e)}
                 />
             </div>
