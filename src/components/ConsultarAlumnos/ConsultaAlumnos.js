@@ -36,7 +36,12 @@ export class ConsultaAlumnos extends Component {
         matricula: '',
         carrera: 'Ingeniería en Software',
         estado: 'Activo',
-        permisos: []
+        permisos: [],
+        // Para cuando se estén obteniendo los usuarios del servidor
+        cargandoUs: true,
+        // Permiten la actualización de la tabla en los checkbox
+        cambioTabla:true,
+        cambioTablaAlt:false
     }
     // Obtiene los usuarios del servidor
     getUsuarios = async () => {
@@ -51,8 +56,8 @@ export class ConsultaAlumnos extends Component {
 
         let result = await res.json();
         if (result && res.status === 200){
-            let usuarios = [];
-            let usuarios_id = [];
+            var usuarios = [];
+            var usuarios_id = [];
             result
                 .filter(usuario => usuario.rol[0].nombre === 'Alumno')
                 .forEach(usuario => {
@@ -62,7 +67,8 @@ export class ConsultaAlumnos extends Component {
             this.setState({
                 usuarios: usuarios,
                 userQry: usuarios,
-                usersForCredential: usuarios_id
+                usersForCredential: usuarios_id,
+                cargandoUs: false
             })
         }
     }
@@ -82,13 +88,59 @@ export class ConsultaAlumnos extends Component {
                 if (usuario._id === index) arrDatos.push(usuario);
             })
         });
+        console.log(datos)
         // if (!datos.length) arrDatos.push(datos)
         // else arrDatos = datos;
+
         const res = await axios.post('http://localhost:4000/cards',{
             usuarios: arrDatos,
             formato: formato
         });
         this.generarArchivo(res.data.pdf, arrDatos.length === 1 ? `Credencial ${arrDatos[0].nombre} ${arrDatos[0].aPaterno}` : 'Credenciales');
+    }
+    
+    // Realiza la actualización de estado entre la baja lógica y la física
+    bajaLogica = async() =>{
+        const newUsuario = {
+            academico: [{ 
+                matricula: this.state.userSelected.academico[0].matricula,
+                carrera: this.state.userSelected.academico[0].carrera,
+                cuatrimestre: this.state.userSelected.academico[0].cuatrimestre,
+                estatus: false 
+            }],
+        };
+
+        await axios.put(`http://localhost:4000/api/users/${this.state.userSelected._id}`,newUsuario)
+            .then(res => {
+                if (res.status === 200){
+                    alert('Usuario modificado exitosamente.');
+                    this.actualizarTabla();
+                    this.setState({ modalEliminar:false });
+                }
+                else if(res.status !== 500)
+                    alert('Ha ocurrido un error. Inténtelo nuevamente.');
+                else
+                    alert('Ha ocurrido un error con la conexión al servidor.');
+            })
+            .catch(error => console.log(error.response));
+
+        
+    }
+    // Eliminación total del usuario
+    bajaFisica = async() =>{
+        await axios.delete(`http://localhost:4000/api/users/${this.state.userSelected._id}`)
+            .then(res => {
+                if (res.status === 200){
+                    alert('Usuario eliminado con éxito.');
+                    this.actualizarTabla();
+                    this.setState({ modalEliminar:false ,userSelected:[] });
+                }
+                else if(res.status !== 500)
+                    alert('Ha ocurrido un error. Inténtelo nuevamente.');
+                else
+                    alert('Ha ocurrido un error con la conexión al servidor.');
+            })
+            .catch(error => console.log(error.response));
     }
 
     //Convierte el archivo de base 64 a uno descargable
@@ -111,7 +163,7 @@ export class ConsultaAlumnos extends Component {
         link.href = window.URL.createObjectURL(blob);
         link.download = fileName;
         link.click();
-      };
+    };
 
 
     // Estado cambia con inputs
@@ -214,16 +266,22 @@ export class ConsultaAlumnos extends Component {
             // Revisa si es el usuario seleccionado y si se elimina o no
             if(usuario._id === this.state.usersForCredential[index] && borrar === 'true')
                 this.state.usersForCredential.splice(index, 1)
+        this.setState({
+            cambioTabla: !this.state.cambioTabla,
+            cambioTablaAlt: !this.state.cambioTablaAlt
+        })
     }
     // Busca todos
     busqueda = () => {
         // Sólo obtiene los ID para la seleccion de credenciales
-        let usuarios_id = [];
+        var usuarios_id = [];
         this.state.usuarios.forEach(usuario =>  usuarios_id.push(usuario._id));
         // Actualización de estado para mostrar en tabla y en lista de credenciales
         this.setState({
             userQry:this.state.usuarios,
-            usersForCredential: usuarios_id
+            usersForCredential: usuarios_id,
+            cambioTabla: !this.state.cambioTabla,
+            cambioTablaAlt: !this.state.cambioTablaAlt
         });
     }
 
@@ -289,7 +347,9 @@ export class ConsultaAlumnos extends Component {
             userSelected:'',
             nombre: '',
             aPaterno: '',
-            aMaterno: ''
+            aMaterno: '',
+            cambioTabla: !this.state.cambioTabla,
+            cambioTablaAlt: !this.state.cambioTablaAlt
         });
     }
 
@@ -324,7 +384,10 @@ export class ConsultaAlumnos extends Component {
                 botones={['Eliminar', 'Editar', 'Credencial']}
                 permisos={this.state.permisos}
                 eliminarClick={() => this.setState({modalEliminar:true})}
-                cardClick={() => this.getCredenciales(arrIds, 'UPPCredencial1')}
+                cardClick={() => {
+                    this.getCredenciales(arrIds, 'UPPCredencial1');
+                    alert('Se está generando el archivo para su descarga.');
+                }}
                 />
             )
         }
@@ -334,7 +397,7 @@ export class ConsultaAlumnos extends Component {
             </div>
         )
     }
-
+    // Abre un modal para seleccionar el tipo de eliminación que desea efectuar
     modalEliminar = () => {
         return(
             <div>
@@ -374,58 +437,96 @@ export class ConsultaAlumnos extends Component {
             </div>
         )
     }
-    // Realiza la actualización de estado entre la baja lógica y la física
-    bajaLogica = async() =>{
-        const newUsuario = {
-            academico: [{ 
-                matricula: this.state.userSelected.academico[0].matricula,
-                carrera: this.state.userSelected.academico[0].carrera,
-                cuatrimestre: this.state.userSelected.academico[0].cuatrimestre,
-                estatus: false 
-            }],
-        };
-
-        await axios.put(`http://localhost:4000/api/users/${this.state.userSelected._id}`,newUsuario)
-            .then(res => {
-                if (res.status === 200){
-                    alert('Usuario modificado exitosamente.');
-                    this.actualizarTabla();
-                    this.setState({ modalEliminar:false });
-                }
-                else if(res.status !== 500)
-                    alert('Ha ocurrido un error. Inténtelo nuevamente.');
-                else
-                    alert('Ha ocurrido un error con la conexión al servidor.');
-            })
-            .catch(error => console.log(error.response));
-
-        
-    }
-    // Eliminación total del usuario
-    bajaFisica = async() =>{
-        await axios.delete(`http://localhost:4000/api/users/${this.state.userSelected._id}`)
-            .then(res => {
-                if (res.status === 200){
-                    alert('Usuario eliminado con éxito.');
-                    this.actualizarTabla();
-                    this.setState({ modalEliminar:false ,userSelected:[] });
-                }
-                else if(res.status !== 500)
-                    alert('Ha ocurrido un error. Inténtelo nuevamente.');
-                else
-                    alert('Ha ocurrido un error con la conexión al servidor.');
-            })
-            .catch(error => console.log(error.response));
-    }
-
+    // Deja los datos de la tabla vacíos y realiza nuevamente la petición al servidor
+    // para obtener los usuarios registrados como alumnos
     actualizarTabla = () => {
         this.setState({
             usuarios : [], // Ususarios de la petición al servidor
             userQry : [], // Ususarios consultados
             usersForCredential: [], // IDs de usuarios para credencial
+            cargandoUs: true
         })
         this.getUsuarios()
     }
+    // Permite, a través de un checkbox, seleccionar todos los usuarios para 
+    // generar credenciales o no
+    todosCredencial = (e) => {
+        var usuarios_id = [];
+        if (e.target.checked)
+            this.state.userQry.forEach(usuario => usuarios_id.push(usuario._id));
+        this.setState({
+            usersForCredential:usuarios_id,
+            cambioTabla: !this.state.cambioTabla,
+            cambioTablaAlt: !this.state.cambioTablaAlt
+        });
+    }
+
+    // Renderiza la tabla con los datos en userQry y usersForCredential
+    renderTabla = () =>{
+        if (this.state.cargandoUs)
+            return(<Loader/>)
+        if(this.state.userQry.length === 0)
+            return(<><br/><br/><span className="texto_mediano"> Alumnos no encontrados </span></>)
+        else
+        // Sólo renderiza en caso de  que no se esté cargando o la lista no esté vacía
+        return(
+            <div>
+            <table className="tabla">
+                <tbody>
+                    <tr>
+                        {/* Headers */}
+                        <th style={{minWidth:'25px'}}>
+                            <Checkbox
+                                set={this.state.userQry.length === this.state.usersForCredential.length}
+                                onClick={e => this.todosCredencial(e)}
+                            />
+                        </th>
+                        <th className="adjustable_td">Nombre completo</th>
+                        <th className="matricula">Matricula</th>
+                        <th className="adjustable_td">Carrera</th>
+                        <th className="rol">Cuatrimestre</th>
+                        <th className="activo-tabla" style={{borderLeft:'none'}}>Activo</th>
+                    </tr>
+                </tbody>
+            </table>
+            <div className="datos-tabla">
+
+            <table className="tabla" style={{marginTop:0}}>
+                <tbody>
+
+                    {/* Carga los datos de los alumnos */}
+                    {/* El checkbox se activa si están en la lista de usersForCredential */}
+                    {
+                    this.state.userQry.length > 0 ?
+                    this.state.userQry.map((usuario, usIndex) => {
+                        return(
+                            <tr key = {usIndex} onClick={() => this.setState({userSelected:usuario})}>
+                                <td style={{minWidth:'25px', padding: '15px 0px'}}>
+                                    <Checkbox
+                                    key = {usIndex}
+                                    set={this.state.usersForCredential.includes(usuario._id)}
+                                    onClick={(e) => {
+                                        this.selectUserForCard(usuario, e.target.value)
+                                    }}/>
+                                </td>
+                                <td className="adjustable_td">{`${usuario.nombre} ${usuario.aPaterno} ${usuario.aMaterno} `}</td>
+                                <td className="matricula">{usuario.academico[0].matricula}</td>
+                                <td className="adjustable_td">{usuario.academico[0].carrera}</td>
+                                <td className="rol">{usuario.academico[0].cuatrimestre}</td>
+                                <td className="activo-tabla" style={{borderLeft:'none'}}> {usuario.academico[0].estatus ? 'Sí' : 'No'}</td>
+                            </tr>
+                        )
+                    }):
+                    <div className="centrado">
+                        <Loader/>
+                    </div>}
+                </tbody>
+            </table>
+            </div>
+            </div>
+        )
+    }
+
     // Renderizado del módulo
     render() {
         return (
@@ -479,59 +580,18 @@ export class ConsultaAlumnos extends Component {
                                     <SubmitButton
                                     styles='large-text'
                                     text='Generar credenciales'
-                                    onclick={() => this.getCredenciales(this.state.usersForCredential, 'UPPCredencial1')}
+                                    onclick={() => {
+                                        this.getCredenciales(this.state.usersForCredential, 'UPPCredencial1');
+                                        alert('Se está preparando el archivo para su descarga.');
+                                    }}
                                     />
                                 </div>
                             </div>
+                            
+                            {/* Permite renderizar la tabla de nuevo al buscar */}
+                            {this.state.cambioTabla === true ? this.renderTabla()  : ''}
+                            {this.state.cambioTablaAlt === true ? this.renderTabla()  : ''}
 
-                            { this.state.userQry.length === 0 ? <><br/><br/><span className="texto_mediano"> Alumnos no encontrados </span></> :
-                            <div>
-                            <table className="tabla">
-                                <tbody>
-                                    <tr>
-                                        <th style={{minWidth:'25px'}}/>
-                                        <th className="adjustable_td">Nombre completo</th>
-                                        <th className="matricula">Matricula</th>
-                                        <th className="adjustable_td">Carrera</th>
-                                        <th className="rol">Cuatrimestre</th>
-                                        <th className="activo-tabla" style={{borderLeft:'none'}}>Activo</th>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <div className="datos-tabla">
-
-                            <table className="tabla" style={{marginTop:0}}>
-                                <tbody>
-
-                                    {/* Carga los datos de los alumnos */}
-                                    {
-                                    this.state.userQry.length > 0 ?
-                                    this.state.userQry.map((usuario, usIndex) => {
-                                        return(
-                                            <tr key = {usIndex} onClick={() => this.setState({userSelected:usuario})}>
-                                                <td style={{minWidth:'25px', padding: '15px 0px'}}>
-                                                    <Checkbox
-                                                    key = {usIndex}
-                                                    onClick={(e) => {
-                                                        this.selectUserForCard(usuario, e.target.value)
-                                                    }}/>
-                                                </td>
-                                                <td className="adjustable_td">{`${usuario.nombre} ${usuario.aPaterno} ${usuario.aMaterno} `}</td>
-                                                <td className="matricula">{usuario.academico[0].matricula}</td>
-                                                <td className="adjustable_td">{usuario.academico[0].carrera}</td>
-                                                <td className="rol">{usuario.academico[0].cuatrimestre}</td>
-                                                <td className="activo-tabla" style={{borderLeft:'none'}}> {usuario.academico[0].estatus ? 'Sí' : 'No'}</td>
-                                            </tr>
-                                        )
-                                    }):
-                                    <div className="centrado">
-                                        <Loader/>
-                                    </div>}
-                                </tbody>
-                            </table>
-                            </div>
-                            </div>
-                            }
                         </div>
                     </div>
                 </div>
