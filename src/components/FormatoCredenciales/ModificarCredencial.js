@@ -6,9 +6,9 @@ import * as FaIcons from 'react-icons/fa';
 
 import InputField from '../GeneralUseComp/InputField'
 import SubmitButton from '../GeneralUseComp/SubmitButton'
-import BtnSeccion from '../MyAccount/BtnSeccion'
+import BtnSeccion from '../AgregarUsuarios/BtnSeccion'
 
-import '../MyAccount/MyAccount.css'
+import '../AgregarUsuarios/MyAccount.css'
 import '../GeneralUseComp/InputFile.css'
 import SelectField from '../GeneralUseComp/SelectField';
 

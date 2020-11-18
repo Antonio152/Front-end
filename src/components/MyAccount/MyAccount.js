@@ -7,9 +7,9 @@ import UserStore from '../Stores/UserStore'
 
 import InputField from '../GeneralUseComp/InputField'
 import SubmitButton from '../GeneralUseComp/SubmitButton'
-import BtnSeccion from './BtnSeccion'
+import BtnSeccion from '../AgregarUsuarios/BtnSeccion'
 
-import './MyAccount.css'
+import '../AgregarUsuarios/MyAccount.css'
 import '../GeneralUseComp/InputFile.css'
 import SelectField from '../GeneralUseComp/SelectField';
 

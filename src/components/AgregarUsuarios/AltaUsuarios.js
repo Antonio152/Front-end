@@ -7,7 +7,7 @@ import * as RiIcons from 'react-icons/ri'
  // Componentes
 import InputField from '../GeneralUseComp/InputField'
 import SubmitButton from '../GeneralUseComp/SubmitButton'
-import BtnSeccion from '../MyAccount/BtnSeccion'
+import BtnSeccion from './BtnSeccion'
 import Checkbox from '../GeneralUseComp/Checkbox'
 import SelectField from '../GeneralUseComp/SelectField'
 import Loader from '../GeneralUseComp/Loader'
@@ -16,7 +16,7 @@ import OpenModal from '../Modals/OpenModal'
 import foto from './foto.json'
 import UserStore from '../Stores/UserStore'
 // Hojas de estilo
-import '../MyAccount/MyAccount.css'
+import './MyAccount.css'
 import '../GeneralUseComp/InputFile.css'
 // Complementos
 const Compress = require('compress.js')
