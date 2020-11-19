@@ -4,6 +4,7 @@ import axios from 'axios'
 
 import * as FaIcons from 'react-icons/fa'; // This way you import all Font Awesome Icons
 import * as AiIcons from 'react-icons/ai';
+import * as BiIcons from 'react-icons/bi';
 import { Link } from 'react-router-dom';
 import './Navbar.css'
 import { IconContext } from 'react-icons'
@@ -76,7 +77,7 @@ function Navbar(props) {
             <IconContext.Provider value={{color:'768597'}}>
                 <div className="navbar">
                     <Link to="#" className={menuBars ? 'menu-bars active': 'menu-bars'}>
-                        <FaIcons.FaBars onClick={ showSideBar }/>
+                        <BiIcons.BiChevronsRight className={menuBars ? 'activate-button active': 'activate-button'} onClick={ showSideBar }/>
                     </Link>
                 </div>
                 {/* Define if is active or not */}
