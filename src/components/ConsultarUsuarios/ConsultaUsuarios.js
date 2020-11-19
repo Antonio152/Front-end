@@ -27,7 +27,9 @@ export class ConsultaUsuarios extends Component {
         aMaterno: '',
         rol: 'Super administrador',
         estado: 'Activo',
-        permisos: []
+        permisos: [],
+        // Para cuando se estén obteniendo los usuarios del servidor
+        cargandoUs: true,
     }
     // Obtiene los usuarios del servidor
     getUsuarios = async () => {
@@ -47,7 +49,8 @@ export class ConsultaUsuarios extends Component {
                 .forEach(usuario => usuarios.push(usuario))
             this.setState({
                 usuarios: usuarios,
-                userQry: usuarios
+                userQry: usuarios,
+                cargandoUs: false
             })
         }
     }
@@ -216,6 +219,56 @@ export class ConsultaUsuarios extends Component {
         )
     }
 
+    renderTabla = () =>{
+        if (this.state.cargandoUs)
+            return(<Loader/>)
+        if(this.state.userQry.length === 0)
+            return(<span className="texto_mediano"> Usuarios no encontrados </span>)
+        else
+        // Sólo renderiza en caso de  que no se esté cargando o la lista no esté vacía
+        return(
+        <table className="tabla">
+            <tbody>
+                <tr>
+                    <th className="th-nombre">Nombre completo</th>
+                    <th className="rol">Rol</th>
+                    <th>Módulos con acceso</th>
+                    <th className="activo" style={{borderLeft:'none'}}>Activo</th>
+                </tr>
+                {/* Carga los datos de los alumnos */}
+                {/* Adjuntar en función con trycatch */
+                this.state.userQry.length > 0 ?
+                this.state.userQry.filter(usuario => usuario._id !== UserStore.id).map((usuario, usIndex) => {
+                    return(
+                    <tr key = {usIndex} onClick={() => this.setState({userSelected:usuario})}>
+                        <td>{`${usuario.nombre} ${usuario.aPaterno} ${usuario.aMaterno} `}</td>
+                        <td>{usuario.rol[0].nombre}</td>
+                        <td className="modulos">
+                            {/* Imprime los datos de cada uno de los módulos que tiene acceso */}
+                            {usuario.rol[0].modulos.map((modulo, modIndex) => {
+                                return(
+                                    <div className="fila" key={modIndex} styles={{textAlign:'center'}}>
+                                    <p><span style={{fontWeight:'500'}}>{modulo.nombre}</span>:  
+                                        {modulo.permisos.map((permiso, perIndex) => {
+                                            return(<span key={perIndex} style={{margin:0, paddingLeft:'1px'}}>{`${perIndex === 0 ? ' ' : ', '} ${permiso}`}</span>)
+                                        })}
+                                    </p>
+                                    </div>
+                                )
+                            })}
+                        </td> 
+                        <td>{usuario.published ? 'Sí' : 'No'}</td>
+                    </tr>
+                    )
+                }) : 
+                <div className="centrado">
+                    <Loader/>
+                </div>} 
+            </tbody>
+        </table>
+        )
+    }
+
     // Renderizado del módulo
     render() {
         return (
@@ -258,47 +311,7 @@ export class ConsultaUsuarios extends Component {
                         <div className="contenidoMod">
                             <h1 className="title">Usuarios</h1>
                             <p className="texto"><BiIcons.BiHelpCircle/>  Para conocer más detalles del usuario, haga click sobre él.</p>
-                            { this.state.userQry.length === 0 ? <span className="texto_mediano"> Usuarios no encontrados </span> : 
-                            <table className="tabla">
-                                <tbody>
-                                    <tr>
-                                        <th className="th-nombre">Nombre completo</th>
-                                        <th className="rol">Rol</th>
-                                        <th>Módulos con acceso</th>
-                                        <th className="activo" style={{borderLeft:'none'}}>Activo</th>
-                                    </tr>
-                                    {/* Carga los datos de los alumnos */}
-                                    {/* Adjuntar en función con trycatch */
-                                    this.state.userQry.length > 0 ?
-                                    this.state.userQry.filter(usuario => usuario._id !== UserStore.id).map((usuario, usIndex) => {
-                                        return(
-                                        <tr key = {usIndex} onClick={() => this.setState({userSelected:usuario})}>
-                                            <td>{`${usuario.nombre} ${usuario.aPaterno} ${usuario.aMaterno} `}</td>
-                                            <td>{usuario.rol[0].nombre}</td>
-                                            <td className="modulos">
-                                                {/* Imprime los datos de cada uno de los módulos que tiene acceso */}
-                                                {usuario.rol[0].modulos.map((modulo, modIndex) => {
-                                                    return(
-                                                        <div className="fila" key={modIndex} styles={{textAlign:'center'}}>
-                                                        <p><span style={{fontWeight:'500'}}>{modulo.nombre}</span>:  
-                                                            {modulo.permisos.map((permiso, perIndex) => {
-                                                                return(<span key={perIndex} style={{margin:0, paddingLeft:'1px'}}>{`${perIndex === 0 ? ' ' : ', '} ${permiso}`}</span>)
-                                                            })}
-                                                        </p>
-                                                        </div>
-                                                    )
-                                                })}
-                                            </td> 
-                                            <td>{usuario.published ? 'Sí' : 'No'}</td>
-                                        </tr>
-                                        )
-                                    }) : 
-                                    <div className="centrado">
-                                        <Loader/>
-                                    </div>} 
-                                </tbody>
-                            </table>
-                            }
+                            { this.renderTabla() }
                         </div>
                     </div>
                 </div>
