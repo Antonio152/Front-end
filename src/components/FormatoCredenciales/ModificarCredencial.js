@@ -7,10 +7,14 @@ import * as FaIcons from 'react-icons/fa';
 import InputField from '../GeneralUseComp/InputField'
 import SubmitButton from '../GeneralUseComp/SubmitButton'
 import BtnSeccion from '../AgregarUsuarios/BtnSeccion'
+import Credencial from './Credencial'
 
 import '../AgregarUsuarios/MyAccount.css'
 import '../GeneralUseComp/InputFile.css'
 import SelectField from '../GeneralUseComp/SelectField';
+import './ModificarCredencial.css'
+
+import '../ConsultarUsuarios/ConsultaUsuarios.css'
 
 const Compress = require('compress.js')
 
@@ -25,9 +29,27 @@ export class ModificarCredencial extends Component {
 
         if (this.state.zona === 'tipo1')
         return(
-            <div>
-                
+            <div className="columns col-iz">
+            <div className="fila">
+                <div className="columns">
+                <Credencial
+                    universidad={{
+                        nombre:'Universidad Politécnica de Pachuca',
+                        lema: 'Una universidad para la Investigación',
+                        departamento:'',
+                        pagWeb: 'www.upp.edu.mx',
+                        direccion: '<b>Universidad Politécnica de Pachuca</b></br>Carr. Pachuca-Ciudad Sahagún km 20.</br>Ex Hacienda de Sta.Bárbara, Zempoala, Hidalgo.</br>C.P. 43830 Tel 01(771)547 7510 ext. 2213'
+                    }}
+                    direccion={{nombre:'Dr. Marco Antonio Flores Gonzáles', cargo:'Rector'}}
+                    colores={{
+                        colorLinea: '#70AD47',
+                        colorPrinc: '#461E68',
+                        colorCarrera:'white',
+                    }}
+                />
+                </div>
             </div>
+        </div>
         )
 
         if (this.state.zona === 'tipo2')
@@ -68,7 +90,7 @@ export class ModificarCredencial extends Component {
     render() {
         return (
             <div className="main_fila main">
-                <div className="columns col-iz">
+                <div>
                     <div className="caja-main-iz" style={{height:'auto'}}>
                         <span className="etiqueta" style={{marginLeft:'0', marginBottom:'10px'}}>FORMATO DE CREDENCIALES</span>
                         <div className="horizontal-line"/>
@@ -98,7 +120,7 @@ export class ModificarCredencial extends Component {
                     </div>
                 </div>
                 <div className="columns col-iz">
-                    <div className="caja-main-iz" style={{height:'auto'}}>
+                    <div className="fila">
                         <div className="columns">
                             {this.renderDatos()}
                         </div>

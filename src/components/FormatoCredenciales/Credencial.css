@@ -1,0 +1,193 @@
+.columns{
+    display: flex;
+    flex-direction: column;
+    /* width: 100%; */
+}
+
+.fila {
+    display: flex;
+    flex-direction: row;
+}
+/* Un lado de la credencial */
+.cred-lado{
+    width: 455px;
+    height: 292px;
+    border: 2px solid #dbdbdb;
+    border-radius: 10px;
+    position: relative;
+}
+/* lado derecho de la credencial */
+.lado-der{
+    margin-left: 15px;
+}
+
+/* fondo de la credencial */
+.fondo{
+    width: 100%;
+    border-radius: 10px;
+    position: absolute;
+    z-index: 0;
+}
+/* Escudo de la institución */
+.escudo{
+    width: 74px;
+}
+
+.foto-cred{
+    width: 74px;
+    height: 96px;
+}
+
+/* datos del alumno */
+.datos-cred{
+    position: relative;
+    padding: 10px;
+}
+/* escudo y foto */
+.cred-images{
+    width: 74px;
+}
+/* nombre de la institución */
+p.nombre-inst{
+    font-size: 16px;
+    font-weight: 500;
+    text-transform:uppercase;
+    text-align: center;
+    padding: 5px 0px;
+}
+
+/* Contenedor de datos */
+.datos-inst{padding: 0px 16px;}
+
+/* Lema de la institución */
+.lema{
+    text-align: center;
+    padding: 5px 0px;
+}
+
+/* letras mayúsculas */
+.mayus{
+    text-transform:uppercase;
+    /* letter-spacing: 1px; */
+}
+
+/* Descripción del alumno */
+.desc{
+    font-size: 12px;
+    padding-right: 10px;
+    padding-bottom: 2px;
+}
+
+/* Nombre completo */
+.nom-compl{
+    padding-bottom: 5px;
+}
+
+/* Dirección del alumno */
+.direc-alu{
+    margin-top: 5px;
+}
+
+.rotado180{
+    background-color: rgb(83, 83, 83);
+    position: relative;
+    transform:rotateZ(180deg);
+    height: 288px;
+    width: 35px;
+    padding:15px 10px;
+    -webkit-border-top-left-radius: 10px;
+    -webkit-border-bottom-left-radius: 10px;
+    -moz-border-radius-topleft: 10px;
+    -moz-border-radius-bottomleft: 10px;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+.carrera{
+    font-size: 13px;
+    writing-mode: vertical-rl;
+    text-orientation: sideways-right;
+}
+
+/* Datos de la dirección de la institución */
+.direccion-academica{
+    width: auto;
+    padding-top: 10px;
+    padding-left: 5px;
+    max-width: 50%;
+    font-size: 10px;
+}
+
+/* Contenedor de la firma */
+.firma-director{
+    position: relative;
+    max-width: 214px;
+}
+/* Para centrar la firma */
+.absoluto-centrado{
+    position: absolute;
+    left: 50%;
+}
+
+.relativo-centrado{
+    position: relative;
+    left: -50%;
+}
+
+/* Estilo de la firma */
+.img-firma-director{
+    height: 40px;
+    text-align: center;
+    /* left: 50%; */
+    /* width: 100%; */
+}
+
+/* Contenedor de datos del director */
+.director{
+    position: relative;
+    margin-top: 30px;
+    width: 214px;
+    text-align: center;
+}
+
+.letra-pequeña {
+    font-size: 10px;
+}
+.texto-centrado{
+    text-align: center;
+}
+
+/* Imagen de la institución a la que la escuela pertenece */
+.inst-superior{
+    padding-top: 10px;
+    padding-right: 5px;
+}
+
+.img-inst-superior{
+    width: 150px;
+}
+/* Donde firma el alumno */
+.cuadro-firma{
+    background-color: rgb(240, 240, 240);
+    margin: 5px 30px;
+    width: 100%;
+    height: 50px;
+}
+
+/* Periodo académico */
+.periodo{
+    height: 57px;
+}
+/* Línea vertical de la credencial */
+.linea-vertical{
+    background: rgb(180, 180, 180);
+    height: 100%;
+    width: 2px;
+}
+
+.linea-permisos{
+    background: #b4b4b4;
+    height: calc(100% - 30px);
+    width: 1.5px;
+    margin: 30px 10px 0px 10px;
+}

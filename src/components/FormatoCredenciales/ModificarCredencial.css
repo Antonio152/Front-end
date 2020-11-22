@@ -1,0 +1,14 @@
+.caja-blanca{
+    margin-left: 20px;
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    background-color: white;
+    border-bottom: 2px solid #f0f0f0;
+    width: calc(100% - 30px);
+}
+
+.justificado{
+    justify-content: space-between;
+}
