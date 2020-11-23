@@ -8,6 +8,7 @@ import InputField from '../GeneralUseComp/InputField'
 import SubmitButton from '../GeneralUseComp/SubmitButton'
 import BtnSeccion from '../AgregarUsuarios/BtnSeccion'
 import Credencial from './Credencial'
+import CredencialT from './CredencialT'
 
 import '../AgregarUsuarios/MyAccount.css'
 import '../GeneralUseComp/InputFile.css'
@@ -26,35 +27,54 @@ export class ModificarCredencial extends Component {
 
     // Renderiza los inputs que podrán ser cambiados
     renderDatos = () => {
-
+        
         if (this.state.zona === 'tipo1')
-        return(
-            <div className="columns col-iz">
-            <div className="fila">
-                <div className="columns">
-                <Credencial
-                    universidad={{
-                        nombre:'Universidad Politécnica de Pachuca',
-                        lema: 'Una universidad para la Investigación',
-                        departamento:'',
-                        pagWeb: 'www.upp.edu.mx',
-                        direccion: '<b>Universidad Politécnica de Pachuca</b></br>Carr. Pachuca-Ciudad Sahagún km 20.</br>Ex Hacienda de Sta.Bárbara, Zempoala, Hidalgo.</br>C.P. 43830 Tel 01(771)547 7510 ext. 2213'
-                    }}
-                    direccion={{nombre:'Dr. Marco Antonio Flores Gonzáles', cargo:'Rector'}}
-                    colores={{
-                        colorLinea: '#70AD47',
-                        colorPrinc: '#461E68',
-                        colorCarrera:'white',
-                    }}
-                />
+            return(
+                <div className="columns col-iz">
+                    <div className="fila">
+                        <div className="columns">
+                            <Credencial
+                                universidad={{
+                                    nombre:'Nombre de la universidad',
+                                    lema: 'Lema de la universidad',
+                                    departamento:'',
+                                    pagWeb: 'Web de la universidad',
+                                    direccion: '<b>Nombre de la universidad</b></br>Dirección parte 1</br>Dirección parte 2</br>Dirección parte 3'
+                                }}
+                                direccion={{nombre:'Nombre del rector de la universidad', cargo:'Cargo'}}
+                                colores={{
+                                    colorLinea: '#70AD47',
+                                    colorPrinc: '#461E68',
+                                    colorCarrera:'white',
+                                }}
+                            />
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-        )
+            )
 
         if (this.state.zona === 'tipo2')
             return(
-                <div>
+                <div className="columns col-iz">
+                    <div className="fila">
+                        <div className="columns">
+                            <CredencialT
+                                universidad={{
+                                    nombre:'Nombre de la universidad',
+                                    lema: 'Lema de la universidad',
+                                    departamento:'',
+                                    pagWeb: 'Web de la universidad',
+                                    direccion: '<b>Nombre de la universidad</b></br>Dirección parte 1</br>Dirección parte 2</br>Dirección parte 3'
+                                }}
+                                direccion={{nombre:'Nombre del rector de la universidad', cargo:'Cargo'}}
+                                colores={{
+                                    colorLinea: '#70AD47',
+                                    colorPrinc: '#461E68',
+                                    colorCarrera:'white',
+                                }}
+                            />
+                        </div>
+                    </div>
                 </div>
             )
     }

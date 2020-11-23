@@ -156,6 +156,9 @@ p.nombre-inst{
 .texto-centrado{
     text-align: center;
 }
+.texto-derecha{
+    text-align: right;
+}
 
 /* Imagen de la institución a la que la escuela pertenece */
 .inst-superior{
@@ -190,4 +193,24 @@ p.nombre-inst{
     height: calc(100% - 30px);
     width: 1.5px;
     margin: 30px 10px 0px 10px;
+}
+
+.barraCarrera {
+    width: 100%;
+    padding: 8px;
+    font-size: 13px;
+    text-align: center;
+    z-index: 10;
+    border-radius: 0 0 10px 10px; 
+    margin-right: 3px;
+}
+
+.logosInst {
+    height: 40px;
+    width: 40px;
+}
+
+.logosInst1 {
+    height: 40px;
+    width: 80px;
 }
