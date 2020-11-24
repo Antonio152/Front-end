@@ -58,11 +58,12 @@ export class ConsultaAlumnos extends Component {
         if (result && res.status === 200){
             var usuarios = [];
             var usuarios_id = [];
+            const query = this.props.profesores ? 'Profesor' : 'Alumno';
             result
-                .filter(usuario => usuario.rol[0].nombre === 'Alumno')
+                .filter(usuario => usuario.rol[0].nombre === query)
                 .forEach(usuario => {
                     usuarios.push(usuario);
-                    usuarios_id.push(usuario._id)
+                    usuarios_id.push(usuario._id);
                 })
             this.setState({
                 usuarios: usuarios,
@@ -88,7 +89,6 @@ export class ConsultaAlumnos extends Component {
                 if (usuario._id === index) arrDatos.push(usuario);
             })
         });
-        console.log(datos)
         // if (!datos.length) arrDatos.push(datos)
         // else arrDatos = datos;
 
@@ -269,7 +269,7 @@ export class ConsultaAlumnos extends Component {
         this.setState({
             cambioTabla: !this.state.cambioTabla,
             cambioTablaAlt: !this.state.cambioTablaAlt
-        })
+        });
     }
     // Busca todos
     busqueda = () => {
@@ -359,6 +359,14 @@ export class ConsultaAlumnos extends Component {
         this.getModulos();
     }
 
+    // Llamado antes de que se renderice el módulo
+    componentWillUpdate(preProps, preState) {
+        if (preProps.profesores !== this.props.profesores){
+            this.setState({cargandoUs : true});
+            this.getUsuarios();
+        }
+    }
+
     // Renderiza los datos del usuario seleccionado
     renderUserSelected () {
         if (this.state.userSelected.nombre) {
@@ -385,7 +393,7 @@ export class ConsultaAlumnos extends Component {
                 permisos={this.state.permisos}
                 eliminarClick={() => this.setState({modalEliminar:true})}
                 cardClick={() => {
-                    this.getCredenciales(arrIds, 'UPPCredencial1');
+                    this.getCredenciales(arrIds, this.props.profesores ? 'UPPCredencial2' : 'UPPCredencial1');
                     alert('Se está generando el archivo para su descarga.');
                 }}
                 />
@@ -393,7 +401,7 @@ export class ConsultaAlumnos extends Component {
         }
         return(
             <div className="centrado">
-                <span className="text no-seleccionado">No ha seleccionado un alumno</span>
+                <span className="text no-seleccionado">No ha seleccionado un {this.props.profesores ? 'profesor' : 'alumno'}.</span>
             </div>
         )
     }
@@ -466,7 +474,7 @@ export class ConsultaAlumnos extends Component {
         if (this.state.cargandoUs)
             return(<Loader/>)
         if(this.state.userQry.length === 0)
-            return(<><br/><br/><span className="texto_mediano"> Alumnos no encontrados </span></>)
+            return(<><br/><br/><span className="texto_mediano"> {this.props.profesores ? 'Profesores' : 'Alumnos'} no encontrados </span></>)
         else
         // Sólo renderiza en caso de  que no se esté cargando o la lista no esté vacía
         return(
@@ -484,7 +492,7 @@ export class ConsultaAlumnos extends Component {
                         <th className="adjustable_td">Nombre completo</th>
                         <th className="matricula">Matricula</th>
                         <th className="adjustable_td">Carrera</th>
-                        <th className="rol">Cuatrimestre</th>
+                        {!this.props.profesores ? <th className="rol">Cuatrimestre</th> : <></>}
                         <th className="activo-tabla" style={{borderLeft:'none'}}>Activo</th>
                     </tr>
                 </tbody>
@@ -512,7 +520,7 @@ export class ConsultaAlumnos extends Component {
                                 <td className="adjustable_td">{`${usuario.nombre} ${usuario.aPaterno} ${usuario.aMaterno} `}</td>
                                 <td className="matricula">{usuario.academico[0].matricula}</td>
                                 <td className="adjustable_td">{usuario.academico[0].carrera}</td>
-                                <td className="rol">{usuario.academico[0].cuatrimestre}</td>
+                                {!this.props.profesores ? <td className="rol">{usuario.academico[0].cuatrimestre}</td> : <></>}
                                 <td className="activo-tabla" style={{borderLeft:'none'}}> {usuario.academico[0].estatus ? 'Sí' : 'No'}</td>
                             </tr>
                         )
@@ -536,7 +544,7 @@ export class ConsultaAlumnos extends Component {
                     <div className="contenedor blanco full_width mh_img">
                         <img src={imgBusqueda} alt="" className="img_contenedor_principal"></img>
                         <div className="contenidoMod">
-                            <h1 className="resize-title-alu title">Buscar alumno por...</h1><br/>
+                            <h1 className="resize-title-alu title">Buscar {this.props.profesores ? 'profesor' : 'alumno'} por...</h1><br/>
                             {/* Filtro de búsqueda */}
                             <SelectField
                                 options={{
@@ -570,10 +578,10 @@ export class ConsultaAlumnos extends Component {
                         <div className="contenidoMod">
                             <div className="fila justificado">
                                 <div className="columns">
-                                    <h1 className="title">Alumnos</h1>
+                                    <h1 className="title">{this.props.profesores ? 'Profesores' : 'Alumnos'}</h1>
                                     <div className="desc-modulo">
 
-                                    <p className="texto"><BiIcons.BiHelpCircle/>  Para conocer más detalles del alumno, haga click sobre él. De ser necesario,</p><p className="texto" style={{marginTop:0}}> seleccione el botón a la derecha para generar las credenciales de todos los alumnos de la tabla.</p>
+                                    <p className="texto"><BiIcons.BiHelpCircle/>  Para conocer más detalles del {this.props.profesores ? 'profesor' : 'alumno'}, haga click sobre él. De ser necesario,</p><p className="texto" style={{marginTop:0}}> seleccione el botón a la derecha para generar las credenciales de todos los {this.props.profesores ? 'profesores' : 'alumnos'} de la tabla.</p>
                                     </div>
                                 </div>
                                 <div className="columns">
@@ -581,7 +589,7 @@ export class ConsultaAlumnos extends Component {
                                     styles='large-text'
                                     text='Generar credenciales'
                                     onclick={() => {
-                                        this.getCredenciales(this.state.usersForCredential, 'UPPCredencial1');
+                                        this.getCredenciales(this.state.usersForCredential, this.props.profesores ? 'UPPCredencial2' : 'UPPCredencial1');
                                         alert('Se está preparando el archivo para su descarga.');
                                     }}
                                     />

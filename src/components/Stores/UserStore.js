@@ -30,6 +30,7 @@ export class UserStore {
             grade: '',
             Usuarios:[],
             Alumnos: [],
+            Profesores: [],
             Credenciales: []
         })
     }

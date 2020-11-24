@@ -80,21 +80,24 @@ export class LoginForm extends Component {
                 UserStore.postalCode = result.direccion[0].cp;
                 UserStore.state = result.direccion[0].estado;
                 //Asignación de permisos
-                if(UserStore.role !== 'Alumno'){
+                if(UserStore.role !== 'Alumno' && UserStore.role !== 'Profesor'){
                     if(result.modulos[0].permisos)
-                        UserStore.Usuarios = result.modulos[0].permisos;
+                    UserStore.Usuarios = result.modulos[0].permisos;
                     if(result.modulos[1].permisos)
-                        UserStore.Alumnos = result.modulos[1].permisos;
+                    UserStore.Alumnos = result.modulos[1].permisos;
                     if(result.modulos[2].permisos)
-                        UserStore.Credenciales = result.modulos[2].permisos;
+                    UserStore.Profesores = result.modulos[2].permisos;
+                    if(result.modulos[3].permisos)
+                    UserStore.Credenciales = result.modulos[3].permisos;
                 }
                 else {
                     UserStore.career = result.datosAcademicos[0].carrera;
                     UserStore.idStudent = result.datosAcademicos[0].matricula;
                     UserStore.grade = result.datosAcademicos[0].cuatrimestre;
                     UserStore.aca_estatus = result.datosAcademicos[0].estatus;
-                    if(result.modulos[0].permisos)
-                        UserStore.Credenciales = result.modulos[0].permisos;
+                    // Sólo tiene permiso de generar su credencial
+                    if(result.modulos[3].permisos)
+                        UserStore.Credenciales = UserStore.Alumnos = result.modulos[3].permisos;
                 }
                 
             }

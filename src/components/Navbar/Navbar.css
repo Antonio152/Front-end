@@ -31,6 +31,11 @@
     transition: 350ms;
 }
 
+.accordions-section{
+    overflow-y: auto;
+    max-height: calc(100vh - 212px);
+}
+
 .activate-button {
     margin-top: -1.25rem;
     margin-left: -1.5rem;

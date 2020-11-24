@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import '../ConsultarUsuarios/ConsultaUsuarios.css'
 import './ConsultaCredencial.css'
-import Credencial from './Cedencial'
+import Credencial from '../FormatoCredenciales/Credencial'
+import CredencialT from '../FormatoCredenciales/CredencialT'
 import SubmitButton from '../GeneralUseComp/SubmitButton'
 import * as AiIcons from 'react-icons/ai'
 import UserStore from '../Stores/UserStore'
@@ -107,55 +108,53 @@ export class ConsultaCredencial extends Component {
                         </div>
                     </div>
                 </div>
-                <div className="columna">
-                    <div className="contenedor-blanco tipo">
-                        <div className="contenidoMod">
-                            <div className="fila">
-                            <h1 className="title">Tipo</h1>
-                            </div>
-                            <br/>
-                            <div className="columns">
-                                <div className="fila">
-                                    <label className="radio-cont">Tipo 1
-                                        <input type="radio"  name="radio" value="Tipo 1"/>
-                                        <span className="checkmark"></span>
-                                    </label>
-                                </div>
-                                <div className="fila">
-                                    <label className="radio-cont">Tipo 2
-                                        <input type="radio" id="tipo1" name="radio" value="Tipo 1"/>
-                                        <span className="checkmark"></span>
-                                    </label>
-                                </div>
-                                <SubmitButton styles=' fila fullWidth consulta padding-10 left-padding' text='imprimir' icon={<AiIcons.AiOutlinePrinter/>}/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
             <div className="fila justificado">
                 <div className="columna ">
                     <div className="contenedor-blanco ">
                         <div className="contenidoMod ">
-                            <h1 className="title">Vista previa</h1>
+                            <div className="fila justificado">
+                                <h1 className="title">Vista previa</h1>
+                                <SubmitButton styles=' fila fullWidth consulta padding-10 left-padding' text='imprimir' icon={<AiIcons.AiOutlinePrinter/>}/>
+                            </div>
                             <br/>
-                            <Credencial
-                            alumno={this.state}
-                            universidad={{
-                                nombre:'Universidad Politécnica de Pachuca',
-                                lema: 'Una universidad para la Investigación',
-                                departamento:'',
-                                pagWeb: 'www.upp.edu.mx',
-                                direccion: '<b>Universidad Politécnica de Pachuca</b></br>Carr. Pachuca-Ciudad Sahagún km 20.</br>Ex Hacienda de Sta.Bárbara, Zempoala, Hidalgo.</br>C.P. 43830 Tel 01(771)547 7510 ext. 2213'
-                            }}
-                            direccion={{nombre:'Dr. Marco Antonio Flores Gonzáles', cargo:'Rector'}}
-                            colores={{
-                                colorLinea: '#70AD47',
-                                colorPrinc: '#461E68',
-                                colorCarrera:'white',
-                            }}
-                            
-                            />
+                            {UserStore.role === 'Alumno' ? 
+                                <Credencial
+                                alumno={this.state}
+                                universidad={{
+                                    nombre:'Universidad Politécnica de Pachuca',
+                                    lema: 'Una universidad para la Investigación',
+                                    departamento:'',
+                                    pagWeb: 'www.upp.edu.mx',
+                                    direccion: '<b>Universidad Politécnica de Pachuca</b></br>Carr. Pachuca-Ciudad Sahagún km 20.</br>Ex Hacienda de Sta.Bárbara, Zempoala, Hidalgo.</br>C.P. 43830 Tel 01(771)547 7510 ext. 2213'
+                                }}
+                                direccion={{nombre:'Dr. Marco Antonio Flores Gonzáles', cargo:'Rector'}}
+                                colores={{
+                                    colorLinea: '#70AD47',
+                                    colorPrinc: '#461E68',
+                                    colorCarrera:'white',
+                                }}
+                                
+                                />
+                                :
+                                <CredencialT
+                                alumno={this.state}
+                                universidad={{
+                                    nombre:'Universidad Politécnica de Pachuca',
+                                    lema: 'Una universidad para la Investigación',
+                                    departamento:'',
+                                    pagWeb: 'www.upp.edu.mx',
+                                    direccion: '<b>Universidad Politécnica de Pachuca</b></br>Carr. Pachuca-Ciudad Sahagún km 20.</br>Ex Hacienda de Sta.Bárbara, Zempoala, Hidalgo.</br>C.P. 43830 Tel 01(771)547 7510 ext. 2213'
+                                }}
+                                direccion={{nombre:'Dr. Marco Antonio Flores Gonzáles', cargo:'Rector'}}
+                                colores={{
+                                    colorLinea: '#70AD47',
+                                    colorPrinc: '#461E68',
+                                    colorCarrera:'white',
+                                }}
+                                
+                                />
+                            }
                         </div>
                     </div>
                 </div>

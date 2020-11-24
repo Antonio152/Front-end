@@ -38,6 +38,8 @@ function Accordion(props) {
             return(<FaIcons.FaUsersCog size={24}/>);
         if (props.title === 'Alumnos')
             return(<IoIcons.IoMdSchool size={24}/>);
+        if (props.title === 'Profesores')
+            return(<FaIcons.FaChalkboardTeacher size={24}/>);
         if (props.title === 'Credenciales')
             return(<FaIcons.FaRegCreditCard size={24}/>);
     }

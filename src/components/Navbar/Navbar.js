@@ -99,10 +99,14 @@ function Navbar(props) {
                             </button>
                          </li>
                         
+                        <div className="accordions-section">
+                            
                         {/* Map all the menus into the Menus JSarray file */}
                         {/* Map every submenu inside the menus array too */}
                         {modules.modules !== undefined ? 
-                        modules.modules.map((menu, index) => {
+                        modules.modules
+                            .filter(menu => menu.permisos.length > 0)
+                            .map((menu, index) => {
                             var concPermisos = '';
                             menu.permisos.forEach((permiso, perIndex) => {
                                 concPermisos += `${perIndex === 0 ? '': ', '} ${permiso} ${menu.nombre.toLowerCase().replace('credenciales','')}`
@@ -136,6 +140,7 @@ function Navbar(props) {
                                 <Loader/>
                             </div>
                         }
+                        </div>
                         
                     </ul>
                     <div className="profile-info-section">

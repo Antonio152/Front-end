@@ -31,6 +31,7 @@ export class AltaUsuarios extends Component {
         zona: 'cuenta', // zona de edición del usuario
         editar: this.props.miUsuario ? true : false,  // si se está editando o agregando un nuevo usuario
         alumnos: window.location.href.includes('alumnos'), // si el usuario editado es un alumno
+        profesores: window.location.href.includes('profesores'), // si el usuario editado es un alumno
         // Datos que serán llenados por el usuario o por la API
         username: this.props.miUsuario ? UserStore.username : '',
         password: '', 
@@ -56,12 +57,21 @@ export class AltaUsuarios extends Component {
         aca_cuatrimestre: this.props.miUsuario && UserStore.role === 'Alumno' ? UserStore.grade : '1',
         aca_estatus: this.props.miUsuario && UserStore.aca_estatus === 'Alumno' ? UserStore.aca_estatus : true,
         // Modulos con acceso
-        rol: this.props.miUsuario ? UserStore.role : window.location.href.includes('alumnos') ? 'Alumno' : 'Super Administrador',
+        rol: this.props.miUsuario ? UserStore.role : window.location.href.includes('alumnos') ? 'Alumno' : window.location.href.includes('profesores') ? 'Profesor' : 'Super Administrador',
+
         permisos_usuarios: this.props.miUsuario ? UserStore.Usuarios :  window.location.href.includes('alumnos') ? ['','','',''] : ['Crear', 'Modificar', 'Consultar', 'Eliminar'],
+
         permisos_alumnos: this.props.miUsuario ? UserStore.Alumnos :  window.location.href.includes('alumnos') ? ['','','',''] : ['Crear', 'Modificar', 'Consultar', 'Eliminar'],
+
+        permisos_profesores: this.props.miUsuario ? UserStore.Profesores :  window.location.href.includes('profesores') ? ['','','',''] : ['Crear', 'Modificar', 'Consultar', 'Eliminar'],
+
         permisos_usuarios_ant: this.props.miUsuario ? UserStore.Usuarios :  window.location.href.includes('alumnos') ? ['','','',''] : ['Crear', 'Modificar', 'Consultar', 'Eliminar'],
+
         permisos_alumnos_ant: this.props.miUsuario ? UserStore.Alumnos :  window.location.href.includes('alumnos') ? ['','','',''] : ['Crear', 'Modificar', 'Consultar', 'Eliminar'],
-        permisos_credenciales: this.props.miUsuario ? UserStore.Credenciales :  window.location.href.includes('alumnos') ? ['Generar formato'] : ['Modificar formato'],
+
+        permisos_profesores_ant: this.props.miUsuario ? UserStore.Profesores :  window.location.href.includes('profesores') ? ['','','',''] : ['Crear', 'Modificar', 'Consultar', 'Eliminar'],
+
+        permisos_credenciales: this.props.miUsuario ? UserStore.Credenciales :  window.location.href.includes('alumnos') || window.location.href.includes('profesores')  ? ['Generar formato'] : ['Modificar formato'],
         // Para la actualización de roles
         // se utiliza un alternativo para que REACT identifique el cambio
         cambioRol: true,
@@ -78,8 +88,10 @@ export class AltaUsuarios extends Component {
     permisosVacios = () => this.setState({
         permisos_usuarios:['','','',''],
         permisos_alumnos:['','','',''],
+        permisos_profesores:['','','',''],
         permisos_usuarios_ant:['','','',''],
         permisos_alumnos_ant:['','','',''],
+        permisos_profesores_ant:['','','',''],
         permisos_credenciales:['']
     });
 
@@ -118,20 +130,36 @@ export class AltaUsuarios extends Component {
                         dir_ciudad: usuario.direccion[0].ciudad,
                         dir_estado: usuario.direccion[0].estado,
                         dir_cp: usuario.direccion[0].cp,
-                        ...(usuario.rol[0].nombre !== 'Alumno' && {permisos_usuarios:usuario.rol[0].modulos[0].permisos !== undefined ? usuario.rol[0].modulos[0].permisos : perVacio}),
-                        ...(usuario.rol[0].nombre !== 'Alumno' && {
-                        permisos_alumnos:usuario.rol[0].modulos[1].permisos !== undefined ? usuario.rol[0].modulos[1].permisos : perVacio}),
-                        permisos_credenciales:usuario.rol[0].modulos[2].permisos !== undefined ? usuario.rol[0].modulos[2].permisos : perVacio,
-                        ...(usuario.rol[0].nombre !== 'Alumno' && {permisos_usuarios_ant: usuario.rol[0].modulos[0].permisos !== undefined ? usuario.rol[0].modulos[0].permisos : perVacio}),
-                        ...(usuario.rol[0].nombre !== 'Alumno' && {permisos_alumnos_ant: usuario.rol[0].modulos[1].permisos !== undefined ? usuario.rol[0].modulos[1].permisos : perVacio}),
+                        // Realiza comparaciones. En caso de que no se trate de un usuario o un profesor, entonces implica que no se agregará dicho permiso
+                        ...(usuario.rol[0].nombre !== 'Alumno' && usuario.rol[0].nombre !== 'Profesor' && 
+                        {permisos_usuarios:usuario.rol[0].modulos[0].permisos !== undefined ? usuario.rol[0].modulos[0].permisos : perVacio}),
+
+                        ...(usuario.rol[0].nombre !== 'Alumno' && usuario.rol[0].nombre !== 'Profesor' && 
+                        {permisos_alumnos:usuario.rol[0].modulos[1].permisos !== undefined ? usuario.rol[0].modulos[1].permisos : perVacio}),
+
+                        ...(usuario.rol[0].nombre !== 'Alumno' && usuario.rol[0].nombre !== 'Profesor' && 
+                        {permisos_profesores:usuario.rol[0].modulos[2].permisos !== undefined ? usuario.rol[0].modulos[2].permisos : perVacio}),
+
+                        permisos_credenciales:usuario.rol[0].modulos[3].permisos !== undefined ? usuario.rol[0].modulos[3].permisos : perVacio,
+
+                        ...(usuario.rol[0].nombre !== 'Alumno' && usuario.rol[0].nombre !== 'Profesor' && 
+                        {permisos_usuarios_ant: usuario.rol[0].modulos[0].permisos !== undefined ? usuario.rol[0].modulos[0].permisos : perVacio}),
+
+                        ...(usuario.rol[0].nombre !== 'Alumno' && usuario.rol[0].nombre !== 'Profesor' && 
+                        {permisos_alumnos_ant: usuario.rol[0].modulos[1].permisos !== undefined ? usuario.rol[0].modulos[1].permisos : perVacio}),
+                        
+                        ...(usuario.rol[0].nombre !== 'Alumno' && usuario.rol[0].nombre !== 'Profesor' && 
+                        {permisos_profesores_ant: usuario.rol[0].modulos[2].permisos !== undefined ? usuario.rol[0].modulos[2].permisos : perVacio}),
+
                         isLoading: false
                     });
                     // En caso de que el usuario modificado sea un alumno
-                    if (usuario.rol[0].nombre === 'Alumno') {
+                    if (usuario.rol[0].nombre === 'Alumno' || usuario.rol[0].nombre === 'Profesor') {
                         this.setState({
                             aca_carrera: usuario.academico[0].carrera,
                             aca_matricula: usuario.academico[0].matricula,
-                            aca_cuatrimestre: usuario.academico[0].cuatrimestre,
+                            // Permiso sólo para alumnos
+                            ...(usuario.rol[0].nombre === 'Alumno' && {aca_cuatrimestre: usuario.academico[0].cuatrimestre}),
                             aca_estatus: usuario.academico[0].estatus
                         });
                     }
@@ -145,6 +173,7 @@ export class AltaUsuarios extends Component {
                 });
             
         }
+        else this.cambiarRoles();
         // else {
         //     this.setState({
         //         permisos_usuarios:['Crear', 'Modificar', 'Consultar', 'Eliminar'],
@@ -167,6 +196,10 @@ export class AltaUsuarios extends Component {
         modulos.push({
             nombre: 'Alumnos',
             permisos: this.state.permisos_alumnos.filter(permiso => permiso !== '')
+        })
+        modulos.push({
+            nombre: 'Profesores',
+            permisos: this.state.permisos_profesores.filter(permiso => permiso !== '')
         })
         modulos.push({
             nombre: 'Credenciales',
@@ -228,7 +261,7 @@ export class AltaUsuarios extends Component {
                         // Si es que se modifica ya sea el usuario o sólo su contraseña
                         if (!this.state.isPswChanged){
                             alert('Usuario modificado exitosamente.\nRedirigiendo al apartado de consultas...');
-                            window.location = this.props.miUsuario ? '/dashboard' : `/dashboard/${this.state.alumnos ? 'alumnos' : 'usuarios'}/consultar`
+                            window.location = this.props.miUsuario ? '/dashboard' : `/dashboard/${this.state.alumnos ? 'alumnos' : this.state.profesores ? 'profesores' : 'usuarios'}/consultar`
                         }
                         else{
                             alert('La contraseña ha sido modificada.');
@@ -248,7 +281,7 @@ export class AltaUsuarios extends Component {
                     if (res.status === 200){
                         alert('Usuario registrado exitosamente.\nRedirigiendo al apartado de consultas...');
                         // Regresa a la ventana de consultas
-                        window.location = `/dashboard/${this.state.alumnos ? 'alumnos' : 'usuarios'}/consultar`;
+                        window.location = `/dashboard/${this.state.alumnos ? 'alumnos' : this.state.profesores ? 'profesores' : 'usuarios'}/consultar`;
                     }
                     else if(res.status !== 500)
                         alert('Ha ocurrido un error. Inténtelo nuevamente.');
@@ -268,6 +301,7 @@ export class AltaUsuarios extends Component {
         {this.setState({
             permisos_usuarios_ant: this.state.permisos_usuarios,
             permisos_alumnos_ant: this.state.permisos_alumnos,
+            permisos_profesores_ant: this.state.permisos_profesores,
             cambioRol: !this.state.cambioRol,
             cambioRolAlt: !this.state.cambioRolAlt
         })}
@@ -276,6 +310,7 @@ export class AltaUsuarios extends Component {
             this.setState({
                 permisos_usuarios: permisos,
                 permisos_alumnos: permisos,
+                permisos_profesores: permisos,
                 permisos_credenciales: ['Modificar formato'],
             });
             return;
@@ -284,6 +319,7 @@ export class AltaUsuarios extends Component {
             this.setState({
                 permisos_usuarios: permisos,
                 permisos_alumnos: ['','','',''],
+                permisos_profesores: ['','','',''],
                 permisos_credenciales: ['Modificar formato'],
             });
             return;
@@ -292,6 +328,7 @@ export class AltaUsuarios extends Component {
             this.setState({
                 permisos_usuarios: ['','','',''],
                 permisos_alumnos: permisos,
+                permisos_profesores: permisos,
                 permisos_credenciales: ['Modificar formato'],
             });
             return;
@@ -301,6 +338,7 @@ export class AltaUsuarios extends Component {
             this.setState({
                 permisos_usuarios: ['','','Consultar',''],
                 permisos_alumnos: ['','','Consultar',''],
+                permisos_profesores: ['','','Consultar',''],
                 permisos_credenciales: [''],
             });
             return;
@@ -309,6 +347,7 @@ export class AltaUsuarios extends Component {
             this.setState({
                 permisos_usuarios: ['','','Consultar',''],
                 permisos_alumnos: ['','','',''],
+                permisos_profesores: ['','','',''],
                 permisos_credenciales: [''],
             });
             return;
@@ -317,6 +356,7 @@ export class AltaUsuarios extends Component {
             this.setState({
                 permisos_usuarios: ['','','',''],
                 permisos_alumnos: ['','','Consultar',''],
+                permisos_profesores: ['','','Consultar',''],
                 permisos_credenciales: [''],
             });
             return;
@@ -325,14 +365,16 @@ export class AltaUsuarios extends Component {
             this.setState({
                 permisos_usuarios: ['','','',''],
                 permisos_alumnos: ['','','',''],
+                permisos_profesores: ['','','',''],
                 permisos_credenciales: ['Modificar formato'],
             });
             return;
         }
-        if (this.state.rol === 'Alumno'){
+        if (this.state.rol === 'Alumno' || this.state.rol === 'Profesor'){
             this.setState({
                 permisos_usuarios: ['','','',''],
                 permisos_alumnos: ['','','',''],
+                permisos_profesores: ['','','',''],
                 permisos_credenciales: ['Generar formato'],
             });
             return;
@@ -428,7 +470,7 @@ export class AltaUsuarios extends Component {
                         'ROL',
                         'rol',
                         this.state.rol,
-                        {nombre:[ 'Super Administrador', 'Administrador del sistema', 'Administrador de la escuela', 'Consultor', 'Consultor del sistema', 'Consultor de la escuela', 'Diseñador', 'Alumno']}
+                        {nombre:[ 'Super Administrador', 'Administrador del sistema', 'Administrador de la escuela', 'Consultor', 'Consultor del sistema', 'Consultor de la escuela', 'Diseñador', 'Alumno', 'Profesor']}
                     )}
                     {/* En caso de que se deseé editar un usuario */}
                     {this.state.editar ? 
@@ -515,7 +557,7 @@ export class AltaUsuarios extends Component {
                         'Licenciatura en Terapia física',
                         'Licenciatura en Médico Cirujano']}
                     )}
-                    
+                    {!window.location.href.includes('profesores') ? 
                     <div className="inp-numero">
                         {this.inputSelectEditable(
                             'Cuatrimestre',
@@ -524,6 +566,9 @@ export class AltaUsuarios extends Component {
                             {nombre:[ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
                         )}
                     </div>
+                    : 
+                    <></>
+                    }
 
                     <div className="inp-numero">
                         {this.inputSelectEditable(
@@ -622,12 +667,19 @@ export class AltaUsuarios extends Component {
 
     // Al hacer click sobre uno de los checkboxes
     handleCheckbox = (e, index, permiso, modulo) => {
-        if (modulo === 'Usuarios')
-            e.target.checked ? this.state.permisos_usuarios.splice(index,1,permiso) : this.state.permisos_usuarios.splice(index,1,'');
-        else if (modulo === 'Alumnos')
-            e.target.checked ? this.state.permisos_alumnos.splice(index,1,permiso) : this.state.permisos_alumnos.splice(index,1,'');
-        else
-            e.target.checked ? this.state.permisos_credenciales.splice(index,1,permiso) : this.state.permisos_credenciales.splice(index,1,'');
+        switch (modulo) {
+            case 'Usuarios':
+                e.target.checked ? this.state.permisos_usuarios.splice(index,1,permiso) : this.state.permisos_usuarios.splice(index,1,'');
+                break;
+            case 'Alumnos':
+                e.target.checked ? this.state.permisos_alumnos.splice(index,1,permiso) : this.state.permisos_alumnos.splice(index,1,'');
+                break;
+            case 'Profesores':
+                e.target.checked ? this.state.permisos_profesores.splice(index,1,permiso) : this.state.permisos_profesores.splice(index,1,'');
+                break;
+            default:
+                e.target.checked ? this.state.permisos_credenciales.splice(index,1,permiso) : this.state.permisos_credenciales.splice(index,1,'');
+        }
     }
     // Renderiza los checkboxes con permisos a los cuales tiene acceso el usuario
     renderPermisos = () => {
@@ -635,7 +687,8 @@ export class AltaUsuarios extends Component {
         // Variable de módulos predefinidos
         const modulos = [
             { nombre:'Usuarios', permisos: ['Crear', 'Modificar', 'Consultar', 'Eliminar'] },
-            { nombre:'Alumnos', permisos: ['Crear', 'Modificar', 'Consultar', 'Eliminar'] }
+            { nombre:'Alumnos', permisos: ['Crear', 'Modificar', 'Consultar', 'Eliminar'] },
+            { nombre:'Profesores', permisos: ['Crear', 'Modificar', 'Consultar', 'Eliminar'] }
         ];
         return(
         <div className="columns">
@@ -644,12 +697,12 @@ export class AltaUsuarios extends Component {
                 //Recorre todos los módulos del arreglo definido anteriormente
                 modulos.map((modulo,modIndex) => {
                     return(
-                    <div className="fila" key={modIndex}> 
+                    <div className={'columns'} key={modIndex}> 
                     <div className="columns">
                         <span className="etiqueta" style={{marginLeft:'0'}}>{modulo.nombre.toUpperCase()}</span>
                         {/* Recorre cada uno de los permisos del módulo */}
                         {modulo.permisos.map((permiso, perIndex) => {
-                            nombreMod = modulo.nombre === 'Usuarios' ? this.state.permisos_usuarios : this.state.permisos_alumnos;
+                            nombreMod = modulo.nombre === 'Usuarios' ? this.state.permisos_usuarios : modulo.nombre === 'Alumnos' ? this.state.permisos_alumnos : this.state.permisos_profesores;
                             // En caso de que el permiso se encuentre en el arreglo de permisos del módulo, lo marca como seleccionado, sino, únicamente lo renderiza.
                             return(
                             <div className="fila" style={{color:'#555555'}} key={perIndex}>
@@ -664,7 +717,6 @@ export class AltaUsuarios extends Component {
                             )
                         })}
                     </div>
-                    {modIndex === 0 ? <div className="linea-permisos"/> : ''}
                     </div>
                 )})
                 }
@@ -761,11 +813,11 @@ export class AltaUsuarios extends Component {
                             onclick={ () => this.setState({zona:'direccion'}) }
                         />
                         
-                        {window.location.href.includes('alumnos') ?
+                        {window.location.href.includes('alumnos') || window.location.href.includes('profesores') ?
                         <BtnSeccion
                             activo={this.state.zona === 'academico' ? true : false}
                             nombre='Académico'
-                            descripcion='Carrera, cuatrimestre, matrícula'
+                            descripcion={window.location.href.includes('profesores') ? 'Carrera, matrícula' : 'Carrera, cuatrimestre, matrícula'}
                             onclick={ () => this.setState({zona:'academico'}) }
                         />
                         : <></>}

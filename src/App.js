@@ -64,7 +64,7 @@ class App extends Component {
         UserStore.Credenciales = [];
       }
     } catch (error) {
-      console.log(error);
+      console.error(error)
     }
   }
 
@@ -84,7 +84,6 @@ class App extends Component {
       }); // From API
 
       let result = await res.json();
-
       // If it's logged in
       if (result && result.success) {
         UserStore.loading = false;
@@ -109,21 +108,24 @@ class App extends Component {
         UserStore.postalCode = result.direccion[0].cp;
         UserStore.state = result.direccion[0].estado;
         //Asignación de permisos
-        if(UserStore.role !== 'Alumno'){
+        if(UserStore.role !== 'Alumno' && UserStore.role !== 'Profesor'){
           if(result.modulos[0].permisos)
             UserStore.Usuarios = result.modulos[0].permisos;
           if(result.modulos[1].permisos)
             UserStore.Alumnos = result.modulos[1].permisos;
           if(result.modulos[2].permisos)
-            UserStore.Credenciales = result.modulos[2].permisos;
+            UserStore.Profesores = result.modulos[2].permisos;
+          if(result.modulos[3].permisos)
+            UserStore.Credenciales = result.modulos[3].permisos;
         }
         else {
           UserStore.career = result.datosAcademicos[0].carrera;
           UserStore.idStudent = result.datosAcademicos[0].matricula;
           UserStore.grade = result.datosAcademicos[0].cuatrimestre;
           UserStore.aca_estatus = result.datosAcademicos[0].estatus;
-          if(result.modulos[0].permisos)
-            UserStore.Credenciales = result.modulos[0].permisos;
+          // Sólo tiene permiso de generar su credencial
+          if(result.modulos[3].permisos)
+              UserStore.Credenciales = UserStore.Alumnos = result.modulos[3].permisos;
         }
       }
       else {
@@ -151,9 +153,9 @@ class App extends Component {
     }
     // Verifica si se encuentra logueado y ya se cargó todo
     else {
-      if(UserStore.isLoggedIn && UserStore.id && (UserStore.Alumnos[0] || UserStore.Credenciales[0])){
+      if(UserStore.isLoggedIn && UserStore.id && (UserStore.Alumnos[0] || UserStore.Credenciales[0] || UserStore.Usuarios[0] || UserStore.Profesores[0])){
         // En caso de ser alumno
-        if (UserStore.role !== 'Alumno')
+        if (UserStore.role !== 'Alumno' && UserStore.role !== 'Profesor')
           return (
             <Router>
               {/* Barra de navegación */}
@@ -198,7 +200,13 @@ class App extends Component {
                     {UserStore.Alumnos.map((permiso, perIndex) => {
                       
                       if (permiso === 'Consultar')
-                        return(<Route key={perIndex} path='/dashboard/alumnos/consultar' component= {ConsultaAlumnos} />)
+                        return <Route 
+                            key={perIndex} 
+                            path='/dashboard/alumnos/consultar' 
+                            render= {(props) => (
+                              <ConsultaAlumnos profesores={false} {...props} />
+                            )} 
+                          />
                       if (permiso === 'Crear')
                         // La razón de escribir el componente como función flecha anónima es debido a que de esa forma, es posible actualizar el componente completo al cambiar la ruta
                         return(<Route key={perIndex} path='/dashboard/alumnos/crear' component= {(props) => (<AltaUsuarios timestamp = {new Date().toString()} miUsuario={false} {...props}/>)} />)
@@ -208,6 +216,42 @@ class App extends Component {
                         return('')
                     })}
 
+                    {/* Para los usuarios con acceso a los datos de los profesores  */}
+                    {UserStore.Profesores.map((permiso, perIndex) => {
+                      
+                      if (permiso === 'Consultar')
+                        return <Route 
+                            key={perIndex} 
+                            path='/dashboard/profesores/consultar' 
+                            render= {(props) => (
+                              <ConsultaAlumnos profesores={true} {...props} />
+                            )} 
+                          />
+
+                      if (permiso === 'Crear')
+                        // La razón de escribir el componente como función flecha anónima es debido a que de esa forma, es posible actualizar el componente completo al cambiar la ruta
+                        return <Route 
+                          key={perIndex} 
+                          path='/dashboard/profesores/crear' 
+                          component= {(props) => (
+                          <AltaUsuarios timestamp = {new Date().toString()} miUsuario={false} {...props}/>
+                          )} 
+                        />
+
+                      if (permiso === 'Modificar')
+                        return <Route 
+                          key={perIndex} 
+                          path='/dashboard/profesores/editar/:id' 
+                          component= {(props) => (
+                          <AltaUsuarios 
+                            timestamp = {new Date().toString()} 
+                            miUsuario={false} {...props}/>
+                          )} 
+                        />
+
+                      else
+                        return('')
+                    })}
                     {/* Para los usuarios con acceso a la modificación de credenciales  */}
                     {UserStore.Credenciales.map((permiso, perIndex) => {
                       
@@ -225,7 +269,7 @@ class App extends Component {
             </Router>
           );
         else
-          // En caso de ser alumno
+          // En caso de ser alumno o profesor
           return (
             <Router>
               <Navbar 

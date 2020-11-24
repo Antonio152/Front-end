@@ -70,13 +70,16 @@ export class MainComponent extends Component {
                             <p className="title titulo-main">Revisa nuestras funciones</p>
                             {
                                 // Agrega los modulos al div
-                                this.state.usuario.rol[0].modulos.map((modulo, modIndex) => {
+                                this.state.usuario.rol[0].modulos
+                                    .filter(modulo => modulo.permisos.length > 0)
+                                    .map((modulo, modIndex) => {
                                     var data = []
                                     return(
                                         <div key={modIndex}>
                                             <div className="fila subitulo-main">
                                                 {modulo.nombre === 'Usuarios' ? <FaIcons.FaUser className="title-icon" /> :
                                                 modulo.nombre === 'Alumnos' ? <FaIcons.FaGraduationCap className="title-icon"/> :
+                                                modulo.nombre === 'Profesores' ? <FaIcons.FaChalkboardTeacher className="title-icon"/> :
                                                 <FaIcons.FaRegCreditCard className="title-icon" />}
                                                 
                                                 <p className="title subitulo-main">{modulo.nombre}</p>
