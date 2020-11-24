@@ -23,6 +23,7 @@ export class ModificarCredencial extends Component {
     imgRef = React.createRef() 
     state = {
         zona: 'tipo1',
+        zona1: 'colores'
     }
 
     // Renderiza los inputs que podrán ser cambiados
@@ -79,6 +80,110 @@ export class ModificarCredencial extends Component {
             )
     }
 
+    renderFormato = () => {
+        
+        if (this.state.zona1 === 'colores')
+            return(
+                <div>
+                    <div className="columns">
+                        <span className="etiqueta" style={{marginLeft:'0'}}>FONDO FRONTAL</span>
+                        <span className="span-descriptivo" style={{color:'#b4b4b4'}}>{}</span>
+                    </div>
+
+                    <div className="columns">
+                        <span className="etiqueta" style={{marginLeft:'0'}}>FONDO TRASERO</span>
+                        <span className="span-descriptivo" style={{color:'#b4b4b4'}}>{}</span>
+                    </div>
+
+                    <div className="columns">
+                        <span className="etiqueta" style={{marginLeft:'0'}}>COLOR FUENTE-TITULOS</span>
+                        <span className="span-descriptivo" style={{color:'#b4b4b4'}}>{}</span>
+                    </div>
+
+                    <div className="columns">
+                        <span className="etiqueta" style={{marginLeft:'0'}}>COLOR FUENTE-CONTENIDO</span>
+                        <span className="span-descriptivo" style={{color:'#b4b4b4'}}>{}</span>
+                    </div>
+
+                    <div className="columns">
+                        <span className="etiqueta" style={{marginLeft:'0'}}>COLOR BARRA</span>
+                        <span className="span-descriptivo" style={{color:'#b4b4b4'}}>{}</span>
+                    </div>
+                
+                </div>
+            )
+        
+        if (this.state.zona1 === 'logos')
+            return(
+                <div>
+                    <div className="columns">
+                        <span className="etiqueta" style={{marginLeft:'0'}}>ESCUDO UNIVERSIDAD</span>
+                        <span className="span-descriptivo" style={{color:'#b4b4b4'}}>{}</span>
+                    </div>
+
+                    <div className="columns">
+                        <span className="etiqueta" style={{marginLeft:'0'}}>AUTORIDAD 1</span>
+                        <span className="span-descriptivo" style={{color:'#b4b4b4'}}>{}</span>
+                    </div>
+
+                    <div className="columns">
+                        <span className="etiqueta" style={{marginLeft:'0'}}>AUTORIDAD 2</span>
+                        <span className="span-descriptivo" style={{color:'#b4b4b4'}}>{}</span>
+                    </div>
+
+                    <div className="columns">
+                        <span className="etiqueta" style={{marginLeft:'0'}}>AUTORIDAD 3</span>
+                        <span className="span-descriptivo" style={{color:'#b4b4b4'}}>{}</span>
+                    </div>
+
+                    <div className="columns">
+                        <span className="etiqueta" style={{marginLeft:'0'}}>AUTORIDAD 4</span>
+                        <span className="span-descriptivo" style={{color:'#b4b4b4'}}>{}</span>
+                    </div>
+
+                    <div className="columns">
+                        <span className="etiqueta" style={{marginLeft:'0'}}>FIRMA</span>
+                        <span className="span-descriptivo" style={{color:'#b4b4b4'}}>{}</span>
+                    </div>
+
+                    <div className="columns">
+                        <span className="etiqueta" style={{marginLeft:'0'}}>PERÍODO</span>
+                        <span className="span-descriptivo" style={{color:'#b4b4b4'}}>{}</span>
+                    </div>
+                </div>
+            )
+
+        if (this.state.zona1 === 'textos')
+            return(
+                <div>
+                    <div className="columns">
+                        <span className="etiqueta" style={{marginLeft:'0'}}>NOMBRE UNIVERSIDAD</span>
+                        <span className="span-descriptivo" style={{color:'#b4b4b4'}}>{}</span>
+                    </div>
+
+                    <div className="columns">
+                        <span className="etiqueta" style={{marginLeft:'0'}}>LEMA</span>
+                        <span className="span-descriptivo" style={{color:'#b4b4b4'}}>{}</span>
+                    </div>
+
+                    <div className="columns">
+                        <span className="etiqueta" style={{marginLeft:'0'}}>NOMBRE DEL RECTOR</span>
+                        <span className="span-descriptivo" style={{color:'#b4b4b4'}}>{}</span>
+                    </div>
+
+                    <div className="columns">
+                        <span className="etiqueta" style={{marginLeft:'0'}}>CARGO</span>
+                        <span className="span-descriptivo" style={{color:'#b4b4b4'}}>{}</span>
+                    </div>
+
+                    <div className="columns">
+                        <span className="etiqueta" style={{marginLeft:'0'}}>DIRECCIÓN DE LA UNIVERSIDAD</span>
+                        <span className="span-descriptivo" style={{color:'#b4b4b4'}}>{}</span>
+                    </div>
+                </div>
+            )
+    }
+
     // Estado cambia con los select
     setSelectValue = (e) => {
         this.setState({
@@ -128,6 +233,35 @@ export class ModificarCredencial extends Component {
                                 descripcion='Credencial de trabajador'
                                 onclick={ () =>  this.setState({zona:'tipo2'}) }
                             />
+                        
+                    </div>
+
+                    <br></br><br></br><br></br><br></br>
+
+                    <div className="caja-main-iz" style={{height:'auto'}}>
+                        <span className="etiqueta" style={{marginLeft:'0', marginBottom:'10px'}}>SECCIÓN CREDENCIAL</span>
+                        <div className="horizontal-line"/>
+                        
+                            <BtnSeccion
+                                activo={this.state.zona1 === 'colores' ? true : false}
+                                nombre='Colores'
+                                descripcion='De fondo, de fuente, de barras, ...'
+                                onclick={ () => this.setState({zona1:'colores'}) }
+                            />
+
+                            <BtnSeccion
+                                activo={this.state.zona1 === 'logos' ? true : false}
+                                nombre='Logos / escudos / imágenes'
+                                descripcion='De universidad, de autoridades, ...'
+                                onclick={ () =>  this.setState({zona1:'logos'}) }
+                            />
+
+                            <BtnSeccion
+                                activo={this.state.zona1 === 'textos' ? true : false}
+                                nombre='Textos'
+                                descripcion='Titulos, lemas, dirección, ...'
+                                onclick={ () =>  this.setState({zona1:'textos'}) }
+                            />
 
                         <div style={{textAlign:'center', marginTop:'10px'}}>
                             <SubmitButton
@@ -143,6 +277,11 @@ export class ModificarCredencial extends Component {
                     <div className="fila">
                         <div className="columns">
                             {this.renderDatos()}
+                        </div>
+                    </div>
+                    <div className="caja-main-iz" style={{height:'auto'}}>
+                        <div className="columns">
+                            {this.renderFormato()}
                         </div>
                     </div>
                 </div>
