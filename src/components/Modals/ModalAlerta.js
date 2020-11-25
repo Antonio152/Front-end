@@ -14,15 +14,9 @@ export class ModalAlerta extends Component {
 
     close = () => this.setState({ open:false });
 
-    componentDidMount() {
-        
-        console.log('Hola')
-    }
-
     render() {
         var icono = <GrIcons.GrCircleInformation/>;
         this.props.contenido.tipo === 'Advertencia' ? icono = <RiIcons.RiAlertLine/> : icono = <AiIcons.AiOutlineCloseCircle/>
-        console.log('Renderizando')
         
         return (
             <div>

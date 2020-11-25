@@ -57,58 +57,12 @@ export class LoginForm extends Component {
             //Almacenamos el token en el sistema local.
             localStorage.setItem('token', result.token)
             // If user is logged
-            if (result && result.success) {
-                UserStore.loading = false;
-                UserStore.isLoggedIn = true;
-                UserStore.username = result.username;
-                UserStore.id = result._id;
-                UserStore.name = result.nombre;
-                UserStore.lastNameP = result.apellidoPaterno;
-                UserStore.lastNameM = result.apellidoMaterno ? result.apellidoMaterno : '';
-                UserStore.curp = result.curp;
-                UserStore.rh = result.seguroSocial[0].gpoSanguineo;
-                UserStore.numSS = result.seguroSocial[0].numSos;
-                UserStore.role = result.role;
-                UserStore.photo = result.foto;
-                UserStore.email = result.contacto[0].email;
-                UserStore.tel = result.contacto[0].telefono;
-                UserStore.telEmer = result.contacto[0].telEmergencia;
-                UserStore.street = result.direccion[0].calle;
-                UserStore.streetNo = result.direccion[0].numero;
-                UserStore.location = result.direccion[0].localidad;
-                UserStore.city = result.direccion[0].ciudad;
-                UserStore.postalCode = result.direccion[0].cp;
-                UserStore.state = result.direccion[0].estado;
-                //Asignación de permisos
-                if(UserStore.role !== 'Alumno' && UserStore.role !== 'Profesor'){
-                    if(result.modulos[0].permisos)
-                    UserStore.Usuarios = result.modulos[0].permisos;
-                    if(result.modulos[1].permisos)
-                    UserStore.Alumnos = result.modulos[1].permisos;
-                    if(result.modulos[2].permisos)
-                    UserStore.Profesores = result.modulos[2].permisos;
-                    if(result.modulos[3].permisos)
-                    UserStore.Credenciales = result.modulos[3].permisos;
-                }
-                else {
-                    UserStore.career = result.datosAcademicos[0].carrera;
-                    UserStore.idStudent = result.datosAcademicos[0].matricula;
-                    UserStore.grade = result.datosAcademicos[0].cuatrimestre;
-                    UserStore.aca_estatus = result.datosAcademicos[0].estatus;
-                    // Sólo tiene permiso de generar su credencial
-                    if(result.modulos[3].permisos)
-                        UserStore.Credenciales = UserStore.Alumnos = result.modulos[3].permisos;
-                }
-                
-            }
-            else if (result && result.success === false) {
+            const logueoExitoso = UserStore.setData(result);
+            if (!logueoExitoso)
                 this.resetForm();
-                alert(result.msg); // Error from API
-                UserStore.loading = false;
-                UserStore.isLoggedIn = false;
-            }
         } catch (error) {
-            console.log(error)
+            UserStore.gotError();
+            console.error(error)
             // this.resetForm();
         }
     }

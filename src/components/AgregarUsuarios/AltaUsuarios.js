@@ -163,11 +163,9 @@ export class AltaUsuarios extends Component {
                             aca_estatus: usuario.academico[0].estatus
                         });
                     }
-                    console.log(usuario.academico[0].estatus)
-                    
                 })
                 .catch((error) => {
-                    console.log(error)
+                    console.error(error)
                     alert(`El usuario con el id ${this.props.match.params.id} no existe.\nSerá redirigido a la página anterior...`);
                     window.history.go(-1);  // Regresa una ventana hacia atrás
                 });
@@ -273,7 +271,7 @@ export class AltaUsuarios extends Component {
                     else
                         alert('Ha ocurrido un error con la conexión al servidor.');
                 })
-                .catch(error => console.log(error.response));
+                .catch(error => console.error(error));
         else
             // En caso de que se deseé agregar un nuevo usuario
             await axios.post('http://localhost:4000/api/users', newUsuario)
@@ -288,7 +286,7 @@ export class AltaUsuarios extends Component {
                     else
                         alert('Ha ocurrido un error con la conexión al servidor.');
                 })
-                .catch(error => console.log(error.response));
+                .catch(error => console.error(error));
     }
 
     // cerrarModal = () => this.refs.alerta.close();
@@ -588,7 +586,6 @@ export class AltaUsuarios extends Component {
             asignacion = true
         if (asignacion === 'Inactivo')
             asignacion = false;
-        console.log(asignacion)
         this.setState({
             [e.target.name] : asignacion
         },() => this.cambiarRoles());

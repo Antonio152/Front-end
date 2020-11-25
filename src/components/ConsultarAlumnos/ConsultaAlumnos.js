@@ -122,7 +122,7 @@ export class ConsultaAlumnos extends Component {
                 else
                     alert('Ha ocurrido un error con la conexión al servidor.');
             })
-            .catch(error => console.log(error.response));
+            .catch(error => console.error(error));
 
         
     }
@@ -140,7 +140,7 @@ export class ConsultaAlumnos extends Component {
                 else
                     alert('Ha ocurrido un error con la conexión al servidor.');
             })
-            .catch(error => console.log(error.response));
+            .catch(error => console.error(error));
     }
 
     //Convierte el archivo de base 64 a uno descargable

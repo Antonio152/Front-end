@@ -33,7 +33,7 @@ export class MainComponent extends Component {
                     this.setState({ usuario:usuario });
                 })
         } catch (error) {
-            console.log('Existió un error', error)
+            console.error(error)
         }
     }
 

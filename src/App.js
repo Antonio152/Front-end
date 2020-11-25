@@ -1,6 +1,6 @@
 // Esto es un comentario de prueba
 
-import React, {Component} from 'react';
+import React, {Component} from 'react'
 import { observer } from 'mobx-react'
 import './App.css';
 import { BrowserRouter as Router, Route, Switch, Link, Redirect } from 'react-router-dom';
@@ -16,7 +16,6 @@ import Navbar from './components/Navbar/Navbar'
 // Módulos
 import AltaUsuarios from './components/AgregarUsuarios/AltaUsuarios'
 import ConsultaUsuarios from './components/ConsultarUsuarios/ConsultaUsuarios'
-import AltaAlumnos from './components/AgregarAlumnos/AltaAlumnos'
 import ConsultaAlumnos from './components/ConsultarAlumnos/ConsultaAlumnos'
 import ConsultaCredencial from './components/ConsultaCredencial/ConsultaCredencial'
 import ModificarCredencial from './components/FormatoCredenciales/ModificarCredencial'
@@ -25,8 +24,8 @@ import PaginaNoEncontrada from './components/PaginaNoEncontrada/PaginaNoEncontra
 import AcercaDe from './components/AcercaDe/AcercaDe'
 import MyAccount from './components/MyAccount/MyAccount'
 
-
 import Loader from './components/GeneralUseComp/Loader';
+
 
 class App extends Component {
 
@@ -51,17 +50,7 @@ class App extends Component {
 
       // Regresa al estado original
       if (result && result.success) {
-        UserStore.isLoggedIn = false;
-        UserStore.username = '';
-        UserStore.id = '';
-        UserStore.name = '';
-        UserStore.lastName = '';
-        UserStore.role = '';
-        UserStore.photo = '';
-        UserStore.email = '';
-        UserStore.Usuarios = [];
-        UserStore.Alumnos = [];
-        UserStore.Credenciales = [];
+        UserStore.reset();
       }
     } catch (error) {
       console.error(error)
@@ -85,62 +74,16 @@ class App extends Component {
 
       let result = await res.json();
       // If it's logged in
-      if (result && result.success) {
-        UserStore.loading = false;
-        UserStore.isLoggedIn = true;
-        UserStore.username = result.username;
-        UserStore.id = result._id;
-        UserStore.name = result.nombre;
-        UserStore.lastNameP = result.apellidoPaterno;
-        UserStore.curp = result.curp;
-        UserStore.rh = result.seguroSocial[0].gpoSanguineo;
-        UserStore.numSS = result.seguroSocial[0].numSos;
-        UserStore.lastNameM = result.apellidoMaterno ? result.apellidoMaterno : '';
-        UserStore.role = result.role;
-        UserStore.photo = result.foto;
-        UserStore.email = result.contacto[0].email;
-        UserStore.tel = result.contacto[0].telefono;
-        UserStore.telEmer = result.contacto[0].telEmergencia;
-        UserStore.street = result.direccion[0].calle;
-        UserStore.streetNo = result.direccion[0].numero;
-        UserStore.location = result.direccion[0].localidad;
-        UserStore.city = result.direccion[0].ciudad;
-        UserStore.postalCode = result.direccion[0].cp;
-        UserStore.state = result.direccion[0].estado;
-        //Asignación de permisos
-        if(UserStore.role !== 'Alumno' && UserStore.role !== 'Profesor'){
-          if(result.modulos[0].permisos)
-            UserStore.Usuarios = result.modulos[0].permisos;
-          if(result.modulos[1].permisos)
-            UserStore.Alumnos = result.modulos[1].permisos;
-          if(result.modulos[2].permisos)
-            UserStore.Profesores = result.modulos[2].permisos;
-          if(result.modulos[3].permisos)
-            UserStore.Credenciales = result.modulos[3].permisos;
-        }
-        else {
-          UserStore.career = result.datosAcademicos[0].carrera;
-          UserStore.idStudent = result.datosAcademicos[0].matricula;
-          UserStore.grade = result.datosAcademicos[0].cuatrimestre;
-          UserStore.aca_estatus = result.datosAcademicos[0].estatus;
-          // Sólo tiene permiso de generar su credencial
-          if(result.modulos[3].permisos)
-              UserStore.Credenciales = UserStore.Alumnos = result.modulos[3].permisos;
-        }
-      }
-      else {
-        UserStore.loading = false;
-        UserStore.isLoggedIn = false;
-      }
+      UserStore.setData(result);
+
     } catch (error) {
-      UserStore.loading = false;
-      UserStore.isLoggedIn = false;
+      UserStore.gotError();
     }
   }
 
   render() {
     // En caso de que se estén cargando datos del servidor
-    if (UserStore.loading && !UserStore.isLoggedIn) {
+    if (UserStore.isLoading()) {
       return (
         <div className="app">
           <div className="container">
@@ -153,7 +96,7 @@ class App extends Component {
     }
     // Verifica si se encuentra logueado y ya se cargó todo
     else {
-      if(UserStore.isLoggedIn && UserStore.id && (UserStore.Alumnos[0] || UserStore.Credenciales[0] || UserStore.Usuarios[0] || UserStore.Profesores[0])){
+      if(UserStore.loggedIntoSystem()){
         // En caso de ser alumno
         if (UserStore.role !== 'Alumno' && UserStore.role !== 'Profesor')
           return (
