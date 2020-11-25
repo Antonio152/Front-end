@@ -360,7 +360,7 @@ export class ConsultaAlumnos extends Component {
     }
 
     // Llamado antes de que se renderice el módulo
-    componentWillUpdate(preProps, preState) {
+    componentDidUpdate(preProps, preState) {
         if (preProps.profesores !== this.props.profesores){
             this.setState({cargandoUs : true});
             this.getUsuarios();

@@ -1,10 +1,7 @@
 import React, { Component } from 'react'
 
-import * as BiIcons from 'react-icons/bi';
-import * as RiIcons from 'react-icons/ri';
 import * as FaIcons from 'react-icons/fa';
 
-import InputField from '../GeneralUseComp/InputField'
 import SubmitButton from '../GeneralUseComp/SubmitButton'
 import BtnSeccion from '../AgregarUsuarios/BtnSeccion'
 import Credencial from './Credencial'
@@ -12,7 +9,6 @@ import CredencialT from './CredencialT'
 
 import '../AgregarUsuarios/MyAccount.css'
 import '../GeneralUseComp/InputFile.css'
-import SelectField from '../GeneralUseComp/SelectField';
 import './ModificarCredencial.css'
 
 import '../ConsultarUsuarios/ConsultaUsuarios.css'

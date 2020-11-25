@@ -27,7 +27,9 @@ var bcrypt = require('bcryptjs')
 export class AltaUsuarios extends Component {
     imgRef = React.createRef();
 
-    state = {
+    initialState = {
+        uri: window.location.href,
+
         zona: 'cuenta', // zona de edición del usuario
         editar: this.props.miUsuario ? true : false,  // si se está editando o agregando un nuevo usuario
         alumnos: window.location.href.includes('alumnos'), // si el usuario editado es un alumno
@@ -83,6 +85,8 @@ export class AltaUsuarios extends Component {
 
         // alerta: {msg:'',tipo:'', accion: () => {}}
     }
+
+    state = this.initialState;
 
     // Vacía los permisos del usuario
     permisosVacios = () => this.setState({
@@ -171,19 +175,25 @@ export class AltaUsuarios extends Component {
                 });
             
         }
-        else this.cambiarRoles();
-        // else {
-        //     this.setState({
-        //         permisos_usuarios:['Crear', 'Modificar', 'Consultar', 'Eliminar'],
-        //         permisos_alumnos:['Crear', 'Modificar', 'Consultar', 'Eliminar'],
-        //         permisos_usuarios_ant:['Crear', 'Modificar', 'Consultar', 'Eliminar'],
-        //         permisos_alumnos_ant:['Crear', 'Modificar', 'Consultar', 'Eliminar'],
-        //         permisos_credenciales:['Modificar formato'],
-        //     });
-        //     this.renderPermisos()
-        // }
+        else {
+            this.cambiarRoles();
+        }
 
     }
+
+    // Llamado antes de que se renderice el módulo
+    // En otras palabras, se va a accionar en cuanto se cambie la uri
+    componentDidUpdate(preProps, preState) {
+        if(preState.uri !== window.location.href){
+            this.setState(this.initialState);
+            this.setState({
+                uri:window.location.href,
+                rol: this.props.miUsuario ? UserStore.role : window.location.href.includes('alumnos') ? 'Alumno' : window.location.href.includes('profesores') ? 'Profesor' : 'Super Administrador'
+            });
+            this.cambiarRoles();
+        }
+    }
+
     // Agrega los módulos a los cuales tiene acceso el usuario buscado
     verificaModulos = () => {
         var modulos = [];
@@ -296,13 +306,13 @@ export class AltaUsuarios extends Component {
         // Permisos predefinidos
         const permisos = ['Crear', 'Modificar', 'Consultar', 'Eliminar'];
 
-        {this.setState({
+        this.setState({
             permisos_usuarios_ant: this.state.permisos_usuarios,
             permisos_alumnos_ant: this.state.permisos_alumnos,
             permisos_profesores_ant: this.state.permisos_profesores,
             cambioRol: !this.state.cambioRol,
             cambioRolAlt: !this.state.cambioRolAlt
-        })}
+        })
 
         if (this.state.rol === 'Super Administrador'){
             this.setState({
@@ -322,7 +332,7 @@ export class AltaUsuarios extends Component {
             });
             return;
         }
-        if (this.state.rol === 'Administrador de la escuela'){{
+        if (this.state.rol === 'Administrador de la escuela'){
             this.setState({
                 permisos_usuarios: ['','','',''],
                 permisos_alumnos: permisos,
@@ -330,7 +340,6 @@ export class AltaUsuarios extends Component {
                 permisos_credenciales: ['Modificar formato'],
             });
             return;
-        }
         }
         if (this.state.rol === 'Consultor'){
             this.setState({

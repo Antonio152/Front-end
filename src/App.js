@@ -121,10 +121,14 @@ class App extends Component {
 
               <div className={this.state.navActivado ? 'contenido nav-activado' : 'contenido'}>
                 <Switch>
+                    <Route exact path="/">
+                        <Redirect to="/dashboard" />
+                    </Route>
                     <Route exact path="/auth">
                       <Redirect to='/dashboard' />
                     </Route>
                     <Route path='/dashboard' exact component= {MainComponent} />
+
                     {/* Para los usuarios con acceso a los datos de los usuarios */}
                     {UserStore.Usuarios.map((permiso, perIndex) => {
                       
@@ -132,9 +136,9 @@ class App extends Component {
                         return(<Route key={perIndex} path='/dashboard/usuarios/consultar' component= {ConsultaUsuarios} />)
                       if (permiso === 'Crear')
                         // La razón de escribir el componente como función flecha anónima es debido a que de esa forma, es posible actualizar el componente completo al cambiar la ruta
-                        return(<Route key={perIndex} path='/dashboard/usuarios/crear' component= {(props) => (<AltaUsuarios timestamp = {new Date().toString()} miUsuario={false} {...props}/>)} />)
+                        return(<Route key={perIndex} path='/dashboard/usuarios/crear' component= {AltaUsuarios} />)
                       if (permiso === 'Modificar')
-                        return(<Route key={perIndex} path='/dashboard/usuarios/editar/:id' component= {(props) => (<AltaUsuarios timestamp = {new Date().toString()} miUsuario={false} {...props}/>)} />)
+                        return(<Route key={perIndex} path='/dashboard/usuarios/editar/:id' component= {AltaUsuarios} />)
                       else
                         return('')
                     })}
@@ -152,9 +156,9 @@ class App extends Component {
                           />
                       if (permiso === 'Crear')
                         // La razón de escribir el componente como función flecha anónima es debido a que de esa forma, es posible actualizar el componente completo al cambiar la ruta
-                        return(<Route key={perIndex} path='/dashboard/alumnos/crear' component= {(props) => (<AltaUsuarios timestamp = {new Date().toString()} miUsuario={false} {...props}/>)} />)
+                        return(<Route key={perIndex} path='/dashboard/alumnos/crear' component= {AltaUsuarios} />)
                       if (permiso === 'Modificar')
-                        return(<Route key={perIndex} path='/dashboard/alumnos/editar/:id' component= {(props) => (<AltaUsuarios timestamp = {new Date().toString()} miUsuario={false} {...props}/>)} />)
+                        return(<Route key={perIndex} path='/dashboard/alumnos/editar/:id' component= {AltaUsuarios} />)
                       else
                         return('')
                     })}
@@ -176,20 +180,14 @@ class App extends Component {
                         return <Route 
                           key={perIndex} 
                           path='/dashboard/profesores/crear' 
-                          component= {(props) => (
-                          <AltaUsuarios timestamp = {new Date().toString()} miUsuario={false} {...props}/>
-                          )} 
+                          component= {AltaUsuarios} 
                         />
 
                       if (permiso === 'Modificar')
                         return <Route 
                           key={perIndex} 
                           path='/dashboard/profesores/editar/:id' 
-                          component= {(props) => (
-                          <AltaUsuarios 
-                            timestamp = {new Date().toString()} 
-                            miUsuario={false} {...props}/>
-                          )} 
+                          component= {AltaUsuarios} 
                         />
 
                       else
@@ -204,7 +202,7 @@ class App extends Component {
                       return('')
                     })}
                     {/* <Route path='/dashboard/mi-cuenta' component= {MyAccount} /> */}
-                    <Route path='/dashboard/mi-cuenta' component= {(props) => (<AltaUsuarios timestamp = {new Date().toString() } miUsuario={true} {...props}/>)} />
+                    <Route path='/dashboard/mi-cuenta' component= {(props) => (<AltaUsuarios miUsuario={true} {...props}/>)} />
                     <Route path='/dashboard/acerca-de' component= {AcercaDe} />
                     <Route component={PaginaNoEncontrada} />
                 </Switch>
@@ -253,6 +251,9 @@ class App extends Component {
           <div className="container">
             <Router>
               <Switch>
+                <Route exact path="/dashboard">
+                    <Redirect to="/auth" />
+                </Route>
                 <Route exact path="/">
                     <Redirect to="/auth" />
                 </Route>
