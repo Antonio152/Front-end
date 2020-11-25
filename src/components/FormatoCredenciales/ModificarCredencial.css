@@ -12,3 +12,25 @@
 .justificado{
     justify-content: space-between;
 }
+
+.banner{
+    margin-left: 20px;
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    background-color:#456F97;
+    border-bottom: 2px solid #f0f0f0;
+    width: calc(100% - 30px);
+}
+
+h1{
+    color: #f0f0f0;
+    font-size: 2em;
+    text-transform: uppercase;
+    font: 'roboto';
+    left: 50%;
+    top: 50%;
+    text-align: center;
+    transform: translateX(55%);
+}

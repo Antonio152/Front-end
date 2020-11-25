@@ -30,6 +30,7 @@ export class ModificarCredencial extends Component {
                 <div className="columns col-iz">
                     <div className="fila">
                         <div className="columns">
+                        <span className="banner" style={{marginLeft:'0'}} ><h1>Modulo en construcción</h1></span> 
                             <Credencial
                                 universidad={{
                                     nombre:'Nombre de la universidad',
@@ -55,6 +56,7 @@ export class ModificarCredencial extends Component {
                 <div className="columns col-iz">
                     <div className="fila">
                         <div className="columns">
+                        <span className="banner" style={{marginLeft:'0'}} ><h1>Modulo en construcción</h1></span> 
                             <CredencialT
                                 universidad={{
                                     nombre:'Nombre de la universidad',
@@ -210,6 +212,8 @@ export class ModificarCredencial extends Component {
 
     render() {
         return (
+            
+            
             <div className="main_fila main">
                 <div>
                     <div className="caja-main-iz" style={{height:'auto'}}>
