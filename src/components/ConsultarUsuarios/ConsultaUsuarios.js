@@ -45,7 +45,7 @@ export class ConsultaUsuarios extends Component {
         if (result && res.status === 200){
             let usuarios = [];
             result
-                .filter(usuario => usuario.rol[0].nombre !== 'Alumno')
+                .filter(usuario => usuario.rol[0].nombre !== 'Alumno' && usuario.rol[0].nombre !== 'Profesor')
                 .forEach(usuario => usuarios.push(usuario))
             this.setState({
                 usuarios: usuarios,
@@ -214,7 +214,7 @@ export class ConsultaUsuarios extends Component {
         }
         return(
             <div className="centrado">
-                <span className="text no-seleccionado">No ha seleccionado un alumno</span>
+                <span className="text no-seleccionado">No ha seleccionado un usuario</span>
             </div>
         )
     }
