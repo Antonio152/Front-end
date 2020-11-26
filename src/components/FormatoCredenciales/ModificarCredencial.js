@@ -196,7 +196,7 @@ export class ModificarCredencial extends Component {
     render() {
         return (
             
-            <div><span className="banner" style={{marginLeft:'0'}} ><h1>Modulo en construcción</h1></span>
+            <div><span className="banner" style={{marginLeft:'0'}} ><h4>Modulo en construcción</h4></span>
             <div className="main_fila main"> 
                 <div>
                     <div className="caja-main-iz" style={{height:'auto'}}>
