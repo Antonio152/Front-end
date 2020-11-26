@@ -1,7 +1,5 @@
 import React, { Component } from 'react'
 import { Modal } from 'react-responsive-modal';
-import SubmitButton from '../GeneralUseComp/SubmitButton'
-import * as BiIcons from 'react-icons/bi';
 import "react-responsive-modal/styles.css"
 
 export class OpenModal extends Component {
