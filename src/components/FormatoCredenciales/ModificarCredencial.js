@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
 
 import * as FaIcons from 'react-icons/fa';
+import * as RiIcons from 'react-icons/ri';
 
 import SubmitButton from '../GeneralUseComp/SubmitButton'
 import BtnSeccion from '../AgregarUsuarios/BtnSeccion'
 import Credencial from './Credencial'
 import CredencialT from './CredencialT'
+import InputField from '../GeneralUseComp/InputField'
 
 import '../AgregarUsuarios/MyAccount.css'
 import '../GeneralUseComp/InputFile.css'
@@ -153,28 +155,11 @@ export class ModificarCredencial extends Component {
             return(
                 <div>
                     <div className="columns">
-                        <span className="etiqueta" style={{marginLeft:'0'}}>NOMBRE UNIVERSIDAD</span>
-                        <span className="span-descriptivo" style={{color:'#b4b4b4'}}>{}</span>
-                    </div>
-
-                    <div className="columns">
-                        <span className="etiqueta" style={{marginLeft:'0'}}>LEMA</span>
-                        <span className="span-descriptivo" style={{color:'#b4b4b4'}}>{}</span>
-                    </div>
-
-                    <div className="columns">
-                        <span className="etiqueta" style={{marginLeft:'0'}}>NOMBRE DEL RECTOR</span>
-                        <span className="span-descriptivo" style={{color:'#b4b4b4'}}>{}</span>
-                    </div>
-
-                    <div className="columns">
-                        <span className="etiqueta" style={{marginLeft:'0'}}>CARGO</span>
-                        <span className="span-descriptivo" style={{color:'#b4b4b4'}}>{}</span>
-                    </div>
-
-                    <div className="columns">
-                        <span className="etiqueta" style={{marginLeft:'0'}}>DIRECCIÓN DE LA UNIVERSIDAD</span>
-                        <span className="span-descriptivo" style={{color:'#b4b4b4'}}>{}</span>
+                        {this.inputTextEditable('NOMBRE UNIVERSIDAD', this.state.username, 'text', 'nombre', 12)}
+                        {this.inputTextEditable('LEMA', this.state.username, 'text', 'LEMA', 12)}
+                        {this.inputTextEditable('NOMBRE DEL RECTOR', this.state.username, 'text', 'RECTOR', 12)}
+                        {this.inputTextEditable('CARGO', this.state.username, 'text', 'CARGO', 12)}
+                        {this.inputTextEditable('DIRECCIÓN DE LA UNIVERSIDAD', this.state.username, 'text', 'dirección', 12)}
                     </div>
                 </div>
             )
@@ -210,7 +195,9 @@ export class ModificarCredencial extends Component {
 
     render() {
         return (
-            <div className="main_fila main">
+            
+            <div><span className="banner" style={{marginLeft:'0'}} ><h1>Modulo en construcción</h1></span>
+            <div className="main_fila main"> 
                 <div>
                     <div className="caja-main-iz" style={{height:'auto'}}>
                         <span className="etiqueta" style={{marginLeft:'0', marginBottom:'10px'}}>FORMATO DE CREDENCIALES</span>
@@ -282,8 +269,30 @@ export class ModificarCredencial extends Component {
                     </div>
                 </div>
             </div>
+            </div>
+        )
+    }
+    inputTextEditable = (titulo, dato, tipo, estado, longitud) => {
+        return(
+            <div className="columns texto-editable">
+                <div className="fila">
+                    <span className="etiqueta" style={{marginLeft:'0'}}>{titulo.toUpperCase()}</span>
+                    <RiIcons.RiAddLine className="lapiz-icon"/>
+                </div>
+                
+                <InputField
+                    type={tipo}
+                    value={dato}
+                    noBorder={true}
+                    onChange={(val) => this.setInputValue(estado,val,longitud)}
+                    placeholder={titulo}
+                />
+            </div>
+            
         )
     }
 }
+
+
 
 export default ModificarCredencial
