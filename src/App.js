@@ -22,7 +22,6 @@ import ModificarCredencial from './components/FormatoCredenciales/ModificarCrede
 import MainComponent from './components/Main/MainComponent'
 import PaginaNoEncontrada from './components/PaginaNoEncontrada/PaginaNoEncontrada'
 import AcercaDe from './components/AcercaDe/AcercaDe'
-import MyAccount from './components/MyAccount/MyAccount'
 
 import Loader from './components/GeneralUseComp/Loader';
 
@@ -237,7 +236,7 @@ class App extends Component {
                     <Route path='/dashboard' exact component= {MainComponent} />
                     {/* {UserStore.Usuarios[2] === 'Consultar' ? <Route path='/usuarios/consultar' component= {ConsultaUsuarios} /> : <Redirect to='/' />} */}
                     {UserStore.Credenciales[0] === 'Generar formato' ? <Route path='/dashboard/credenciales/generar-formato' component= {ConsultaCredencial} /> : <Redirect to='/notFound' />}
-                    <Route path='/dashboard/mi-cuenta' component= {MyAccount} />
+                    <Route path='/dashboard/mi-cuenta' component= {(props) => (<AltaUsuarios miUsuario={true} {...props}/>)} />
                     <Route path='/dashboard/acerca-de' component= {AcercaDe} />
                     <Route component={PaginaNoEncontrada} />
                 </Switch>

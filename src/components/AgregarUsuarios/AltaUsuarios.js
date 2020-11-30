@@ -537,7 +537,15 @@ export class AltaUsuarios extends Component {
         if (this.state.zona === 'contacto')
             return(
                 <div>
-                    {this.inputTextEditable('Correo electrónico',this.state.con_email, 'text', 'con_email', 100)}
+                    {
+                        this.state.editar || this.props.miUsuario ?
+                        <div className="columns">
+                            <span className="etiqueta" style={{marginLeft:'0'}}>CORREO ELECTRÓNICO</span>
+                            <span className="span-descriptivo" style={{color:'#b4b4b4'}}>{this.state.con_email}</span>
+                        </div>
+                        :
+                        this.inputTextEditable('Correo electrónico',this.state.con_email, 'text', 'con_email', 100)
+                    }
                     
                     {this.inputTextEditable('Teléfono',this.state.con_telefono, 'text', 'con_telefono', 10)}
 
