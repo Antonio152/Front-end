@@ -83,20 +83,20 @@ export class ConsultaAlumnos extends Component {
 
     // Obtiene el archivo PDF en base 64
     getCredenciales = async (datos, formato) => {
-        var arrDatos = [];
-        this.state.userQry.forEach(usuario => {
-            datos.forEach(index => {
-                if (usuario._id === index) arrDatos.push(usuario);
-            })
-        });
+        // var arrDatos = [];
+        // this.state.userQry.forEach(usuario => {
+        //     datos.forEach(index => {
+        //         if (usuario._id === index) arrDatos.push(usuario);
+        //     })
+        // });
         // if (!datos.length) arrDatos.push(datos)
         // else arrDatos = datos;
 
         const res = await axios.post('http://localhost:4000/cards',{
-            usuarios: arrDatos,
+            usuarios: datos,
             formato: formato
         });
-        this.generarArchivo(res.data.pdf, arrDatos.length === 1 ? `Credencial ${arrDatos[0].nombre} ${arrDatos[0].aPaterno}` : 'Credenciales');
+        this.generarArchivo(res.data.pdf, 'Credenciales');
     }
     
     // Realiza la actualización de estado entre la baja lógica y la física
