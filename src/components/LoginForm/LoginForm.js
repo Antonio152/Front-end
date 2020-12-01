@@ -45,16 +45,16 @@ export class LoginForm extends Component {
     }
     // Deja el formulario en su estado original
     // Además, realiza el control de intentos fallidos
-    resetForm(noRegistrado){
+    async resetForm(result, id){
         // Variables auxiliares
         var intentosAux = this.state.intentosFallidos;
         var indiceAux = 0;
         var intentos = 0;
         // Cuando no esté registrado se retorna en lugar de contarlo 
-        if (noRegistrado) return;
-        // Cuando el arreglo esté vacío
+        if (result.includes('no está registrado')) return;
+        // Cuando el arreglo esté vacío y en caso de que el usuario esté bloqueado, lo agrega a la tabla con 6
         if (intentosAux.length === 0) {
-            intentosAux.push({username: this.state.username, intentos: 1})
+            intentosAux.push({username: this.state.username, intentos: result.includes('bloqueado') ? 6 : 1})
         }
         else {
             // Obtiene el índice de un usuario específico
@@ -65,12 +65,21 @@ export class LoginForm extends Component {
                 // Incrementa los intentos
                 intentos = this.state.intentosFallidos[indiceAux].intentos + 1;
                 // AQUÍ SE IMPLEMENTARÁ EL BLOQUEO
-                if (intentos > 5) return;
-
-                // Actualización del arreglo
-                intentosAux.splice(indiceAux,1,{
-                    username:this.state.username, 
-                    intentos: intentos});
+                if (intentos > 5)  {
+                    await axios.put(`http://localhost:4000/api/users/${id}`, {
+                        bloqueado: true
+                    })
+                        .then(() => {
+                            alert(`El usuario ${this.state.username} ha sido bloqueado.\nReestablezca su contraseña.`);
+                            return;
+                        })
+                        .catch(err => console.error(err));
+                }
+                else
+                    // Actualización del arreglo
+                    intentosAux.splice(indiceAux,1,{
+                        username:this.state.username, 
+                        intentos: intentos});
             }
             else {
                 // Cuando el usuario no fue encontrado, lo agrega
@@ -109,7 +118,7 @@ export class LoginForm extends Component {
             return;
         if (!this.state.password)
             return;
-        
+        this.setState({buttonDisabled:true});
         try {
             // From API
             let res = await fetch('http://localhost:4000/session/logIn', {
@@ -131,15 +140,16 @@ export class LoginForm extends Component {
             const logueoExitoso = UserStore.setData(result);
 
             if (!logueoExitoso){
-                alert(result.msg)
+                alert(result.msg);
                 // Función de error
-                this.resetForm(result.msg.includes('no está registrado') ? true : false);
-                console.log(this.state.intentosFallidos);
+                if (result.msg !== 'Usuario bloqueado')
+                    this.resetForm(result.msg, result.id);
             }
         } catch (error) {
             UserStore.gotError();
             console.error(error);
         }
+        this.setState({buttonDisabled:false});
     }
 
     // Se encarga de verificar que el email sea correcto
@@ -157,12 +167,15 @@ export class LoginForm extends Component {
     }
     // Se encarga de verificar que el código sea correcto
     async verificarCodigo() {
-        await axios.get('http://localhost:4000/session/codeVerification',{
+        await axios.post('http://localhost:4000/session/codeVerification',{
             codigo: this.state.codigo,
             email: this.state.email
         }).then(res => {
-            console.log(res);
-            this.setState({emailCorrecto: true, isPswChanged: true, idUsuario: res.data.id});
+            if (res.data.success){
+                this.setState({emailCorrecto: true, isPswChanged: true, idUsuario: res.data.id});
+            }
+            else
+                alert(res.data.msg)
         }).catch(error => console.error(error));
     }
     // Se encarga de realizar el cambio de contraseña
@@ -174,12 +187,13 @@ export class LoginForm extends Component {
         }
         // Petición
         await axios.put(`http://localhost:4000/api/users/${this.state.idUsuario}`,{
-            password: bcrypt.hashSync(this.state.rest_password,9)
+            password: bcrypt.hashSync(this.state.rest_password,9),
+            bloqueado:false
         })
             .then(res => {
                 if (res.status === 200){
                     alert('La contraseña ha sido modificada.');
-                    this.setState({modalAbierto:false});
+                    this.setState({modalAbierto:false , emailCorrecto: false});
                 }
                 else if(res.status !== 500)
                     alert('Ha ocurrido un error. Inténtelo nuevamente.');
