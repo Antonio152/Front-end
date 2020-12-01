@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import axios from 'axios'
+import { Modal } from 'react-responsive-modal';
 // Íconos e imágenes
 import imgBusqueda from './img/busqueda.jpg'
 import * as BiIcons from 'react-icons/bi'
+import * as GrIcons from 'react-icons/gr'
 // Componentes de uso general
 import SelectField from '../GeneralUseComp/SelectField'
 import SubmitButton from '../GeneralUseComp/SubmitButton'
@@ -18,6 +20,7 @@ import './ConsultaUsuarios.css'
 export class ConsultaUsuarios extends Component {
     // Estado de la clase
     state = {
+        modalEliminar:false,
         usuarios : [],
         userQry : [],
         userSelected:[],
@@ -30,6 +33,9 @@ export class ConsultaUsuarios extends Component {
         permisos: [],
         // Para cuando se estén obteniendo los usuarios del servidor
         cargandoUs: true,
+
+        btnBajaLogDisabled:false,
+        btnBajaFisDisabled:false
     }
     // Obtiene los usuarios del servidor
     getUsuarios = async () => {
@@ -69,6 +75,56 @@ export class ConsultaUsuarios extends Component {
         this.setState({
             [property]: val // Cambia el valor del estado que se le indique
         });
+    }
+
+    
+    // Realiza la actualización de estado entre la baja lógica y la física
+    bajaLogica = async() =>{
+        this.setState({btnBajaLogDisabled: true});
+        await axios.put(`http://localhost:4000/api/users/${this.state.userSelected._id}`,{published: false})
+            .then(res => {
+                if (res.status === 200){
+                    alert('Usuario modificado exitosamente.');
+                    this.actualizarTabla();
+                    this.setState({ modalEliminar:false });
+                }
+                else if(res.status !== 500)
+                    alert('Ha ocurrido un error. Inténtelo nuevamente.');
+                else
+                    alert('Ha ocurrido un error con la conexión al servidor.');
+            })
+            .catch(error => console.error(error));
+        
+        this.setState({btnBajaLogDisabled: false});
+    }
+    // Eliminación total del usuario
+    bajaFisica = async() =>{
+        this.setState({btnBajaFisDisabled: true});
+        await axios.delete(`http://localhost:4000/api/users/${this.state.userSelected._id}`)
+            .then(res => {
+                if (res.status === 200){
+                    alert('Usuario eliminado con éxito.');
+                    this.actualizarTabla();
+                    this.setState({ modalEliminar:false ,userSelected:[] });
+                }
+                else if(res.status !== 500)
+                    alert('Ha ocurrido un error. Inténtelo nuevamente.');
+                else
+                    alert('Ha ocurrido un error con la conexión al servidor.');
+            })
+            .catch(error => console.error(error));
+        this.setState({btnBajaFisDisabled: false});
+    }
+
+    
+    actualizarTabla = () => {
+        this.setState({
+            usuarios : [], // Ususarios de la petición al servidor
+            userQry : [], // Ususarios consultados
+            usersForCredential: [], // IDs de usuarios para credencial
+            cargandoUs: true
+        })
+        this.getUsuarios()
     }
 
     // Estado cambia con los select
@@ -208,6 +264,7 @@ export class ConsultaUsuarios extends Component {
                     ]}
                 ]}}
                 botones={['Eliminar', 'Editar']}
+                eliminarClick={() => this.setState({modalEliminar:true})}
                 permisos={this.state.permisos}
                 />
             )
@@ -218,6 +275,50 @@ export class ConsultaUsuarios extends Component {
             </div>
         )
     }
+
+    // Abre un modal para seleccionar el tipo de eliminación que desea efectuar
+    modalEliminar = () => {
+        return(
+            <div>
+                <Modal open={this.state.modalEliminar} onClose={() => this.setState({ modalEliminar:false })}>
+                    <div style={{color:'#555555'}}>
+                            {/* Botón de cancelación */}
+                            <h1 className="title">
+                                <GrIcons.GrCircleInformation/>
+                                <span>Sobre la eliminación</span>
+                            </h1><br/>
+                            <p>Una <b>baja lógica</b> es la desactivación del usuario sin que se pierdan</p>
+                            <p> sus datos almacenados en el sistema.</p>
+                            <p>Por otro lado, una <b>baja física</b> es la eliminación definitiva de un </p>
+                            <p>usuario dentro del sistema; es decir, sus datos serán borrados</p><p> del sistema.</p><br/>
+                            <p>¿Qué clase de eliminación desea efectuar?</p><br/>
+                        <div className="fila justificado" style={{textAlign:'center', marginTop:'10px'}}>
+                            <SubmitButton
+                                text="Baja lógica"
+                                disabled={this.state.btnBajaLogDisabled}
+                                onclick={() => this.bajaLogica() }
+                                styles="no_margin"
+                            />
+                            
+                            {/* Botón para salvar los cambios */}
+                            <SubmitButton
+                                text="Baja física"
+                                disabled={this.state.btnBajaFisDisabled}
+                                onclick={() => {
+                                    if (window.confirm('Los datos serán eliminados de forma permanente, ¿Está seguro?'))
+                                        this.bajaFisica()
+                                    else
+                                        this.setState({ modalEliminar:false });
+                                } }
+                                styles="no_margin"
+                            />
+                        </div>
+                    </div>
+                </Modal>
+            </div>
+        )
+    }
+
 
     renderTabla = () =>{
         if (this.state.cargandoUs)
@@ -273,6 +374,7 @@ export class ConsultaUsuarios extends Component {
     render() {
         return (
             <div className="modulo">
+                {this.modalEliminar()}
                 <div className="resize-columna justificado ">
                     <div className="contenedor blanco full_width mh_img">
                         <img src={imgBusqueda} alt="" className="img_contenedor_principal"></img>

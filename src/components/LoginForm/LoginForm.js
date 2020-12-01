@@ -27,6 +27,10 @@ export class LoginForm extends Component {
             buttonDisabled: false, // When a user clicks log in button and the API checks if user exists
             redirect: null,
 
+            btnEmailDisabled: false,
+            btnCodeDisabled: false,
+            btnPswDisabled: false,
+
             modalAbierto:false,
 
             intentosFallidos:[]
@@ -154,6 +158,7 @@ export class LoginForm extends Component {
 
     // Se encarga de verificar que el email sea correcto
     async verificarCorreo() { 
+        this.setState({ btnEmailDisabled: true });
         const res = await axios.put('http://localhost:4000/session/email',{
             email: this.state.email
         }); 
@@ -164,9 +169,11 @@ export class LoginForm extends Component {
         else {
             alert(res.data.msg)
         }
+        this.setState({ btnEmailDisabled: false });
     }
     // Se encarga de verificar que el código sea correcto
     async verificarCodigo() {
+        this.setState({ btnCodeDisabled: true });
         await axios.post('http://localhost:4000/session/codeVerification',{
             codigo: this.state.codigo,
             email: this.state.email
@@ -177,6 +184,7 @@ export class LoginForm extends Component {
             else
                 alert(res.data.msg)
         }).catch(error => console.error(error));
+        this.setState({ btnCodeDisabled: false });
     }
     // Se encarga de realizar el cambio de contraseña
     async cambioPsw() {
@@ -186,6 +194,7 @@ export class LoginForm extends Component {
             return;
         }
         // Petición
+        this.setState({ btnPswDisabled: true });
         await axios.put(`http://localhost:4000/api/users/${this.state.idUsuario}`,{
             password: bcrypt.hashSync(this.state.rest_password,9),
             bloqueado:false
@@ -201,6 +210,7 @@ export class LoginForm extends Component {
                     alert('Ha ocurrido un error con la conexión al servidor.');
             })
             .catch(error => console.error(error));
+        this.setState({ btnPswDisabled: false });
     }
 
     // Se encarga de consultar y renderizar qué usuario tiene n cantidad de intentos restantes
@@ -252,7 +262,11 @@ export class LoginForm extends Component {
                         <SubmitButton
                             styles = {'no_margin'}
                             text = {'Verificar'}
-                            onclick = {() => {this.verificarCorreo();this.setState({username:'', password:''});} }
+                            disabled = { this.state.btnEmailDisabled }
+                            onclick = {() => {
+                                this.verificarCorreo();
+                                this.setState({username:'', password:''}); 
+                            }}
                         />
                     </div>
                 </div>
@@ -279,7 +293,10 @@ export class LoginForm extends Component {
                         <SubmitButton
                             styles = {'no_margin'}
                             text = {'Verificar'}
-                            onclick = {() => this.verificarCodigo() }
+                            disabled = { this.state.btnCodeDisabled }
+                            onclick = {() => {
+                                this.verificarCodigo();
+                            } }
                         />
                     </div>
                 </div>
@@ -310,8 +327,11 @@ export class LoginForm extends Component {
                     <div style={{marginLeft:'auto'}}>
                         <SubmitButton
                             styles = {'no_margin'}
+                            disabled = { this.state.btnPswDisabled }
                             text = {'Cambiar contraseña'}
-                            onclick = {() => this.cambioPsw() }
+                            onclick = {() => {
+                                this.cambioPsw()
+                            } }
                         />
                     </div>
                 </div>

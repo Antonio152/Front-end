@@ -41,7 +41,10 @@ export class ConsultaAlumnos extends Component {
         cargandoUs: true,
         // Permiten la actualización de la tabla en los checkbox
         cambioTabla:true,
-        cambioTablaAlt:false
+        cambioTablaAlt:false,
+
+        btnBajaLogDisabled:false,
+        btnBajaFisDisabled:false
     }
     // Obtiene los usuarios del servidor
     getUsuarios = async () => {
@@ -110,6 +113,7 @@ export class ConsultaAlumnos extends Component {
             }],
         };
 
+        this.setState({btnBajaLogDisabled: true});
         await axios.put(`http://localhost:4000/api/users/${this.state.userSelected._id}`,newUsuario)
             .then(res => {
                 if (res.status === 200){
@@ -124,10 +128,12 @@ export class ConsultaAlumnos extends Component {
             })
             .catch(error => console.error(error));
 
+        this.setState({btnBajaLogDisabled: false});
         
     }
     // Eliminación total del usuario
     bajaFisica = async() =>{
+        this.setState({btnBajaFisDisabled: true});
         await axios.delete(`http://localhost:4000/api/users/${this.state.userSelected._id}`)
             .then(res => {
                 if (res.status === 200){
@@ -141,6 +147,7 @@ export class ConsultaAlumnos extends Component {
                     alert('Ha ocurrido un error con la conexión al servidor.');
             })
             .catch(error => console.error(error));
+        this.setState({btnBajaFisDisabled: false});
     }
 
     //Convierte el archivo de base 64 a uno descargable
@@ -424,6 +431,7 @@ export class ConsultaAlumnos extends Component {
                         <div className="fila justificado" style={{textAlign:'center', marginTop:'10px'}}>
                             <SubmitButton
                                 text="Baja lógica"
+                                disabled={this.state.btnBajaLogDisabled}
                                 onclick={() => this.bajaLogica() }
                                 styles="no_margin"
                             />
@@ -431,6 +439,7 @@ export class ConsultaAlumnos extends Component {
                             {/* Botón para salvar los cambios */}
                             <SubmitButton
                                 text="Baja física"
+                                disabled={this.state.btnBajaFisDisabled}
                                 onclick={() => {
                                     if (window.confirm('Los datos serán eliminados de forma permanente, ¿Está seguro?'))
                                         this.bajaFisica()

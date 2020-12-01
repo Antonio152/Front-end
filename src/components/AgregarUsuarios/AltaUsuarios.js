@@ -81,7 +81,10 @@ export class AltaUsuarios extends Component {
         // Si se encuentran cargando los datos
         isLoading: false,
         // Si lo que desea hacer es cambiar su contraseña
-        isPswChanged: false
+        isPswChanged: false,
+
+        btnPswDisabled: false,
+        btnGuardarDisabled: false
 
         // alerta: {msg:'',tipo:'', accion: () => {}}
     }
@@ -261,6 +264,7 @@ export class AltaUsuarios extends Component {
                 password: bcrypt.hashSync(this.state.password,9)
             };
         
+        this.setState({btnPswDisabled: true, btnGuardarDisabled: true});
         // Para editar o modificar el usuario
         if (this.state.editar)
             await axios.put(`http://localhost:4000/api/users/${this.props.miUsuario ? UserStore.id : this.props.match.params.id}`,newUsuario)
@@ -268,7 +272,7 @@ export class AltaUsuarios extends Component {
                     if (res.status === 200){
                         // Si es que se modifica ya sea el usuario o sólo su contraseña
                         if (!this.state.isPswChanged){
-                            alert('Usuario modificado exitosamente.\nRedirigiendo al apartado de consultas...');
+                            alert('Usuario modificado exitosamente.\nRedirigiendo...');
                             window.location = this.props.miUsuario ? '/dashboard' : `/dashboard/${this.state.alumnos ? 'alumnos' : this.state.profesores ? 'profesores' : 'usuarios'}/consultar`
                         }
                         else{
@@ -287,7 +291,7 @@ export class AltaUsuarios extends Component {
             await axios.post('http://localhost:4000/api/users', newUsuario)
                 .then(res => {
                     if (res.status === 200){
-                        alert('Usuario registrado exitosamente.\nRedirigiendo al apartado de consultas...');
+                        alert('Usuario registrado exitosamente.\nRedirigiendo...');
                         // Regresa a la ventana de consultas
                         window.location = `/dashboard/${this.state.alumnos ? 'alumnos' : this.state.profesores ? 'profesores' : 'usuarios'}/consultar`;
                     }
@@ -297,6 +301,7 @@ export class AltaUsuarios extends Component {
                         alert('Ha ocurrido un error con la conexión al servidor.');
                 })
                 .catch(error => console.error(error));
+        this.setState({btnPswDisabled: false, btnGuardarDisabled: false});
     }
 
     // cerrarModal = () => this.refs.alerta.close();
@@ -438,6 +443,7 @@ export class AltaUsuarios extends Component {
                             {/* Botón para salvar los cambios */}
                             <SubmitButton
                                 text="Guardar"
+                                disabled = { this.state.btnPswDisabled }
                                 onclick={() => {
                                     // Realiza la validación de contraseñas
                                     if (this.state.password !== this.state.passwordRepeat)
@@ -847,6 +853,7 @@ export class AltaUsuarios extends Component {
                             <SubmitButton
                             text={this.state.editar ? 'Guardar cambios' : 'Agregar usuario'}
                             icon={<BiIcons.BiUserPlus/>}
+                            disabled = { this.state.btnGuardarDisabled }
                             onclick={() => {this.guardarUsuario();}}
                             styles="no_margin"
                             />
