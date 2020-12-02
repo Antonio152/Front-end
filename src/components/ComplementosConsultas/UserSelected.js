@@ -42,6 +42,7 @@ export class UserSelected extends Component {
                                 icon={<AiIcons.AiOutlineIdcard/>}
                                 styles="fullWidth no_padding no_margin boton btn-blanco padding-top7"
                                 onclick={() => this.props.cardClick()}
+                                disabled={this.props.btnCardDisabled}
                                 text="Credencial"/>
                             : ''}
                         </div>
@@ -69,37 +70,6 @@ export class UserSelected extends Component {
                                     </div>
                                 )
                             })}
-                            {/* <div className="fila">
-                                <div className="columns">
-                                    <span className="etiqueta">{`MATRÍCULA`}</span>
-                                    <span>{`${this.props.usuario.academico[0].matricula}`}</span>
-                                </div>
-                                <div className="columns">
-                                    <span className="etiqueta">{`CURP`}</span>
-                                    <span>{`${this.props.usuario.curp}`}</span>
-                                </div>
-                                <div className="columns">
-                                    <span className="etiqueta">{`GPO. SANGUÍNEO`}</span>
-                                    <span>{`${this.props.usuario.sanguineo}`}</span>
-                                </div>
-                            </div>
-                            <div className="fila">
-                                <div className="columns">
-                                    <span className="etiqueta">{`EMAIL`}</span>
-                                    <span>{`${this.props.usuario.contacto[0].email}`}</span>
-                                </div>
-                                <div className="columns">
-                                    <span className="etiqueta">{`TEL / TEL. SOS`}</span>
-                                    <span>{`${this.props.usuario.contacto[0].telefono} | ${this.props.usuario.contacto[0].telEmergencia}`}</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="columns">
-                            <span className="etiqueta">DIRECCION</span>
-                            <p className="direccion">
-                                <span>{`${this.props.usuario.direccion[0].calle} ${this.props.usuario.direccion[0].numero}, ${this.props.usuario.direccion[0].localidad}, ${this.props.usuario.direccion[0].ciudad}, ${this.props.usuario.direccion[0].estado}. C.P.  ${this.props.usuario.direccion[0].cp}`}</span>
-                            </p>
-                        </div> */}
                         </div>
                     </div>
                 </div>

@@ -44,7 +44,8 @@ export class ConsultaAlumnos extends Component {
         cambioTablaAlt:false,
 
         btnBajaLogDisabled:false,
-        btnBajaFisDisabled:false
+        btnBajaFisDisabled:false,
+        btnMuchasCredDisabled: false
     }
     // Obtiene los usuarios del servidor
     getUsuarios = async () => {
@@ -86,19 +87,14 @@ export class ConsultaAlumnos extends Component {
 
     // Obtiene el archivo PDF en base 64
     getCredenciales = async (datos, formato) => {
-        // var arrDatos = [];
-        // this.state.userQry.forEach(usuario => {
-        //     datos.forEach(index => {
-        //         if (usuario._id === index) arrDatos.push(usuario);
-        //     })
-        // });
-        // if (!datos.length) arrDatos.push(datos)
-        // else arrDatos = datos;
-
-        const res = await axios.post('http://localhost:4000/cards',{
+        this.setState({btnMuchasCredDisabled: true});
+        const enviados = {
             usuarios: datos,
             formato: formato
-        });
+        };
+        console.log(enviados);
+        const res = await axios.post('http://localhost:4000/cards', enviados);
+        this.setState({btnMuchasCredDisabled: false});
         this.generarArchivo(res.data.pdf, 'Credenciales');
     }
     
@@ -399,6 +395,7 @@ export class ConsultaAlumnos extends Component {
                 botones={['Eliminar', 'Editar', 'Credencial']}
                 permisos={this.state.permisos}
                 eliminarClick={() => this.setState({modalEliminar:true})}
+                btnCardDisabled={this.state.btnMuchasCredDisabled}
                 cardClick={() => {
                     this.getCredenciales(arrIds, this.props.profesores ? 'UPPCredencial2' : 'UPPCredencial1');
                     alert('Se está generando el archivo para su descarga.');
@@ -596,6 +593,7 @@ export class ConsultaAlumnos extends Component {
                                 <div className="columns">
                                     <SubmitButton
                                     styles='large-text'
+                                    disabled={this.state.btnMuchasCredDisabled}
                                     text='Generar credenciales'
                                     onclick={() => {
                                         this.getCredenciales(this.state.usersForCredential, this.props.profesores ? 'UPPCredencial2' : 'UPPCredencial1');
