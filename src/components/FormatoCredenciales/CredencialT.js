@@ -3,7 +3,6 @@ import './Credencial.css'
 import fondoaAtras from './img/FONDO ATRAS.png'
 import fondoaFrente from './img/FONDO FRENTE.png'
 import escudo from './img/LOGO.png'
-import sep from './img/SEP.png'
 import firma from './img/FIRMA.png'
 import periodo from './img/PERIODO.png'
 import qr from './img/QR.png'
@@ -11,7 +10,6 @@ import user from './img/usuario.png'
 import gob from './img/Gobierno.png'
 import hidalgo from './img/Hidalgo.png'
 import utyp from './img/UTyP.png'
-import Loader from '../GeneralUseComp/Loader'
 
 export class CredencialT extends Component {
     render() {

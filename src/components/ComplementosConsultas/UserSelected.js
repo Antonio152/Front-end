@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 
 import SubmitButton from '../GeneralUseComp/SubmitButton'
-import OpenModal from '../Modals/OpenModal'
 
 import * as BiIcons from 'react-icons/bi'
 import * as AiIcons from 'react-icons/ai'
