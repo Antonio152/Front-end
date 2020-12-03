@@ -172,8 +172,11 @@ export class AltaUsuarios extends Component {
                             aca_matricula: usuario.academico[0].matricula,
                             // Permiso sólo para alumnos
                             ...(usuario.rol[0].nombre === 'Alumno' && {aca_cuatrimestre: usuario.academico[0].cuatrimestre}),
-                            aca_estatus: usuario.academico[0].estatus
+                            aca_estatus: usuario.academico[0].estatus,
+                            aca_registro: new Date(usuario.academico[0].registro)
                         });
+                        // console.log('Esta fecha: ', new Date())
+                        // console.log(new Date(usuario.academico[0].registro))
                     }
                 })
                 .catch((error) => {
