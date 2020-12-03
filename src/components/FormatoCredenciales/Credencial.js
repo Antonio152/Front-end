@@ -8,7 +8,6 @@ import firma from './img/FIRMA.png'
 import periodo from './img/PERIODO.png'
 import qr from './img/QR.png'
 import user from './img/usuario.png'
-import Loader from '../GeneralUseComp/Loader'
 
 export class Credencial extends Component {
     render() {
