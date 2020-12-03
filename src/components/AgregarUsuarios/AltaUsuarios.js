@@ -1,5 +1,9 @@
 import React, { Component } from 'react'
 import axios from 'axios'
+
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
 // Íconos del módulo
 import * as AiIcons from 'react-icons/ai'
 import * as BiIcons from 'react-icons/bi'
@@ -57,6 +61,7 @@ export class AltaUsuarios extends Component {
         aca_carrera: this.props.miUsuario && UserStore.role === 'Alumno' ? UserStore.career : 'Ingeniería en Software',
         aca_matricula: this.props.miUsuario && UserStore.role === 'Alumno' ? UserStore.idStudent : '',
         aca_cuatrimestre: this.props.miUsuario && UserStore.role === 'Alumno' ? UserStore.grade : '1',
+        aca_registro: new Date(),
         aca_estatus: this.props.miUsuario && UserStore.aca_estatus === 'Alumno' ? UserStore.aca_estatus : true,
         // Modulos con acceso
         rol: this.props.miUsuario ? UserStore.role : window.location.href.includes('alumnos') ? 'Alumno' : window.location.href.includes('profesores') ? 'Profesor' : 'Super Administrador',
@@ -254,7 +259,7 @@ export class AltaUsuarios extends Component {
                     matricula: this.state.aca_matricula,
                     carrera: this.state.aca_carrera,
                     cuatrimestre: this.state.aca_cuatrimestre,
-                    // registro:   this.state.aca_registro,
+                    registro: this.state.aca_registro,
                     estatus: this.state.aca_estatus
                 }],
                 published: true
@@ -599,6 +604,14 @@ export class AltaUsuarios extends Component {
                             {nombre:[ true, false]}
                         )}
                     </div>
+
+                    <div className="inp-numero">
+                        <DatePicker
+                            selected = {this.state.aca_registro}
+                            onChange={fecha => this.setState({aca_registro : fecha})}
+                        />
+                    </div>
+
                 </div>
             )
     }

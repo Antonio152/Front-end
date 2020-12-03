@@ -116,6 +116,7 @@ export class UserStore {
         this.telEmer= '';
         this.career= '';
         this.idStudent= '';
+        this.registro='';
         this.aca_estatus= true;
         this.grade= '';
         this.Usuarios=[];
