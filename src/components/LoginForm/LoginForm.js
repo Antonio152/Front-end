@@ -69,7 +69,7 @@ export class LoginForm extends Component {
                 // Incrementa los intentos
                 intentos = this.state.intentosFallidos[indiceAux].intentos + 1;
                 // AQUÍ SE IMPLEMENTARÁ EL BLOQUEO
-                if (intentos > 5)  {
+                if (intentos >= 5)  {
                     await axios.put(`http://localhost:4000/api/users/${id}`, {
                         bloqueado: true
                     })
@@ -79,11 +79,10 @@ export class LoginForm extends Component {
                         })
                         .catch(err => console.error(err));
                 }
-                else
-                    // Actualización del arreglo
-                    intentosAux.splice(indiceAux,1,{
-                        username:this.state.username, 
-                        intentos: intentos});
+                // Actualización del arreglo
+                intentosAux.splice(indiceAux,1,{
+                    username:this.state.username, 
+                    intentos: intentos});
             }
             else {
                 // Cuando el usuario no fue encontrado, lo agrega
