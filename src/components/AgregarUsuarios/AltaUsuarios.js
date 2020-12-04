@@ -875,7 +875,7 @@ export class AltaUsuarios extends Component {
                         <div style={{textAlign:'center', marginTop:'10px'}}>
                             <SubmitButton
                             text={this.state.editar ? 'Guardar cambios' : 'Agregar usuario'}
-                            icon={<BiIcons.BiUserPlus/>}
+                            icon={this.state.editar ? <BiIcons.BiUserCheck/> : <BiIcons.BiUserPlus/>}
                             disabled = { this.state.btnGuardarDisabled }
                             onclick={() => {this.guardarUsuario();}}
                             styles="no_margin"
