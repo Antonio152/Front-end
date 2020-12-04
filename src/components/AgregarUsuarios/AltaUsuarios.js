@@ -231,13 +231,14 @@ export class AltaUsuarios extends Component {
         const modulos = this.verificaModulos();
         var newUsuario = {};
         var datosListos = true;
+        const regexNombre = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/g;
 
         //validaciones
-        if(this.state.username === '' || this.state.password === ''){
+        if(this.state.username === '' || this.state.password === '' && !this.props.miUsuario && !this.state.editar){
             alert('Rectifique los datos de la cuenta, no deben estar vacios')
             datosListos = false;
         }
-        if(this.state.nombre === '' || this.state.aPaterno === '' || ! /^[a-zA-Z ]+$/.test(this.state.nombre) || ! /^[a-zA-Z ]+$/.test(this.state.aPaterno) || ! /^[a-zA-Z ]+$/.test(this.state.aMaterno)){
+        if(this.state.nombre === '' || this.state.aPaterno === '' || ! regexNombre.test(this.state.nombre) && ! regexNombre.test(this.state.aPaterno) && ! regexNombre.test(this.state.aMaterno)){
             alert('Rectifique los datos de su nombre')
             datosListos = false;
         }
@@ -335,7 +336,11 @@ export class AltaUsuarios extends Component {
                 // En caso de que se deseé agregar un nuevo usuario
                 await axios.post('http://localhost:4000/api/users', newUsuario)
                     .then(res => {
-                        if (res.status === 200){
+                        if (res.data.existente) {
+                            alert('Ya existe un usuario registrado con ese email o nombre de usuario.');
+                            return;
+                        }
+                        else if (res.status === 200){
                             alert('Usuario registrado exitosamente.\nRedirigiendo...');
                             // Regresa a la ventana de consultas
                             window.location = `/dashboard/${this.state.alumnos ? 'alumnos' : this.state.profesores ? 'profesores' : 'usuarios'}/consultar`;
@@ -677,8 +682,33 @@ export class AltaUsuarios extends Component {
 
     // Estado cambia con inputs
     setInputValue = (property, val, maxLenght) => {
-        if (property === 'curp')
+        var regex; 
+        if (property === 'curp'){
+            regex = /^[a-zA-Z0-9]+$/i
+            if (!regex.test(val) && val.length > 0)
+                return
             val = val.toUpperCase();
+        }
+        if (property === 'username'){
+            regex = /^[a-z0-9+._]+$/i
+            if (!regex.test(val) && val.length > 0)
+                return
+            val = val.trim();
+        }
+
+        if (property === 'aMaterno' || property === 'aPaterno' || property === 'nombre') {
+            regex = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/g;
+            if (!regex.test(val) && val.length > 0)
+                return;
+        }
+
+        if (property === 'con_telefono' || property === 'con_telEmergencia' || property === 'dir_numero'  || property === 'dir_cp') {
+            regex = /^[0-9]+$/i
+            if (!regex.test(val) && val.length > 0)
+                return
+            val = val.trim();
+        }
+
         if (val.length > maxLenght)  //Max lenght
             return;
         this.setState({
