@@ -230,86 +230,124 @@ export class AltaUsuarios extends Component {
     guardarUsuario = async () => {
         const modulos = this.verificaModulos();
         var newUsuario = {};
-        // La contraseña se debe de actualizar por separado
-        if (!this.state.isPswChanged)
-            newUsuario = {
-                ...(!this.state.editar && {username: this.state.username}),
-                ...(!this.state.editar && {password: this.state.password}),
-                foto: this.state.foto,
-                nombre: this.state.nombre,
-                aPaterno: this.state.aPaterno,
-                aMaterno: this.state.aMaterno,
-                curp: this.state.curp,
-                sanguineo: this.state.sanguineo,
-                rol: [{
-                    nombre: this.state.rol,
-                    modulos: modulos
-                }],
-                contacto: [{
-                    telefono: this.state.con_telefono,
-                    email:this.state.con_email,
-                    telEmergencia: this.state.con_telEmergencia
-                }],
-                direccion: [{
-                    numero: this.state.dir_numero,
-                    calle: this.state.dir_calle,
-                    localidad: this.state.dir_localidad,
-                    ciudad: this.state.dir_ciudad,
-                    estado: this.state.dir_estado,
-                    cp: this.state.dir_cp
-                }],
-                academico: [{
-                    matricula: this.state.aca_matricula,
-                    carrera: this.state.aca_carrera,
-                    cuatrimestre: this.state.aca_cuatrimestre,
-                    registro: this.state.aca_registro,
-                    estatus: this.state.aca_estatus
-                }],
-                published: true
-            };
-        else
-            newUsuario = {
-                password: bcrypt.hashSync(this.state.password,9)
-            };
-        
-        this.setState({btnPswDisabled: true, btnGuardarDisabled: true});
-        // Para editar o modificar el usuario
-        if (this.state.editar)
-            await axios.put(`http://localhost:4000/api/users/${this.props.miUsuario ? UserStore.id : this.props.match.params.id}`,newUsuario)
-                .then(res => {
-                    if (res.status === 200){
-                        // Si es que se modifica ya sea el usuario o sólo su contraseña
-                        if (!this.state.isPswChanged){
-                            alert('Usuario modificado exitosamente.\nRedirigiendo...');
-                            window.location = this.props.miUsuario ? '/dashboard' : `/dashboard/${this.state.alumnos ? 'alumnos' : this.state.profesores ? 'profesores' : 'usuarios'}/consultar`
+        var datosListos = true;
+
+        //validaciones
+        if(this.state.username === '' || this.state.password === ''){
+            alert('Rectifique los datos de la cuenta, no deben estar vacios')
+            datosListos = false;
+        }
+        if(this.state.nombre === '' || this.state.aPaterno === '' || ! /^[a-zA-Z ]+$/.test(this.state.nombre) || ! /^[a-zA-Z ]+$/.test(this.state.aPaterno) || ! /^[a-zA-Z ]+$/.test(this.state.aMaterno)){
+            alert('Rectifique los datos de su nombre')
+            datosListos = false;
+        }
+        if(this.state.curp === ''){
+            alert('Es necesario que ingrese su CURP')
+            datosListos = false;
+        }
+        if(this.state.dir_cp === '' || this.state.dir_ciudad === '' || this.state.dir_estado === '' || ! /^[0-9]/.test(this.state.dir_cp)){
+            alert('Rectifique los datos de la dirección')
+            datosListos = false;
+        }
+        if(this.state.rol === 'Alumno' || this.state.rol === 'Profesor'){
+            if(this.state.aca_matricula === '' || ! /^[0-9]/.test(this.state.aca_matricula))
+            alert('Rectifique los datos de su matrícula')
+            datosListos = false;
+        }
+        if(this.state.con_email === '' || ! /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(this.state.con_email)){
+            alert('Rectifique que el correo electrónico sea correcto')
+            datosListos = false;
+        }
+        if(this.state.con_telefono === '' || this.state.con_telEmergencia === '' || ! /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im.test(this.state.con_telefono) || ! /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im.test(this.state.con_telEmergencia)){
+            alert('Rectifique el / los números de teléfono')
+            datosListos = false;
+        }
+
+        if(datosListos === false){
+            return;
+        }else{
+            datosListos = true;
+            // La contraseña se debe de actualizar por separado
+            if (!this.state.isPswChanged)
+                newUsuario = {
+                    ...(!this.state.editar && {username: this.state.username}),
+                    ...(!this.state.editar && {password: this.state.password}),
+                    foto: this.state.foto,
+                    nombre: this.state.nombre,
+                    aPaterno: this.state.aPaterno,
+                    aMaterno: this.state.aMaterno,
+                    curp: this.state.curp,
+                    sanguineo: this.state.sanguineo,
+                    rol: [{
+                        nombre: this.state.rol,
+                        modulos: modulos
+                    }],
+                    contacto: [{
+                        telefono: this.state.con_telefono,
+                        email:this.state.con_email,
+                        telEmergencia: this.state.con_telEmergencia
+                    }],
+                    direccion: [{
+                        numero: this.state.dir_numero,
+                        calle: this.state.dir_calle,
+                        localidad: this.state.dir_localidad,
+                        ciudad: this.state.dir_ciudad,
+                        estado: this.state.dir_estado,
+                        cp: this.state.dir_cp
+                    }],
+                    academico: [{
+                        matricula: this.state.aca_matricula,
+                        carrera: this.state.aca_carrera,
+                        cuatrimestre: this.state.aca_cuatrimestre,
+                        registro: this.state.aca_registro,
+                        estatus: this.state.aca_estatus
+                    }],
+                    published: true
+                };
+            else
+                newUsuario = {
+                    password: bcrypt.hashSync(this.state.password,9)
+                };
+            
+            this.setState({btnPswDisabled: true, btnGuardarDisabled: true});
+            // Para editar o modificar el usuario
+            if (this.state.editar)
+                await axios.put(`http://localhost:4000/api/users/${this.props.miUsuario ? UserStore.id : this.props.match.params.id}`,newUsuario)
+                    .then(res => {
+                        if (res.status === 200){
+                            // Si es que se modifica ya sea el usuario o sólo su contraseña
+                            if (!this.state.isPswChanged){
+                                alert('Usuario modificado exitosamente.\nRedirigiendo...');
+                                window.location = this.props.miUsuario ? '/dashboard' : `/dashboard/${this.state.alumnos ? 'alumnos' : this.state.profesores ? 'profesores' : 'usuarios'}/consultar`
+                            }
+                            else{
+                                alert('La contraseña ha sido modificada.');
+                                this.setState({isPswChanged:false, password: '',  passwordRepeat: ''});
+                            }
                         }
-                        else{
-                            alert('La contraseña ha sido modificada.');
-                            this.setState({isPswChanged:false, password: '',  passwordRepeat: ''});
+                        else if(res.status !== 500)
+                            alert('Ha ocurrido un error. Inténtelo nuevamente.');
+                        else
+                            alert('Ha ocurrido un error con la conexión al servidor.');
+                    })
+                    .catch(error => console.error(error));
+            else
+                // En caso de que se deseé agregar un nuevo usuario
+                await axios.post('http://localhost:4000/api/users', newUsuario)
+                    .then(res => {
+                        if (res.status === 200){
+                            alert('Usuario registrado exitosamente.\nRedirigiendo...');
+                            // Regresa a la ventana de consultas
+                            window.location = `/dashboard/${this.state.alumnos ? 'alumnos' : this.state.profesores ? 'profesores' : 'usuarios'}/consultar`;
                         }
-                    }
-                    else if(res.status !== 500)
-                        alert('Ha ocurrido un error. Inténtelo nuevamente.');
-                    else
-                        alert('Ha ocurrido un error con la conexión al servidor.');
-                })
-                .catch(error => console.error(error));
-        else
-            // En caso de que se deseé agregar un nuevo usuario
-            await axios.post('http://localhost:4000/api/users', newUsuario)
-                .then(res => {
-                    if (res.status === 200){
-                        alert('Usuario registrado exitosamente.\nRedirigiendo...');
-                        // Regresa a la ventana de consultas
-                        window.location = `/dashboard/${this.state.alumnos ? 'alumnos' : this.state.profesores ? 'profesores' : 'usuarios'}/consultar`;
-                    }
-                    else if(res.status !== 500)
-                        alert('Ha ocurrido un error. Inténtelo nuevamente.');
-                    else
-                        alert('Ha ocurrido un error con la conexión al servidor.');
-                })
-                .catch(error => console.error(error));
-        this.setState({btnPswDisabled: false, btnGuardarDisabled: false});
+                        else if(res.status !== 500)
+                            alert('Ha ocurrido un error. Inténtelo nuevamente.');
+                        else
+                            alert('Ha ocurrido un error con la conexión al servidor.');
+                    })
+                    .catch(error => console.error(error));
+            this.setState({btnPswDisabled: false, btnGuardarDisabled: false});
+        }
     }
 
     // cerrarModal = () => this.refs.alerta.close();
@@ -496,26 +534,26 @@ export class AltaUsuarios extends Component {
                     {/* En caso de que se deseé editar un usuario */}
                     {this.state.editar ? 
                     <div className="columns">
-                        <span className="etiqueta" style={{marginLeft:'0'}}>NOMBRE DE USUARIO</span>
+                        <span className="etiqueta" style={{marginLeft:'0'}}>NOMBRE DE USUARIO*</span>
                         <span className="span-descriptivo" style={{color:'#b4b4b4'}}>{this.state.username}</span>
                     </div> :
-                    this.inputTextEditable('Nombre de usuario', this.state.username, 'text', 'username', 12)
+                    this.inputTextEditable('Nombre de usuario*', this.state.username, 'text', 'username', 12)
                     }
-                    {this.state.editar ? this.apartadoPassword() : this.inputTextEditable('Contraseña', this.state.password, 'password','password', 32) }
+                    {this.state.editar ? this.apartadoPassword() : this.inputTextEditable('Contraseña*', this.state.password, 'password','password', 32) }
                 </div>
             )
 
         if (this.state.zona === 'personales')
             return(
                 <div>
-                    {this.inputTextEditable('Nombre(s)', this.state.nombre, 'text', 'nombre', 100)}
+                    {this.inputTextEditable('Nombre(s)*', this.state.nombre, 'text', 'nombre', 50)}
 
-                    {this.inputTextEditable('Apellido paterno',this.state.aPaterno, 'text', 'aPaterno', 50)}
+                    {this.inputTextEditable('Apellido paterno*',this.state.aPaterno, 'text', 'aPaterno', 50)}
 
                     {this.inputTextEditable('Apellido materno',this.state.aMaterno, 'text', 'aMaterno', 50)}
                     
                     <div className="fila">
-                        {this.inputTextEditable('CURP',this.state.curp, 'text', 'curp', 18)}
+                        {this.inputTextEditable('CURP*',this.state.curp, 'text', 'curp', 18)}
                         <div className="inp-numero">
                             {this.inputSelectEditable(
                                 'RH',
@@ -534,18 +572,18 @@ export class AltaUsuarios extends Component {
                     <div className="fila">
                         {this.inputTextEditable('Calle',this.state.dir_calle, 'text', 'dir_calle', 50)}
                         <div className="inp-numero">
-                            {this.inputTextEditable('Numero',this.state.dir_numero, 'text', 'dir_numero', 10)}
+                            {this.inputTextEditable('Numero',this.state.dir_numero, 'text', 'dir_numero', 5)}
                         </div>
                     </div>
                     <div className="fila">
-                        {this.inputTextEditable('Localidad',this.state.dir_localidad, 'text', 'dir_localidad', 100)}
+                        {this.inputTextEditable('Localidad',this.state.dir_localidad, 'text', 'dir_localidad', 80)}
                         <div className="inp-numero">
-                            {this.inputTextEditable('C.P.',this.state.dir_cp, 'text', 'dir_cp', 10)}
+                            {this.inputTextEditable('C.P.*',this.state.dir_cp, 'text', 'dir_cp', 7)}
                         </div>
                     </div>
-                    {this.inputTextEditable('Ciudad',this.state.dir_ciudad, 'text', 'dir_ciudad', 100)}
+                    {this.inputTextEditable('Ciudad*',this.state.dir_ciudad, 'text', 'dir_ciudad', 50)}
 
-                    {this.inputTextEditable('Estado',this.state.dir_estado, 'text', 'dir_estado', 50)}
+                    {this.inputTextEditable('Estado*',this.state.dir_estado, 'text', 'dir_estado', 50)}
                 </div>
             )
         if (this.state.zona === 'contacto')
@@ -558,18 +596,18 @@ export class AltaUsuarios extends Component {
                             <span className="span-descriptivo" style={{color:'#b4b4b4'}}>{this.state.con_email}</span>
                         </div>
                         :
-                        this.inputTextEditable('Correo electrónico',this.state.con_email, 'text', 'con_email', 100)
+                        this.inputTextEditable('Correo electrónico*',this.state.con_email, 'text', 'con_email', 50)
                     }
                     
-                    {this.inputTextEditable('Teléfono',this.state.con_telefono, 'text', 'con_telefono', 10)}
+                    {this.inputTextEditable('Teléfono*',this.state.con_telefono, 'text', 'con_telefono', 10)}
 
-                    {this.inputTextEditable('Teléfono Emer.',this.state.con_telEmergencia, 'text', 'con_telEmergencia', 10)}
+                    {this.inputTextEditable('Teléfono Emer.*',this.state.con_telEmergencia, 'text', 'con_telEmergencia', 10)}
                 </div>
             )
         if (this.state.zona === 'academico')
             return(
                 <div>
-                    {this.inputTextEditable('Matrícula',this.state.aca_matricula, 'text', 'aca_matricula', 10)}
+                    {this.inputTextEditable('Matrícula*',this.state.aca_matricula, 'text', 'aca_matricula', 10)}
 
                     {this.inputSelectEditable(
                         'CARRERA',
@@ -639,6 +677,8 @@ export class AltaUsuarios extends Component {
 
     // Estado cambia con inputs
     setInputValue = (property, val, maxLenght) => {
+        if (property === 'curp')
+            val = val.toUpperCase();
         if (val.length > maxLenght)  //Max lenght
             return;
         this.setState({
