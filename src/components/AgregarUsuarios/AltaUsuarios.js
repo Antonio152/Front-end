@@ -608,8 +608,15 @@ export class AltaUsuarios extends Component {
                         )}
                     </div>
 
-                    <div className="inp-numero">
+
+                    <div className="columns texto-editable">
+                        <div className="fila">
+                            <span className="etiqueta" style={{marginLeft:'0'}}>FECHA DE REGISTRO</span>
+                            <RiIcons.RiAddLine className="lapiz-icon"/>
+                        </div>
+                        
                         <DatePicker
+                            className="input mg_top no-border"
                             selected = {this.state.aca_registro}
                             onChange={fecha => this.setState({aca_registro : fecha})}
                         />
