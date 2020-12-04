@@ -84,19 +84,6 @@ export class ConsultaAlumnos extends Component {
         if (res.status === 200)
             this.setState({permisos: res.data.rol[0].modulos[1].permisos});
     }
-
-    // Obtiene el archivo PDF en base 64
-    getCredenciales = async (datos, formato) => {
-        this.setState({btnMuchasCredDisabled: true});
-        const enviados = {
-            usuarios: datos,
-            formato: formato
-        };
-        console.log(enviados);
-        const res = await axios.post('http://localhost:4000/cards', enviados);
-        this.setState({btnMuchasCredDisabled: false});
-        this.generarArchivo(res.data.pdf, 'Credenciales');
-    }
     
     // Realiza la actualización de estado entre la baja lógica y la física
     bajaLogica = async() =>{
@@ -144,6 +131,19 @@ export class ConsultaAlumnos extends Component {
             })
             .catch(error => console.error(error));
         this.setState({btnBajaFisDisabled: false});
+    }
+
+    // Obtiene el archivo PDF en base 64
+    getCredenciales = async (datos, formato) => {
+        this.setState({btnMuchasCredDisabled: true});
+        const enviados = {
+            usuarios: datos,
+            formato: formato
+        };
+        console.log(enviados);
+        const res = await axios.post('http://localhost:4000/cards', enviados);
+        this.setState({btnMuchasCredDisabled: false});
+        this.generarArchivo(res.data.pdf, 'Credenciales');
     }
 
     //Convierte el archivo de base 64 a uno descargable
