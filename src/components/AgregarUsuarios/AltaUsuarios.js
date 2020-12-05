@@ -697,7 +697,7 @@ export class AltaUsuarios extends Component {
         }
 
         if (property === 'aMaterno' || property === 'aPaterno' || property === 'nombre') {
-            regex = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/g;
+            regex = /^[ \-a-zA-ZÀ-ÿ\u00f1\u00d1]*$/g;
             if (!regex.test(val) && val.length > 0)
                 return;
         }
