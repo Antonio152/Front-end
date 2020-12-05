@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 
+import { BrowserRouter as Router, withRouter, Redirect } from 'react-router-dom';
+
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -89,7 +91,9 @@ export class AltaUsuarios extends Component {
         isPswChanged: false,
 
         btnPswDisabled: false,
-        btnGuardarDisabled: false
+        btnGuardarDisabled: false,
+
+        redireccionar: false
 
         // alerta: {msg:'',tipo:'', accion: () => {}}
     }
@@ -231,14 +235,14 @@ export class AltaUsuarios extends Component {
         const modulos = this.verificaModulos();
         var newUsuario = {};
         var datosListos = true;
-        const regexNombre = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/g;
 
+        const regexNombre = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/g;
         //validaciones
-        if(this.state.username === '' || this.state.password === '' && !this.props.miUsuario && !this.state.editar){
+        if((this.state.username === '' || this.state.password === '') && !this.props.miUsuario && !this.state.editar){
             alert('Rectifique los datos de la cuenta, no deben estar vacios')
             datosListos = false;
         }
-        if(this.state.nombre === '' || this.state.aPaterno === '' || ! regexNombre.test(this.state.nombre) && ! regexNombre.test(this.state.aPaterno) && ! regexNombre.test(this.state.aMaterno)){
+        if((this.state.nombre === '' || this.state.aPaterno === '' || ! regexNombre.test(this.state.nombre)) && ! regexNombre.test(this.state.aPaterno) && ! regexNombre.test(this.state.aMaterno)){
             alert('Rectifique los datos de su nombre')
             datosListos = false;
         }
@@ -250,8 +254,7 @@ export class AltaUsuarios extends Component {
             alert('Rectifique los datos de la dirección')
             datosListos = false;
         }
-        if(this.state.rol === 'Alumno' || this.state.rol === 'Profesor'){
-            if(this.state.aca_matricula === '' || ! /^[0-9]/.test(this.state.aca_matricula))
+        if((this.state.alumnos || this.state.profesores) && this.state.aca_matricula === ''){
             alert('Rectifique los datos de su matrícula')
             datosListos = false;
         }
@@ -259,11 +262,10 @@ export class AltaUsuarios extends Component {
             alert('Rectifique que el correo electrónico sea correcto')
             datosListos = false;
         }
-        if(this.state.con_telefono === '' || this.state.con_telEmergencia === '' || ! /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im.test(this.state.con_telefono) || ! /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im.test(this.state.con_telEmergencia)){
+        if(this.state.con_telefono === '' || this.state.con_telEmergencia === '' || ! /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/im.test(this.state.con_telefono) || ! /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/im.test(this.state.con_telEmergencia)){
             alert('Rectifique el / los números de teléfono')
             datosListos = false;
         }
-
         if(datosListos === false){
             return;
         }else{
@@ -319,7 +321,8 @@ export class AltaUsuarios extends Component {
                             // Si es que se modifica ya sea el usuario o sólo su contraseña
                             if (!this.state.isPswChanged){
                                 alert('Usuario modificado exitosamente.\nRedirigiendo...');
-                                window.location = this.props.miUsuario ? '/dashboard' : `/dashboard/${this.state.alumnos ? 'alumnos' : this.state.profesores ? 'profesores' : 'usuarios'}/consultar`
+                                this.setState({redireccionar:true});
+                                // window.location = this.props.miUsuario ? '/dashboard' : `/dashboard/${this.state.alumnos ? 'alumnos' : this.state.profesores ? 'profesores' : 'usuarios'}/consultar`
                             }
                             else{
                                 alert('La contraseña ha sido modificada.');
@@ -343,7 +346,8 @@ export class AltaUsuarios extends Component {
                         else if (res.status === 200){
                             alert('Usuario registrado exitosamente.\nRedirigiendo...');
                             // Regresa a la ventana de consultas
-                            window.location = `/dashboard/${this.state.alumnos ? 'alumnos' : this.state.profesores ? 'profesores' : 'usuarios'}/consultar`;
+                            this.setState({redireccionar:true});
+                            // window.location = `/dashboard/${this.state.alumnos ? 'alumnos' : this.state.profesores ? 'profesores' : 'usuarios'}/consultar`;
                         }
                         else if(res.status !== 500)
                             alert('Ha ocurrido un error. Inténtelo nuevamente.');
@@ -703,10 +707,9 @@ export class AltaUsuarios extends Component {
         }
 
         if (property === 'con_telefono' || property === 'con_telEmergencia' || property === 'dir_numero'  || property === 'dir_cp') {
-            regex = /^[0-9]+$/i
+            regex = /^[ +()\-.0-9]+$/i
             if (!regex.test(val) && val.length > 0)
                 return
-            val = val.trim();
         }
 
         if (val.length > maxLenght)  //Max lenght
@@ -862,12 +865,27 @@ export class AltaUsuarios extends Component {
         )
     }
 
+    redireccionar() {
+        if( this.state.redireccionar )
+        return(
+            <div>
+                {this.props.miUsuario ? <Redirect to="/"/> : 
+                this.state.alumnos ? <Redirect to='/dashboard/alumnos/consultar'/> :
+                this.state.profesores ? <Redirect to='/dashboard/profesores/consultar'/> :
+                <Redirect to='/dashboard/usuarios/consultar'/> 
+                }
+            </div>
+                    
+        )
+    }
+
     render() {
         if(this.state.isLoading)
             return(<Loader/>)
         else
         return (
             <div className="main_fila main">
+                {this.redireccionar()}
                 <div className="columns col-iz">
                     <div className="caja-main-iz" style={{height:'auto'}}>
                         <span className="etiqueta" style={{marginLeft:'0', marginBottom:'10px'}}>FOTO DE PERFIL</span>
@@ -985,4 +1003,4 @@ export class AltaUsuarios extends Component {
     }
 }
 
-export default AltaUsuarios
+export default withRouter(AltaUsuarios) 
