@@ -59,7 +59,7 @@ export class UserStore {
     })
     // En caso de que haya accedido con éxito
     setData = action((result) => {
-        console.log(this.role);
+        console.log(result);
         if (result && result.success) {
             this.loading = false;
             this.isLoggedIn = true;

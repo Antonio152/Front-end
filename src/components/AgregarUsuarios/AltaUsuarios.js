@@ -639,12 +639,19 @@ export class AltaUsuarios extends Component {
         if (this.state.zona === 'academico')
             return(
                 <div>
-                    {this.inputTextEditable('Matrícula*',this.state.aca_matricula, 'text', 'aca_matricula', 10)}
+                    {console.log(UserStore)}
+                    { UserStore.role !== 'Alumno' && UserStore.role !== 'Profesor' ?
+                    this.inputTextEditable('Matrícula*',this.state.aca_matricula, 'text', 'aca_matricula', 10) : 
+                    <div className="columns">
+                        <span className="etiqueta" style={{marginLeft:'0'}}>MATRÍCULA</span>
+                        <span className="span-descriptivo" style={{color:'#b4b4b4'}}>{UserStore.idStudent}</span>
+                    </div>
+                    }
 
                     {this.inputSelectEditable(
                         'CARRERA',
                         'aca_carrera',
-                        this.state.aca_carrera,
+                        UserStore.role !== 'Alumno' && UserStore.role !== 'Profesor' ? this.state.aca_carrera : UserStore.career,
                         {nombre:['Ingeniería en Software',
                         'Ingeniería en Mecatrónica',
                         'Ingeniería en Biomédica',
@@ -656,7 +663,7 @@ export class AltaUsuarios extends Component {
                         'Licenciatura en Terapia física',
                         'Licenciatura en Médico Cirujano']}
                     )}
-                    {!window.location.href.includes('profesores') ? 
+                    {UserStore.role !== 'Alumno' && UserStore.role !== 'Profesor' && !window.location.href.includes('profesores') ? 
                     <div className="inp-numero">
                         {this.inputSelectEditable(
                             'Cuatrimestre',
@@ -668,8 +675,8 @@ export class AltaUsuarios extends Component {
                     : 
                     <></>
                     }
-
-                    <div className="inp-numero">
+                    {UserStore.role !== 'Alumno' && UserStore.role !== 'Profesor' ? 
+                    <><div className="inp-numero">
                         {this.inputSelectEditable(
                             'Estado',
                             'aca_estatus',
@@ -690,7 +697,8 @@ export class AltaUsuarios extends Component {
                             selected = {this.state.aca_registro}
                             onChange={fecha => this.setState({aca_registro : fecha})}
                         />
-                    </div>
+                    </div></> : <></>
+                    }
 
                 </div>
             )
@@ -892,7 +900,7 @@ export class AltaUsuarios extends Component {
         if( this.state.redireccionar )
         return(
             <div>
-                {this.props.miUsuario ? <Redirect to="/"/> : 
+                {this.props.miUsuario ? <Redirect to="/dashboard"/> : 
                 this.state.alumnos ? <Redirect to='/dashboard/alumnos/consultar'/> :
                 this.state.profesores ? <Redirect to='/dashboard/profesores/consultar'/> :
                 <Redirect to='/dashboard/usuarios/consultar'/> 
@@ -967,7 +975,7 @@ export class AltaUsuarios extends Component {
                             onclick={ () => this.setState({zona:'direccion'}) }
                         />
                         
-                        {window.location.href.includes('alumnos') || window.location.href.includes('profesores') ?
+                        {window.location.href.includes('alumnos') || window.location.href.includes('profesores') || UserStore.role === 'Alumno' || UserStore.role === 'Profesor' ?
                         <BtnSeccion
                             activo={this.state.zona === 'academico' ? true : false}
                             nombre='Académico'
