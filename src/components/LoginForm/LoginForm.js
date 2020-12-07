@@ -55,10 +55,10 @@ export class LoginForm extends Component {
         var indiceAux = 0;
         var intentos = 0;
         // Cuando no esté registrado se retorna en lugar de contarlo 
-        if (result.includes('no está registrado')) return;
+        if (result.includes('no está registrado') || result.includes('Error: ')) return;
         // Cuando el arreglo esté vacío y en caso de que el usuario esté bloqueado, lo agrega a la tabla con 6
         if (intentosAux.length === 0) {
-            intentosAux.push({username: this.state.username, intentos: result.includes('bloqueado') ? 6 : 1})
+            intentosAux.push({username: this.state.username, intentos: result.includes(' bloqueado') ? 6 : 1})
         }
         else {
             // Obtiene el índice de un usuario específico

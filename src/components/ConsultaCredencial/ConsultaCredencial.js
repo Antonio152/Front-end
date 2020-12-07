@@ -16,7 +16,8 @@ export class ConsultaCredencial extends Component {
         rol: {},
         academico: {},
         contacto: {},
-        direccion: {}
+        direccion: {},
+        btnImprimirDisabled: false
     }
 
     //Obtiene el usuario el id
@@ -30,6 +31,42 @@ export class ConsultaCredencial extends Component {
             direccion: res.data.direccion[0]
         })
     }
+
+    
+    // Obtiene el archivo PDF en base 64
+    getCredenciales = async (datos, formato) => {
+        this.setState({btnImprimirDisabled: true});
+        const enviados = {
+            usuarios: datos,
+            formato: formato
+        };
+        console.log(enviados);
+        const res = await axios.post('https://node-server-credenciales.herokuapp.com/cards', enviados);
+        this.setState({btnImprimirDisabled: false});
+        this.generarArchivo(res.data.pdf, 'Credenciales');
+    }
+
+    //Convierte el archivo de base 64 a uno descargable
+    generarArchivo = (content, fileName) => {
+        // Decodifica base 64 y remueve el espacio para compatibilidad con  IE
+        var binary = atob(content.replace(/\s/g, ''));
+        var len = binary.length;
+        // Buffer de datos y u
+        var buffer = new ArrayBuffer(len);
+        // array de enteros sin signo de 8 bits
+        var view = new Uint8Array(buffer);
+        // Decodifica caracter a caracter
+        for (var i = 0; i < len; i++) {
+            view[i] = binary.charCodeAt(i);
+        }
+        // Blob de datos
+        const blob = new Blob([view], { type: "application/pdf" });
+        // Crea link de descarga automático
+        const link = document.createElement("a");
+        link.href = window.URL.createObjectURL(blob);
+        link.download = fileName;
+        link.click();
+    };
     //Renderiza el usuario cargado con el id
     renderUserSelected () {
         if (this.state.usuario.nombre)
@@ -97,6 +134,8 @@ export class ConsultaCredencial extends Component {
     }
 
     render() {
+        var arrIds = [];
+        arrIds.push(UserStore.id);
         return (
             <div className="">
             <div className="fila">
@@ -115,7 +154,12 @@ export class ConsultaCredencial extends Component {
                         <div className="contenidoMod ">
                             <div className="fila justificado">
                                 <h1 className="title">Vista previa</h1>
-                                <SubmitButton styles=' fila fullWidth consulta padding-10 left-padding' text='imprimir' icon={<AiIcons.AiOutlinePrinter/>}/>
+                                <SubmitButton styles=' fila fullWidth consulta padding-10 left-padding' text='imprimir' icon={<AiIcons.AiOutlinePrinter/>}
+                                onclick = {() => {
+                                    this.getCredenciales(arrIds, UserStore.role === 'Alumno' ? 'UPPCredencial1' : 'UPPCredencial2');
+                                    alert('Se está generando el archivo para su descarga.');
+                                }}
+                                disabled={this.state.btnImprimirDisabled}/>
                             </div>
                             <br/>
                             {UserStore.role === 'Alumno' ? 

@@ -82,9 +82,9 @@ export class CredencialT extends Component {
                             <div className="director">
                                         
                             </div>
-                            <div class="columns datos-cred">
-                                <div class="fila datos-cred">
-                                    <div class="cuadro-firma" />
+                            <div className="columns datos-cred">
+                                <div className="fila datos-cred">
+                                    <div className="cuadro-firma" />
                                 </div>
                             </div>
                             <div className="fila datos-cred">
