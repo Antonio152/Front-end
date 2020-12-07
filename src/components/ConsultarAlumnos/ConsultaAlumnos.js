@@ -49,7 +49,7 @@ export class ConsultaAlumnos extends Component {
     }
     // Obtiene los usuarios del servidor
     getUsuarios = async () => {
-        let res = await fetch('http://localhost:4000/api/users', {
+        let res = await fetch('https://node-server-credenciales.herokuapp.com/api/users', {
             method: 'get',
             headers: {
               'Accept': 'application/json',
@@ -80,7 +80,7 @@ export class ConsultaAlumnos extends Component {
 
     // Obtiene los modulos del servidor
     getModulos = async () => {
-        const res = await axios.get(`http://localhost:4000/api/users/${UserStore.id}`);
+        const res = await axios.get(`https://node-server-credenciales.herokuapp.com/api/users/${UserStore.id}`);
         if (res.status === 200)
             this.setState({permisos: res.data.rol[0].modulos[1].permisos});
     }
@@ -97,7 +97,7 @@ export class ConsultaAlumnos extends Component {
         };
 
         this.setState({btnBajaLogDisabled: true});
-        await axios.put(`http://localhost:4000/api/users/${this.state.userSelected._id}`,newUsuario)
+        await axios.put(`https://node-server-credenciales.herokuapp.com/api/users/${this.state.userSelected._id}`,newUsuario)
             .then(res => {
                 if (res.status === 200){
                     alert('Usuario modificado exitosamente.');
@@ -117,7 +117,7 @@ export class ConsultaAlumnos extends Component {
     // Eliminación total del usuario
     bajaFisica = async() =>{
         this.setState({btnBajaFisDisabled: true});
-        await axios.delete(`http://localhost:4000/api/users/${this.state.userSelected._id}`)
+        await axios.delete(`https://node-server-credenciales.herokuapp.com/api/users/${this.state.userSelected._id}`)
             .then(res => {
                 if (res.status === 200){
                     alert('Usuario eliminado con éxito.');
@@ -141,7 +141,7 @@ export class ConsultaAlumnos extends Component {
             formato: formato
         };
         console.log(enviados);
-        const res = await axios.post('http://localhost:4000/cards', enviados);
+        const res = await axios.post('https://node-server-credenciales.herokuapp.com/cards', enviados);
         this.setState({btnMuchasCredDisabled: false});
         this.generarArchivo(res.data.pdf, 'Credenciales');
     }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 
-import { BrowserRouter as Router, withRouter, Redirect } from 'react-router-dom';
+import { withRouter, Redirect } from 'react-router-dom';
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -119,7 +119,7 @@ export class AltaUsuarios extends Component {
             this.setState({isLoading:true});
             this.permisosVacios();
             // Petición 
-            await axios.get(`http://localhost:4000/api/users/${this.props.match.params.id}`)
+            await axios.get(`https://node-server-credenciales.herokuapp.com/api/users/${this.props.match.params.id}`)
                 .then(res => {
                     // Usuario obtenido por el servidor
                     const usuario = res.data;
@@ -230,6 +230,18 @@ export class AltaUsuarios extends Component {
         })
         return modulos;
     }
+
+    reasignarStore = async () => {
+        await axios.get(`https://node-server-credenciales.herokuapp.com/api/users/${UserStore.id}`)
+            .then(res => {
+                const result = Object.assign(res.data, {success: true});
+                UserStore.setMiUsuario(result);
+                alert('Usuario modificado exitosamente.');
+                this.setState({redireccionar: true});
+            })
+            .catch(error => console.error(error));
+    }
+
     // Para guardar cambios
     guardarUsuario = async () => {
         const modulos = this.verificaModulos();
@@ -315,11 +327,16 @@ export class AltaUsuarios extends Component {
             this.setState({btnPswDisabled: true, btnGuardarDisabled: true});
             // Para editar o modificar el usuario
             if (this.state.editar)
-                await axios.put(`http://localhost:4000/api/users/${this.props.miUsuario ? UserStore.id : this.props.match.params.id}`,newUsuario)
+                await axios.put(`https://node-server-credenciales.herokuapp.com/api/users/${this.props.miUsuario ? UserStore.id : this.props.match.params.id}`,newUsuario)
                     .then(res => {
                         if (res.status === 200){
+
+                            if(this.props.miUsuario) {
+                                this.reasignarStore();
+                            }
+
                             // Si es que se modifica ya sea el usuario o sólo su contraseña
-                            if (!this.state.isPswChanged){
+                            else if (!this.state.isPswChanged){
                                 alert('Usuario modificado exitosamente.\nRedirigiendo...');
                                 this.setState({redireccionar:true});
                                 // window.location = this.props.miUsuario ? '/dashboard' : `/dashboard/${this.state.alumnos ? 'alumnos' : this.state.profesores ? 'profesores' : 'usuarios'}/consultar`
@@ -337,7 +354,7 @@ export class AltaUsuarios extends Component {
                     .catch(error => console.error(error));
             else
                 // En caso de que se deseé agregar un nuevo usuario
-                await axios.post('http://localhost:4000/api/users', newUsuario)
+                await axios.post('https://node-server-credenciales.herokuapp.com/api/users', newUsuario)
                     .then(res => {
                         if (res.data.existente) {
                             alert('Ya existe un usuario registrado con ese email o nombre de usuario.');
@@ -560,7 +577,12 @@ export class AltaUsuarios extends Component {
                     {this.inputTextEditable('Apellido paterno*',this.state.aPaterno, 'text', 'aPaterno', 50)}
 
                     {this.inputTextEditable('Apellido materno',this.state.aMaterno, 'text', 'aMaterno', 50)}
-                    
+                    {this.props.miUsuario ? 
+                    <div className="columns">
+                        <span className="etiqueta" style={{marginLeft:'0'}}>CURP</span>
+                        <span className="span-descriptivo" style={{color:'#b4b4b4'}}>{this.state.curp}</span>
+                    </div>
+                    :
                     <div className="fila">
                         {this.inputTextEditable('CURP*',this.state.curp, 'text', 'curp', 18)}
                         <div className="inp-numero">
@@ -572,6 +594,7 @@ export class AltaUsuarios extends Component {
                             )}
                         </div>
                     </div>
+                    }
                 </div>
             )
 

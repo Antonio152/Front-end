@@ -36,7 +36,7 @@ class App extends Component {
   async doLogout () {
     try {
       // Check if user is logged in or not
-      let res = await fetch('http://localhost:4000/session/logout', {
+      let res = await fetch('https://node-server-credenciales.herokuapp.com/session/logout', {
         method: 'post',
         headers: {
           'Accept': 'application/json',
@@ -62,7 +62,7 @@ class App extends Component {
   async componentDidMount () {
     try {
       // Check if user is logged in or not
-      let res = await fetch('http://localhost:4000/session/isLoggedIn', {
+      let res = await fetch('https://node-server-credenciales.herokuapp.com/session/isLoggedIn', {
         method: 'post',
         headers: {
           'Accept': 'application/json',

@@ -35,7 +35,31 @@ export class UserStore {
         })
     }
     // En caso de que haya accedido con éxito
+    setMiUsuario = action((result) => {
+        if (result && result.success) {
+            this.loading = false;
+            this.isLoggedIn = true;
+            this.name = result.nombre;
+            this.lastNameP = result.aPaterno;
+            this.lastNameM = result.aMaterno ? result.aMaterno : '';
+            this.rh = result.rh;
+            this.photo = result.foto;
+            this.email = result.contacto[0].email;
+            this.tel = result.contacto[0].telefono;
+            this.telEmer = result.contacto[0].telEmergencia;
+            this.street = result.direccion[0].calle;
+            this.streetNo = result.direccion[0].numero;
+            this.location = result.direccion[0].localidad;
+            this.city = result.direccion[0].ciudad;
+            this.postalCode = result.direccion[0].cp;
+            this.state = result.direccion[0].estado;
+            return true;
+        }
+        return false
+    })
+    // En caso de que haya accedido con éxito
     setData = action((result) => {
+        console.log(this.role);
         if (result && result.success) {
             this.loading = false;
             this.isLoggedIn = true;
@@ -61,13 +85,13 @@ export class UserStore {
             //Asignación de permisos
             if(this.role !== 'Alumno' && this.role !== 'Profesor'){
                 if(result.modulos[0].permisos)
-                this.Usuarios = result.modulos[0].permisos;
+                    this.Usuarios = result.modulos[0].permisos;
                 if(result.modulos[1].permisos)
-                this.Alumnos = result.modulos[1].permisos;
+                    this.Alumnos = result.modulos[1].permisos;
                 if(result.modulos[2].permisos)
-                this.Profesores = result.modulos[2].permisos;
+                    this.Profesores = result.modulos[2].permisos;
                 if(result.modulos[3].permisos)
-                this.Credenciales = result.modulos[3].permisos;
+                    this.Credenciales = result.modulos[3].permisos;
             }
             else {
                 this.career = result.datosAcademicos[0].carrera;

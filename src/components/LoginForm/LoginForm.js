@@ -70,7 +70,7 @@ export class LoginForm extends Component {
                 intentos = this.state.intentosFallidos[indiceAux].intentos + 1;
                 // AQUÍ SE IMPLEMENTARÁ EL BLOQUEO
                 if (intentos >= 5)  {
-                    await axios.put(`http://localhost:4000/api/users/${id}`, {
+                    await axios.put(`https://node-server-credenciales.herokuapp.com/api/users/${id}`, {
                         bloqueado: true
                     })
                         .then(() => {
@@ -100,7 +100,7 @@ export class LoginForm extends Component {
     // Se encarga de bloquear el usuario 
     // AÚN NO ESTÁ IMPLEMENTADA 
     async bloquearUsuario(usuario) {
-        await axios.put(`http://localhost:4000/session/lock`,{
+        await axios.put(`https://node-server-credenciales.herokuapp.com/session/lock`,{
             username: usuario
         })
             .then(res => {
@@ -124,7 +124,7 @@ export class LoginForm extends Component {
         this.setState({buttonDisabled:true});
         try {
             // From API
-            let res = await fetch('http://localhost:4000/session/logIn', {
+            let res = await fetch('https://node-server-credenciales.herokuapp.com/session/logIn', {
                 method: 'post',
                 headers: {
                     'Accept': 'application/json',
@@ -158,7 +158,7 @@ export class LoginForm extends Component {
     // Se encarga de verificar que el email sea correcto
     async verificarCorreo() { 
         this.setState({ btnEmailDisabled: true });
-        const res = await axios.put('http://localhost:4000/session/email',{
+        const res = await axios.put('https://node-server-credenciales.herokuapp.com/session/email',{
             email: this.state.email
         }); 
 
@@ -173,7 +173,7 @@ export class LoginForm extends Component {
     // Se encarga de verificar que el código sea correcto
     async verificarCodigo() {
         this.setState({ btnCodeDisabled: true });
-        await axios.post('http://localhost:4000/session/codeVerification',{
+        await axios.post('https://node-server-credenciales.herokuapp.com/session/codeVerification',{
             codigo: this.state.codigo,
             email: this.state.email
         }).then(res => {
@@ -194,7 +194,7 @@ export class LoginForm extends Component {
         }
         // Petición
         this.setState({ btnPswDisabled: true });
-        await axios.put(`http://localhost:4000/api/users/${this.state.idUsuario}`,{
+        await axios.put(`https://node-server-credenciales.herokuapp.com/api/users/${this.state.idUsuario}`,{
             password: bcrypt.hashSync(this.state.rest_password,9),
             bloqueado:false
         })

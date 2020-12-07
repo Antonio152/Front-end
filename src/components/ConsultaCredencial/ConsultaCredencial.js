@@ -21,7 +21,7 @@ export class ConsultaCredencial extends Component {
 
     //Obtiene el usuario el id
     async componentDidMount() {
-        const res = await axios.get('http://localhost:4000/api/users/' + UserStore.id);
+        const res = await axios.get('https://node-server-credenciales.herokuapp.com/api/users/' + UserStore.id);
         this.setState({ 
             usuario: res.data ,
             rol: res.data.rol[0],

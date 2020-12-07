@@ -39,7 +39,7 @@ export class ConsultaUsuarios extends Component {
     }
     // Obtiene los usuarios del servidor
     getUsuarios = async () => {
-        let res = await fetch('http://localhost:4000/api/users', {
+        let res = await fetch('https://node-server-credenciales.herokuapp.com/api/users', {
             method: 'get',
             headers: {
               'Accept': 'application/json',
@@ -62,7 +62,7 @@ export class ConsultaUsuarios extends Component {
     }
     // Obtiene los modulos del servidor
     getModulos = async () => {
-        const res = await axios.get(`http://localhost:4000/api/users/${UserStore.id}`);
+        const res = await axios.get(`https://node-server-credenciales.herokuapp.com/api/users/${UserStore.id}`);
         if (res.status === 200)
             this.setState({permisos: res.data.rol[0].modulos[0].permisos});
     }
@@ -81,7 +81,7 @@ export class ConsultaUsuarios extends Component {
     // Realiza la actualización de estado entre la baja lógica y la física
     bajaLogica = async() =>{
         this.setState({btnBajaLogDisabled: true});
-        await axios.put(`http://localhost:4000/api/users/${this.state.userSelected._id}`,{published: false})
+        await axios.put(`https://node-server-credenciales.herokuapp.com/api/users/${this.state.userSelected._id}`,{published: false})
             .then(res => {
                 if (res.status === 200){
                     alert('Usuario modificado exitosamente.');
@@ -100,7 +100,7 @@ export class ConsultaUsuarios extends Component {
     // Eliminación total del usuario
     bajaFisica = async() =>{
         this.setState({btnBajaFisDisabled: true});
-        await axios.delete(`http://localhost:4000/api/users/${this.state.userSelected._id}`)
+        await axios.delete(`https://node-server-credenciales.herokuapp.com/api/users/${this.state.userSelected._id}`)
             .then(res => {
                 if (res.status === 200){
                     alert('Usuario eliminado con éxito.');

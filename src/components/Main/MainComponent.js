@@ -27,7 +27,7 @@ export class MainComponent extends Component {
     // Obtiene los permisos del usuario accedido
     componentDidMount() {
         try {
-             axios.get('http://localhost:4000/api/users/' + UserStore.id)
+             axios.get('https://node-server-credenciales.herokuapp.com/api/users/' + UserStore.id)
                 .then(res => {
                     const usuario = res.data;
                     this.setState({ usuario:usuario });

@@ -1,6 +1,7 @@
 //snippet rfce
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios'
+import { observer } from 'mobx-react'
 
 import * as FaIcons from 'react-icons/fa'; // This way you import all Font Awesome Icons
 import * as AiIcons from 'react-icons/ai';
@@ -63,7 +64,7 @@ function Navbar(props) {
     // Similiar to ComponentDidMount 
     useEffect(() => {
         async function getUser() {
-            const uri = `http://localhost:4000/api/users/${UserStore.id}`;
+            const uri = `https://node-server-credenciales.herokuapp.com/api/users/${UserStore.id}`;
             const res = await axios.get(uri);
             if (res.data.rol[0].modulos)
                 setModules({modules: res.data.rol[0].modulos});
@@ -179,5 +180,5 @@ function Navbar(props) {
 }
 
 
-export default Navbar
+export default observer(Navbar)
 
